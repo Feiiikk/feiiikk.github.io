@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gillian Wellness Tracker v3</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f7f4;color:#1a1a18;padding:16px;max-width:760px;margin:0 auto;font-size:14px;}
+.dash-hero{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(120deg,#fff 0%,#fffaf0 48%,#f3f0ff 100%);color:#24211d;border:1px solid #e7e1d7;border-radius:18px;padding:22px;margin-bottom:12px;box-shadow:0 14px 38px rgba(65,48,25,.08)}
+.dash-hero:before,.dash-hero:after{content:"";position:absolute;z-index:-1;border-radius:50%;filter:blur(2px);opacity:.72;animation:floatOrb 7s ease-in-out infinite alternate}.dash-hero:before{width:170px;height:170px;right:-38px;top:-86px;background:radial-gradient(circle at 35% 35%,#ffd67b,#ffb6aa 62%,transparent 64%)}.dash-hero:after{width:120px;height:120px;right:95px;bottom:-80px;background:radial-gradient(circle at 35% 35%,#b9ddff,#c9b9ff 64%,transparent 66%);animation-delay:-3s}
+.hero-kicker{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.72);border:1px solid #e8dfd2;border-radius:99px;padding:5px 9px;font-size:10px;font-weight:700;color:#76624e;margin-bottom:10px;backdrop-filter:blur(8px)}.hero-kicker:before{content:"";width:7px;height:7px;border-radius:50%;background:#f2a93b;box-shadow:0 0 0 4px rgba(242,169,59,.16);animation:pulseDot 2s ease-out infinite}
+.dash-hero h1{font-size:24px;line-height:1.15;margin-bottom:6px;letter-spacing:-.02em}.dash-hero p{font-size:12px;color:#786f67}
+.quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 0}.quick{border:1px solid rgba(85,72,55,.12);background:rgba(255,255,255,.84);border-radius:11px;padding:11px 8px;color:#3a342e;font:600 12px inherit;cursor:pointer;box-shadow:0 5px 14px rgba(55,43,27,.06);transition:transform .18s ease,box-shadow .18s ease,background .18s}.quick:hover{transform:translateY(-2px);background:#fff;box-shadow:0 9px 20px rgba(55,43,27,.11)}
+@keyframes floatOrb{from{transform:translate3d(0,0,0) rotate(0)}to{transform:translate3d(-12px,12px,0) rotate(8deg)}}@keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(242,169,59,.35)}70%{box-shadow:0 0 0 7px rgba(242,169,59,0)}100%{box-shadow:0 0 0 0 rgba(242,169,59,0)}}
+.today-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}.today-card{background:#fff;border:.5px solid #e0ded8;border-radius:11px;padding:12px}.today-v{font-size:18px;font-weight:700}.today-l{font-size:10px;color:#888;margin-top:2px}
+.section-card{background:#fff;border:.5px solid #e0ded8;border-radius:12px;padding:14px;margin-bottom:12px}.section-title{font-size:13px;font-weight:700;margin-bottom:9px}.muted{font-size:11px;color:#888;line-height:1.45}
+.plate-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.plate-btn{border:.5px solid #d8d6d0;background:#fff;border-radius:8px;padding:9px 5px;font-size:11px;cursor:pointer}.plate-btn.on{border-color:#1D9E75;background:#E1F5EE;color:#0F6E56;font-weight:600}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.settings-grid label{font-size:10px;color:#888}.settings-grid input,.settings-grid select{width:100%;margin-top:3px;border:.5px solid #d0ced8;border-radius:7px;padding:8px;background:#fff}
+.performed{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:600;color:#555}.performed input{accent-color:#1D9E75}.ecard:not(.is-done) .einps{display:none}.ecard.is-done{border-color:#1D9E7566}.ecard.is-done .ehead{background:#f5fbf8}
+.nav{display:flex;gap:4px;background:rgba(238,236,231,.92);border-radius:10px;padding:4px;margin-bottom:18px;position:sticky;top:8px;z-index:20;backdrop-filter:blur(12px);box-shadow:0 3px 12px rgba(35,30,22,.05)}
+.nb{flex:1;padding:8px 4px;border:none;border-radius:7px;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:#888;transition:all .15s;}
+.nb.on{background:#fff;color:#1a1a18;box-shadow:0 1px 3px rgba(0,0,0,.1);}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.row label{font-size:12px;color:#888;}
+input[type=date]{border:0.5px solid #d0ced8;border-radius:7px;padding:6px 10px;font-size:13px;background:#fff;color:#1a1a18;font-family:inherit;}
+.slbl{font-size:10px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.07em;margin:10px 0 5px;}
+.btn1{background:#1D9E75;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:500;cursor:pointer;}
+.btn2{background:none;border:0.5px solid #d0ced8;border-radius:8px;padding:10px 16px;font-size:13px;cursor:pointer;color:#555;}
+.btnrow{display:flex;gap:8px;margin-top:10px;}
+.fb{font-size:12px;color:#1D9E75;min-height:16px;margin-top:5px;}
+textarea{width:100%;border:0.5px solid #e0ded8;border-radius:8px;padding:8px 10px;font-size:12px;background:#fff;resize:none;font-family:inherit;color:#1a1a18;}
+textarea:focus{outline:none;border-color:#1D9E75;}
+/* SESSION CHIPS */
+.sch-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.sch{padding:7px 12px;border-radius:8px;border:1.5px solid #e0ded8;background:#fff;cursor:pointer;font-size:12px;font-weight:500;color:#888;transition:all .15s;user-select:none;}
+/* EXERCISE CARD */
+.sec-h{display:flex;align-items:center;gap:6px;margin:10px 0 4px;}
+.sec-dot{width:7px;height:7px;border-radius:50%;}
+.sec-nm{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;}
+.ecard{background:#fff;border:0.5px solid #e0ded8;border-radius:10px;margin-bottom:7px;overflow:hidden;}
+.ehead{padding:9px 13px 7px;border-bottom:0.5px solid #f0ede8;}
+.een{font-size:13px;font-weight:600;}
+.ecn{font-size:11px;color:#bbb;margin-top:1px;}
+.eprev{font-size:11px;color:#1D9E75;margin-top:2px;}
+.einps{display:grid;grid-template-columns:1.1fr .7fr .7fr .9fr 1.4fr;gap:6px;padding:9px 13px;}
+.ig{display:flex;flex-direction:column;gap:2px;}
+.ig label{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.04em;}
+.ig input{border:0.5px solid #e0ded8;border-radius:6px;padding:6px 8px;font-size:12px;background:#f8f7f4;width:100%;font-family:inherit;}
+.ig input:focus{outline:none;border-color:#1D9E75;background:#fff;}
+.ebar{display:flex;gap:5px;align-items:center;}
+.ebtn{background:none;border:0.5px solid #e0e0dd;border-radius:99px;padding:3px 10px;font-size:11px;cursor:pointer;color:#888;transition:all .15s;}
+/* CUSTOM EXERCISE */
+.cx-row{display:flex;gap:5px;align-items:center;background:#fff;border:0.5px dashed #c0ced8;border-radius:10px;padding:9px 12px;margin-bottom:7px;flex-wrap:wrap;}
+.cx-row input{border:0.5px solid #e0ded8;border-radius:6px;padding:6px 8px;font-size:12px;background:#f8f7f4;font-family:inherit;}
+.cx-row input:focus{outline:none;border-color:#1D9E75;background:#fff;}
+.cxi-n{flex:2;min-width:120px;}
+.cxi-s{flex:1;min-width:55px;}
+.cxi-l{flex:2;min-width:100px;}
+.cx-del{background:none;border:none;cursor:pointer;color:#ccc;font-size:16px;flex-shrink:0;}
+.cx-del:hover{color:#e05050;}
+.cx-save{background:none;border:none;cursor:pointer;font-size:14px;flex-shrink:0;opacity:.5;transition:opacity .15s;padding:0 2px;}
+.cx-save:hover{opacity:1;}
+.myex-hdr{font-size:10px;font-weight:600;color:#7B5EA7;text-transform:uppercase;letter-spacing:.07em;margin:12px 0 5px;display:flex;align-items:center;gap:5px;}
+.myex-card{background:#fff;border:0.5px solid #7B5EA733;border-radius:10px;margin-bottom:7px;overflow:hidden;}
+.myex-head{padding:8px 13px 6px;border-bottom:0.5px solid #f0ede8;display:flex;justify-content:space-between;align-items:center;}
+.myfd-saved{font-size:10px;color:#7B5EA7;background:#F0EBF8;padding:2px 7px;border-radius:99px;font-weight:500;display:inline-block;margin-top:3px;}
+.add-cx{width:100%;background:none;border:0.5px dashed #c8c6c0;border-radius:8px;padding:9px;font-size:12px;cursor:pointer;color:#888;margin-bottom:10px;}
+.add-cx:hover{border-color:#1D9E75;color:#1D9E75;background:#f0faf5;}
+/* NUTRITION */
+.dtrow{display:flex;gap:7px;margin-bottom:12px;}
+.dtb{flex:1;padding:9px 10px;border:0.5px solid #d0ced8;border-radius:8px;background:#fff;cursor:pointer;font-size:12px;font-weight:500;color:#888;transition:all .15s;text-align:center;}
+.dtb.on{border:1.5px solid #1D9E75;color:#1a1a18;}
+.mtg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:13px;}
+.mtc{background:#fff;border:0.5px solid #e0ded8;border-radius:10px;padding:10px 11px;}
+.mtl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;}
+.mtv{font-size:16px;font-weight:700;}
+.mts{font-size:10px;color:#1D9E75;margin-top:2px;}
+.mtover{color:#e05050!important;}
+.mtr{height:3px;background:#e8e6e0;border-radius:99px;margin-top:5px;}
+.mtf{height:3px;border-radius:99px;transition:width .3s;}
+/* HYDRATION */
+.hydrow{display:flex;align-items:center;gap:8px;background:#fff;border:0.5px solid #e0ded8;border-radius:10px;padding:9px 13px;margin-bottom:12px;}
+.hydl{font-size:12px;color:#888;flex:1;}
+.hydbtn{width:26px;height:26px;border-radius:50%;border:0.5px solid #d0ced8;background:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.hydv{font-size:13px;font-weight:600;min-width:58px;text-align:center;}
+.hydtr{flex:2;height:4px;background:#e8e6e0;border-radius:99px;}
+.hydtf{height:4px;background:#378ADD;border-radius:99px;transition:width .3s;}
+.hydp{font-size:11px;color:#378ADD;font-weight:500;min-width:28px;text-align:right;}
+/* MEAL */
+.msec{background:#fff;border:0.5px solid #e0ded8;border-radius:10px;margin-bottom:9px;overflow:hidden;}
+.mhead{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;}
+.mnam{display:flex;align-items:center;gap:7px;}
+.mttl{font-size:13px;font-weight:600;}
+.mkcl{font-size:11px;color:#aaa;}
+.addbtn{background:#f1efe8;border:none;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;color:#555;font-weight:500;}
+.addbtn:hover{background:#e4e2da;}
+.fents{border-top:0.5px solid #f0ede8;}
+.frow{display:flex;align-items:center;padding:8px 13px;border-bottom:0.5px solid #f8f7f4;gap:7px;}
+.frow:last-child{border-bottom:none;}
+.fnm{flex:1;}
+.fen{font-size:12px;font-weight:500;}
+.fdt{font-size:11px;color:#aaa;}
+.fmacs{display:flex;gap:4px;}
+.bm{font-size:10px;padding:2px 5px;border-radius:4px;}
+.bp{background:#E1F5EE;color:#0F6E56;}
+.bc{background:#E6F1FB;color:#185FA5;}
+.bf{background:#FFF3DC;color:#854F0B;}
+.fkc{font-size:12px;font-weight:600;min-width:50px;text-align:right;}
+.delbtn{background:none;border:none;cursor:pointer;color:#ccc;font-size:13px;padding:0 2px;}
+.delbtn:hover{color:#e05050;}
+/* ADD FOOD FORM */
+.aform{background:#f8f7f4;border-top:0.5px solid #e0ded8;padding:11px 13px;}
+.cchips{display:flex;gap:5px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px;scrollbar-width:none;}
+.cchips::-webkit-scrollbar{display:none;}
+.cchip{white-space:nowrap;padding:4px 10px;border:0.5px solid #d0ced8;border-radius:99px;font-size:11px;cursor:pointer;color:#888;background:#fff;transition:all .15s;}
+.cchip.on{background:#1D9E75;color:#fff;border-color:#1D9E75;}
+.fsrch{width:100%;border:0.5px solid #d0ced8;border-radius:7px;padding:7px 10px;font-size:13px;background:#fff;margin-bottom:7px;font-family:inherit;}
+.fsrch:focus{outline:none;border-color:#1D9E75;}
+.flist{max-height:260px;overflow-y:auto;background:#fff;border:0.5px solid #e0ded8;border-radius:7px;margin-bottom:7px;}
+.fitem{padding:7px 11px;font-size:12px;cursor:pointer;border-bottom:0.5px solid #f8f7f4;}
+.fitem:last-child{border-bottom:none;}
+.fitem:hover{background:#f1efe8;}
+.finn{font-weight:500;}
+.fide{color:#aaa;margin-top:1px;}
+.qrow{display:flex;gap:7px;align-items:center;margin-bottom:8px;background:#fff;border:0.5px solid #e0ded8;border-radius:8px;padding:8px 11px;}
+.qrow input{width:62px;border:0.5px solid #d0ced8;border-radius:6px;padding:6px 8px;font-size:13px;text-align:center;font-family:inherit;}
+.qrow input:focus{outline:none;border-color:#1D9E75;}
+.qunit{font-size:11px;color:#888;flex:1;}
+.qprev{font-size:12px;color:#1D9E75;font-weight:600;white-space:nowrap;}
+.qadd{background:#1D9E75;color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer;font-weight:500;}
+.custg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:5px;margin-top:8px;}
+.custg input{border:0.5px solid #d0ced8;border-radius:6px;padding:6px 7px;font-size:12px;background:#fff;width:100%;font-family:inherit;}
+.custg input:focus{outline:none;border-color:#1D9E75;}
+.custbtn{width:100%;margin-top:6px;padding:8px;background:none;border:0.5px solid #d0ced8;border-radius:7px;font-size:12px;cursor:pointer;color:#555;}
+/* REVIEW */
+.monnav{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.monnav button{background:none;border:0.5px solid #e0ded8;border-radius:6px;padding:4px 11px;cursor:pointer;font-size:14px;}
+.montitle{font-size:17px;font-weight:700;min-width:160px;text-align:center;}
+.revtabs{display:flex;gap:7px;margin-bottom:16px;}
+.rtab{flex:1;padding:9px;border:0.5px solid #d0ced8;border-radius:8px;background:#fff;cursor:pointer;font-size:12px;font-weight:500;color:#888;text-align:center;transition:all .15s;}
+.rtab.on{border:1.5px solid #1D9E75;color:#1a1a18;}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px;}
+.sc{background:#fff;border:0.5px solid #e0ded8;border-radius:10px;padding:11px 12px;text-align:center;}
+.sv{font-size:20px;font-weight:700;}
+.sl{font-size:11px;color:#888;margin-top:2px;}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:14px;}
+.cdow{font-size:10px;color:#aaa;text-align:center;padding:3px 0;font-weight:600;}
+.cday{min-height:44px;background:#fff;border:0.5px solid #e0ded8;border-radius:7px;padding:4px 5px;}
+.cnum{font-size:11px;color:#aaa;margin-bottom:2px;}
+.cday.istoday .cnum{color:#1D9E75;font-weight:700;}
+.sdots{display:flex;flex-wrap:wrap;gap:2px;}
+.sdot{width:17px;height:15px;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;}
+.ndot{width:5px;height:5px;background:#EF9F27;border-radius:50%;margin-top:2px;}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px;}
+.cc{background:#fff;border:0.5px solid #e0ded8;border-radius:10px;padding:12px;}
+.cct{font-size:10px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.ccv{font-size:14px;font-weight:700;color:#1D9E75;margin-bottom:5px;}
+.ccw{height:72px;position:relative;}
+.prcard{background:#fff;border:0.5px solid #e0ded8;border-radius:10px;padding:13px;margin-bottom:10px;}
+.prrow{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid #f0ede8;}
+.prrow:last-child{border-bottom:none;}
+.prex{font-size:13px;font-weight:500;}
+.prcn{font-size:11px;color:#bbb;margin-top:1px;}
+.prv{text-align:right;}
+.prcur{font-size:13px;font-weight:700;color:#1D9E75;}
+.prch{font-size:11px;color:#888;}
+.expbtn{background:none;border:0.5px solid #d0ced8;border-radius:7px;padding:6px 14px;font-size:12px;cursor:pointer;color:#555;margin-left:auto;}
+/* SYNC BAR */
+.sync-bar{background:#fff;border:0.5px solid #e0ded8;border-radius:12px;padding:11px 14px;margin-bottom:14px;}
+.sync-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.sync-btns{display:flex;gap:7px;flex-shrink:0;}
+.sbtn{padding:7px 13px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .15s;}
+.sbtn-exp{background:#E1F5EE;border:0.5px solid #A8D9C8;color:#0F6E56;}
+.sbtn-exp:hover{background:#C8EEE0;}
+.sbtn-imp{background:#E6F1FB;border:0.5px solid #9EC5E8;color:#185FA5;}
+.sbtn-imp:hover{background:#D0E6F7;}
+.sync-status{font-size:11px;color:#888;margin-top:3px;}
+.sync-guide{display:flex;align-items:center;gap:6px;margin-top:10px;padding:8px 10px;background:#f8f7f4;border-radius:8px;flex-wrap:wrap;}
+.guide-step{font-size:11px;color:#555;display:flex;align-items:center;gap:4px;}
+.guide-arrow{color:#aaa;font-size:12px;}
+.import-preview{margin-top:10px;background:#f4f2ee;border-radius:8px;padding:10px 12px;}
+.import-actions{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap;}
+.imp-merge{background:#1D9E75;color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:500;cursor:pointer;}
+.imp-replace{background:#e05050;color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:500;cursor:pointer;}
+.imp-cancel{background:none;border:0.5px solid #d0ced8;border-radius:7px;padding:7px 12px;font-size:12px;cursor:pointer;color:#555;}
+.nutsg{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px;}
+.nsc{background:#fff;border:0.5px solid #e0ded8;border-radius:10px;padding:12px;text-align:center;}
+.nsv{font-size:20px;font-weight:700;}
+.nsl{font-size:11px;color:#888;margin-top:2px;}
+.cfull{background:#fff;border:0.5px solid #e0ded8;border-radius:10px;padding:14px;margin-bottom:14px;}
+.cfullw{height:140px;position:relative;}
+.tag{font-size:10px;padding:2px 7px;border-radius:99px;}
+.tg{background:#E1F5EE;color:#0F6E56;}
+.ta{background:#FAEEDA;color:#854F0B;}
+/* WEIGHT + BURN */
+.sminput{border:0.5px solid #d0ced8;border-radius:7px;padding:6px 10px;font-size:13px;background:#fff;width:72px;font-family:inherit;text-align:center;}
+.sminput:focus{outline:none;border-color:#1D9E75;}
+.burn-box{background:#FDF0EC;border:0.5px solid #E8C4B2;border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.burn-num{font-size:22px;font-weight:700;color:#993C1D;}
+.burn-meta{font-size:11px;color:#993C1D;line-height:1.5;}
+.net-row{display:flex;gap:8px;margin-bottom:12px;}
+.net-card{flex:1;border-radius:10px;padding:10px 12px;text-align:center;}
+.net-v{font-size:18px;font-weight:700;}
+.net-l{font-size:10px;margin-top:2px;text-transform:uppercase;letter-spacing:.04em;}
+.activity-box{background:linear-gradient(135deg,#fff,#f2f7ff);border:.5px solid #cfddec;border-radius:12px;padding:13px;margin-bottom:14px}.activity-grid{display:grid;grid-template-columns:1.25fr .7fr .7fr .8fr;gap:7px}.activity-grid label{font-size:10px;color:#7b8794}.activity-grid input,.activity-grid select{width:100%;margin-top:3px;border:.5px solid #ccd6e0;border-radius:7px;padding:8px;background:#fff;font-family:inherit}.activity-fields{margin-top:8px}.history-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}.hbadge{font-size:10px;padding:2px 6px;border-radius:99px;background:#f1efe9;color:#70685f}.hbadge.best{background:#fff0d4;color:#895c0c}
+.cloud-card{background:linear-gradient(135deg,#fff,#f4f2ff);border:1px solid #ddd6f2;border-radius:13px;padding:14px;margin-bottom:12px}.cloud-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.cloud-state{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#71687e}.cloud-dot{width:8px;height:8px;border-radius:50%;background:#aaa}.cloud-dot.ok{background:#1D9E75;box-shadow:0 0 0 4px #1D9E7520}.cloud-dot.busy{background:#EF9F27}.cloud-dot.err{background:#d74d4d}.auth-row{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}.auth-row input{flex:1;min-width:210px;border:.5px solid #cfc8dd;border-radius:8px;padding:9px;font-family:inherit}.cloud-config{margin-top:10px;padding-top:10px;border-top:.5px solid #e7e0ef}.cloud-config input{width:100%;margin-top:4px;border:.5px solid #d8d1e2;border-radius:7px;padding:8px;font-family:inherit}.cloud-config label{display:block;font-size:10px;color:#888;margin-top:7px}
+@media(max-width:500px){
+  .today-grid{grid-template-columns:repeat(2,1fr)}.quick-actions{grid-template-columns:1fr}.settings-grid{grid-template-columns:1fr}
+  .sgrid,.mtg{grid-template-columns:repeat(2,1fr);}
+  .cgrid{grid-template-columns:1fr;}
+  .einps{grid-template-columns:1fr 1fr;}
+  .einps .ig:last-child{grid-column:span 2;}
+  .custg{grid-template-columns:1fr 1fr;}
+  .custg input:first-child{grid-column:span 2;}
+  .nutsg{grid-template-columns:repeat(2,1fr);}
+  .activity-grid{grid-template-columns:1fr 1fr}
+}
+@media(prefers-reduced-motion:reduce){.dash-hero:before,.dash-hero:after,.hero-kicker:before{animation:none}.quick{transition:none}}
+</style>
+</head>
+<body>
+
+<div style="margin-bottom:13px;">
+  <div style="font-size:18px;font-weight:700;">Gillian · Wellness Tracker</div>
+  <div style="font-size:12px;color:#888;margin-top:1px;" id="profile-sub">5'4" · <span id="hdr-wt">52.0</span> kg · 19% BF · Recomposition · Noon sessions</div>
+</div>
+
+<div class="nav" role="tablist">
+  <button class="nb on" onclick="showTab('D')" id="nb-D">Today</button>
+  <button class="nb" onclick="showTab('T')" id="nb-T">Training</button>
+  <button class="nb" onclick="showTab('N')" id="nb-N">Nutrition log</button>
+  <button class="nb" onclick="showTab('R')" id="nb-R">Progress</button>
+  <button class="nb" onclick="showTab('S')" id="nb-S">Settings</button>
+</div>
+
+<div id="tab-S" style="display:none;">
+<div class="cloud-card">
+  <div class="cloud-top"><div><div class="section-title" style="margin:0">☁ Private cloud sync</div><div class="cloud-state" style="margin-top:4px"><span class="cloud-dot" id="cloud-dot"></span><span id="cloud-status">Checking configuration…</span></div></div><button class="btn2" id="cloud-signout" style="display:none" onclick="cloudSignOut()">Sign out</button></div>
+  <div id="cloud-auth"><div class="muted" style="margin-top:9px">Sign in with your approved email. Your tracker remains local-first and syncs privately when online.</div><div class="auth-row"><input id="cloud-email" type="email" placeholder="Your email address"><button class="btn1" onclick="sendMagicLink()">Email magic link</button></div><div class="fb" id="cloud-fb"></div></div>
+  <div id="cloud-user" class="muted" style="display:none;margin-top:9px"></div>
+  <details class="cloud-config" id="cloud-config"><summary style="font-size:11px;cursor:pointer;color:#71687e">Supabase connection</summary><label>Project URL<input id="cloud-url" placeholder="https://your-project.supabase.co"></label><label>Publishable key<input id="cloud-key" placeholder="sb_publishable_…"></label><button class="btn2" style="margin-top:8px" onclick="saveCloudConfig()">Save connection</button></details>
+</div>
+<div class="section-card">
+  <div class="section-title">Profile &amp; target assumptions</div>
+  <div class="muted" style="margin-bottom:10px;">These settings explain the estimates. They are planning aids, not medical advice.</div>
+  <div class="settings-grid">
+    <label>Height (cm)<input id="set-height" type="number" value="162.5"></label>
+    <label>Age<input id="set-age" type="number" value="26"></label>
+    <label>Goal<select id="set-goal"><option>Recomposition</option><option>Maintain</option><option>Performance</option><option>General health</option></select></label>
+    <label>Weekly training target<input id="set-weekly" type="number" value="4" min="1" max="14"></label>
+  </div>
+  <button class="btn1" style="margin-top:10px" onclick="saveSettings()">Save settings</button>
+  <div class="fb" id="sfb-settings"></div>
+</div>
+<div class="sync-bar">
+  <div class="sync-top">
+    <div>
+      <div style="font-size:13px;font-weight:600;color:#1a1a18;">📦 Emergency backup</div>
+      <div class="sync-status" id="sync-status">Loading…</div>
+    </div>
+    <div class="sync-btns">
+      <button class="sbtn sbtn-exp" onclick="downloadExport()">⬇ Export</button>
+      <button class="sbtn sbtn-imp" onclick="triggerImport()">⬆ Import</button>
+      <input type="file" id="import-file-input" accept=".json,application/json" style="display:none;" onchange="handleImportFile(event)">
+    </div>
+  </div>
+  <div class="muted" style="margin-top:8px">Cloud sync is the normal workflow. Export occasionally as an independent backup.</div>
+  <div class="import-preview" id="import-preview" style="display:none;">
+    <div style="font-size:12px;font-weight:500;color:#1a1a18;" id="import-info"></div>
+    <div style="font-size:11px;color:#888;margin-top:4px;"><strong>Merge</strong> keeps your existing data and adds incoming (incoming wins on same dates). <strong>Replace</strong> overwrites everything.</div>
+    <div class="import-actions">
+      <button class="imp-merge" onclick="confirmImport('merge')">✦ Merge with my data</button>
+      <button class="imp-replace" onclick="confirmImport('replace')">Replace all</button>
+      <button class="imp-cancel" onclick="cancelImport()">Cancel</button>
+    </div>
+  </div>
+  <div class="fb" id="sync-fb" style="margin-top:6px;min-height:0;"></div>
+</div>
+</div>
+
+<!-- ====== TODAY DASHBOARD ====== -->
+<div id="tab-D">
+  <div class="dash-hero">
+    <div class="hero-kicker">TODAY'S RHYTHM</div>
+    <h1 id="dash-greeting">Today, at a glance</h1>
+    <p id="dash-date"></p>
+    <div class="quick-actions">
+      <button class="quick" onclick="showTab('T')">＋ Start or log workout</button>
+      <button class="quick" onclick="showTab('N')">＋ Log food or water</button>
+      <button class="quick" onclick="openTodayHistory()">↗ Review today</button>
+    </div>
+  </div>
+  <div class="today-grid" id="today-grid"></div>
+  <div class="section-card">
+    <div class="section-title">Daily plate check</div>
+    <div class="muted" style="margin-bottom:9px;">A quick alternative when detailed calorie logging is too much.</div>
+    <div class="plate-grid" id="plate-grid"></div>
+  </div>
+  <div class="section-card">
+    <div class="section-title">This week</div>
+    <div id="week-summary" class="muted"></div>
+  </div>
+  <div class="section-card">
+    <div class="section-title">Recovery check-in</div>
+    <div class="muted" style="margin-bottom:8px;">Optional: use this to spot patterns, not to grade yourself.</div>
+    <div class="row" style="margin:0"><label>Sleep</label><input class="sminput" id="rec-sleep" type="number" min="0" max="15" step="0.5" placeholder="7.5"><span class="muted">hrs</span><label>Soreness</label><select id="rec-sore"><option value="">—</option><option>Low</option><option>Moderate</option><option>High</option></select><button class="btn2" onclick="saveRecovery()">Save</button></div>
+    <div class="fb" id="rec-fb"></div>
+  </div>
+</div>
+
+<!-- ====== TRAINING ====== -->
+<div id="tab-T" style="display:none;">
+  <div style="font-size:12px;color:#888;margin-bottom:8px;">Pick one or more session types — you can mix them freely in one day.</div>
+  <div class="sch-wrap" id="sch-wrap"></div>
+  <div class="row">
+    <label for="td">Date</label><input type="date" id="td" onchange="drawExs()">
+    <label for="tw" style="margin-left:4px;">Weight</label>
+    <input type="number" class="sminput" id="tw" step="0.1" min="30" max="120" placeholder="52.0" oninput="onWtInput()" title="Log today's body weight (kg)">
+    <span style="font-size:11px;color:#888;">kg</span>
+    <label for="tdur" style="margin-left:4px;">Duration</label>
+    <input type="number" class="sminput" id="tdur" min="10" max="180" placeholder="50" oninput="updBurn()" title="Total session length in minutes">
+    <span style="font-size:11px;color:#888;">min</span>
+    <div class="ebar">
+      <span style="font-size:11px;color:#888;">Energy</span>
+      <button class="ebtn" onclick="setE(1)" id="e1">Low</button>
+      <button class="ebtn" onclick="setE(2)" id="e2">Good</button>
+      <button class="ebtn" onclick="setE(3)" id="e3">Strong 💪</button>
+    </div>
+  </div>
+  <div class="activity-box">
+    <div class="section-title" style="margin-bottom:3px;">Ride or tennis</div>
+    <div class="muted">Log sport sessions separately from gym exercises. They still count toward your weekly activity.</div>
+    <div class="activity-grid" style="margin-top:9px;">
+      <label>Activity<select id="activity-type" onchange="renderActivityFields()"><option value="">No sport activity</option><option value="cycling">🚴 Cycling</option><option value="tennis">🎾 Tennis</option></select></label>
+      <label>Duration (min)<input id="activity-duration" type="number" min="1" placeholder="60"></label>
+      <label>Distance (km)<input id="activity-distance" type="number" min="0" step="0.1" placeholder="optional"></label>
+      <label>Intensity<select id="activity-intensity"><option value="easy">Easy</option><option value="moderate" selected>Moderate</option><option value="hard">Hard</option></select></label>
+    </div>
+    <div class="activity-fields" id="activity-fields"></div>
+  </div>
+  <div id="exlist"></div>
+  <div class="slbl" style="margin-top:2px;">Custom / unlisted exercises</div>
+  <div id="cxlist"></div>
+  <button class="add-cx" onclick="addCx()">＋ Add custom exercise (or anything not on the list above)</button>
+  <div id="my-ex-section" style="display:none;">
+    <div class="myex-hdr">⭐ My saved exercises <span style="font-size:10px;color:#aaa;font-weight:400;">— tap ✕ to remove</span></div>
+    <div id="my-ex-list"></div>
+  </div>
+  <div id="burn-display"></div>
+  <div class="slbl">Session notes</div>
+  <textarea id="snotes" rows="2" placeholder="How did it feel? New weight? Anything to flag next time..."></textarea>
+  <div class="btnrow">
+    <button class="btn1" onclick="saveT()">Save session</button>
+    <button class="btn2" onclick="copyT()">Copy log</button>
+  </div>
+  <div class="fb" id="tfb"></div>
+</div>
+
+<!-- ====== NUTRITION ====== -->
+<div id="tab-N" style="display:none;">
+  <div class="row">
+    <label for="nd">Date</label>
+    <input type="date" id="nd" onchange="renderN()">
+    <div class="dtrow" style="margin-bottom:0;flex:1;margin-left:4px;">
+      <button class="dtb on" onclick="setDT('training')" id="dtT" style="font-size:12px;">Training day <span class="tag tg">+carbs</span></button>
+      <button class="dtb" onclick="setDT('rest')" id="dtR" style="font-size:12px;">Rest day <span class="tag ta">-carbs</span></button>
+    </div>
+  </div>
+  <div id="hydrow"></div>
+  <div id="burn-info-nut"></div>
+  <div class="mtg" id="mtg"></div>
+  <div id="meals"></div>
+  <div class="fb" id="nfb"></div>
+</div>
+
+<!-- ====== REVIEW ====== -->
+<div id="tab-R" style="display:none;">
+  <div class="monnav">
+    <button onclick="chMon(-1)">‹</button>
+    <div class="montitle" id="montitle"></div>
+    <button onclick="chMon(1)">›</button>
+    <button class="expbtn" onclick="downloadExport()">⬇ Export data</button>
+  </div>
+  <div class="revtabs">
+    <button class="rtab on" onclick="setRTab('tr')" id="rt-tr">Training</button>
+    <button class="rtab" onclick="setRTab('nut')" id="rt-nut">Nutrition</button>
+  </div>
+  <div id="rev-tr">
+    <div class="sgrid" id="rstats"></div>
+    <div id="rcal"></div>
+    <div id="wt-chart-wrap" style="display:none;">
+      <div class="slbl" style="margin-top:4px;">Weight trend this month</div>
+      <div class="cfull"><div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Body weight (kg) — dotted line = 52 kg baseline</div><div class="cfullw"><canvas id="wtchart"></canvas></div></div>
+    </div>
+    <div class="slbl" style="margin-top:4px;">Strength progression (all time)</div>
+    <div class="cgrid" id="rcharts"></div>
+    <div class="slbl">Current bests</div>
+    <div class="prcard" id="rprs"></div>
+  </div>
+  <div id="rev-nut" style="display:none;">
+    <div class="nutsg" id="nutstats"></div>
+    <div class="cfull">
+      <div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Daily calories — teal = training day · amber = rest day</div>
+      <div class="cfullw"><canvas id="nutchart"></canvas></div>
+    </div>
+    <div class="slbl">Average macros (logged days only)</div>
+    <div class="cgrid" id="nutmacros"></div>
+  </div>
+</div>
+
+<script>
+// Safe for public GitHub Pages: use only a Supabase publishable key here, never a secret key.
+window.TRACKER_SUPABASE=window.TRACKER_SUPABASE||{url:"",key:""};
+// ============================================================
+// EXERCISE DATABASE — 5 session types
+// ============================================================
+const EX = {
+  A:{name:"Glute & leg",ic:"🦵",col:"#1D9E75",exs:[
+    {en:"Smith split squat",cn:"史密斯机分腿蹲",unit:"kg added",def:"15",prev:"+15 kg × 12/side × 4",sec:"Main"},
+    {en:"Smith RDL",cn:"史密斯机罗马尼亚硬拉",unit:"kg added",def:"12.5",prev:"+12.5 kg × 10 × 4",sec:"Main"},
+    {en:"Smith hip thrust",cn:"史密斯机臀推",unit:"kg added",def:"15",prev:"+15 kg × 12 × 4 (bring back!)",sec:"Main"},
+    {en:"Hyperextension",cn:"自重背伸",unit:"BW or kg",def:"BW",prev:"BW × 10 × 3–4",sec:"Accessory"}
+  ]},
+  B:{name:"Upper body",ic:"💪",col:"#378ADD",exs:[
+    {en:"Incline DB press 30°",cn:"上斜哑铃卧推",unit:"kg/hand",def:"8",prev:"8 kg × 10–12 × 4 — try 9 kg",sec:"Push"},
+    {en:"Seated DB shoulder press",cn:"坐姿哑铃肩推",unit:"kg/hand",def:"8",prev:"8 kg × 12 × 4",sec:"Push"},
+    {en:"Low cable crossover",cn:"低位绳索夹胸",unit:"kg/side",def:"2.5",prev:"2.5 kg × 8 × 4",sec:"Push"},
+    {en:"Lat pulldown",cn:"高位下拉",unit:"kg",def:"20",prev:"20 kg × 12 × 4",sec:"Pull"},
+    {en:"Straight arm pulldown",cn:"直臂下拉",unit:"kg",def:"7.5",prev:"7.5 kg × 12 × 4",sec:"Pull"},
+    {en:"Roman chair row",cn:"推罗马椅划船",unit:"kg",def:"10",prev:"10 kg × 12 × 4",sec:"Pull"},
+    {en:"Face pull",cn:"面拉",unit:"kg",def:"10",prev:"10 kg × 15 × 4",sec:"Pull"},
+    {en:"Lateral raise",cn:"侧平举",unit:"kg",def:"2",prev:"2 kg × 15 × 4",sec:"Shoulder health"},
+    {en:"Y-raise",cn:"Y字训练",unit:"kg",def:"2",prev:"2 kg × 15 × 4",sec:"Shoulder health"}
+  ]},
+  C:{name:"Core",ic:"🔥",col:"#EF9F27",exs:[
+    {en:"Plank hold",cn:"平板支撑",unit:"sec",def:"45",prev:"45 sec × 3 sets",sec:"Anti-extension"},
+    {en:"Dead bug",cn:"死虫动作",unit:"reps/side",def:"10",prev:"10/side × 3 sets",sec:"Anti-extension"},
+    {en:"Bicycle crunch",cn:"自行车卷腹",unit:"reps",def:"20",prev:"20 × 3 sets",sec:"Flexion"},
+    {en:"Cable woodchop",cn:"绳索砍树",unit:"kg/side",def:"10",prev:"10 kg × 12/side × 3",sec:"Rotation"},
+    {en:"Hanging knee raise",cn:"悬挂举腿",unit:"reps",def:"15",prev:"15 × 3 sets",sec:"Lower abs"},
+    {en:"Ab wheel rollout",cn:"腹轮",unit:"reps",def:"8",prev:"8 × 3 sets",sec:"Anti-extension"},
+    {en:"Russian twist",cn:"俄罗斯转体",unit:"reps",def:"20",prev:"20 × 3 sets",sec:"Rotation"}
+  ]},
+  D:{name:"Cardio / HIIT",ic:"🏃",col:"#993C1D",exs:[
+    {en:"Treadmill HIIT",cn:"跑步机间歇",unit:"min",def:"20",prev:"20 min — 1min hard / 1min easy × 10",sec:"HIIT"},
+    {en:"Bike HIIT",cn:"单车间歇",unit:"min",def:"15",prev:"15 min — 30s all-out / 30s easy",sec:"HIIT"},
+    {en:"Jump rope",cn:"跳绳",unit:"min",def:"10",prev:"10 min",sec:"HIIT"},
+    {en:"Elliptical steady state",cn:"椭圆机",unit:"min",def:"20",prev:"20 min level 5–7",sec:"Steady state"},
+    {en:"Rowing machine",cn:"划船机",unit:"min",def:"15",prev:"15 min",sec:"Steady state"},
+    {en:"Stairmaster",cn:"爬楼机",unit:"min",def:"15",prev:"15 min level 8–10",sec:"Steady state"}
+  ]},
+  E:{name:"Full body",ic:"⚡",col:"#7B5EA7",exs:[
+    {en:"Goblet squat",cn:"高脚杯深蹲",unit:"kg",def:"16",prev:"16 kg × 15 × 3",sec:"Lower"},
+    {en:"Push-up",cn:"俯卧撑",unit:"reps",def:"15",prev:"15 × 3 sets",sec:"Upper"},
+    {en:"Dumbbell RDL",cn:"哑铃罗马尼亚硬拉",unit:"kg/hand",def:"12",prev:"12 kg × 12 × 3",sec:"Lower"},
+    {en:"Cable row",cn:"绳索划船",unit:"kg",def:"15",prev:"15 kg × 12 × 3",sec:"Upper"},
+    {en:"Box step-up",cn:"踏箱",unit:"kg/hand",def:"8",prev:"8 kg × 12/leg × 3",sec:"Lower"},
+    {en:"Battle rope",cn:"战绳",unit:"sec",def:"30",prev:"30s × 5 rounds",sec:"Conditioning"}
+  ]}
+};
+const SCOL = {A:"#1D9E75",B:"#378ADD",C:"#EF9F27",D:"#993C1D",E:"#7B5EA7"};
+
+// ============================================================
+// FOOD DATABASE — 90+ items with categories
+// ============================================================
+const FCATS=[
+  {id:"all",n:"All",ic:"🍽"},{id:"myfood",n:"⭐ My foods",ic:"⭐"},
+  {id:"egg",n:"Eggs",ic:"🥚"},{id:"protein",n:"Protein",ic:"🍗"},
+  {id:"dairy",n:"Dairy",ic:"🥛"},{id:"grain",n:"Grains",ic:"🌾"},{id:"veg",n:"Veg",ic:"🥦"},
+  {id:"fruit",n:"Fruit",ic:"🍎"},{id:"fat",n:"Fats",ic:"🥜"},{id:"drink",n:"Drinks ☕",ic:"☕"},
+  {id:"cn",n:"Chinese",ic:"🥢"},{id:"jp",n:"Japanese",ic:"🍣"},{id:"kr",n:"Korean",ic:"🫕"},
+  {id:"th",n:"Thai",ic:"🌶"},{id:"home",n:"Home-style",ic:"🏠"},{id:"snack",n:"Snacks",ic:"🍪"},{id:"fast",n:"Burgers",ic:"🍔"},{id:"sand",n:"Sandwich",ic:"🥪"}
+];
+
+const DB=[
+  // EGGS — cooking variants
+  {id:"eg_b",n:"水煮蛋 Boiled egg",per:"per egg",k:78,p:6,c:0.6,f:5,cat:"egg"},
+  {id:"eg_f",n:"煎蛋 Fried egg (with oil)",per:"per egg",k:90,p:6,c:0.4,f:7,cat:"egg"},
+  {id:"eg_sc",n:"炒蛋 Scrambled egg",per:"per egg",k:100,p:7,c:1,f:7.5,cat:"egg"},
+  {id:"eg_p",n:"荷包蛋 Poached egg",per:"per egg",k:78,p:6,c:0.6,f:5,cat:"egg"},
+  {id:"eg_st",n:"蒸水蛋 Steamed egg custard",per:"per 150g",k:130,p:9,c:2,f:9,cat:"egg"},
+  {id:"egw",n:"蛋白 Egg white only",per:"per white",k:17,p:3.6,c:0.2,f:0,cat:"egg"},
+  // PROTEIN — cooking variants
+  {id:"ch_p",n:"水煮鸡胸 Poached chicken breast",per:"per 100g",k:165,p:31,c:0,f:3.6,cat:"protein"},
+  {id:"ch_pf",n:"香煎鸡胸 Pan-fried chicken breast",per:"per 100g",k:185,p:31,c:0,f:5.5,cat:"protein"},
+  {id:"ch_fr",n:"炸鸡 Fried chicken",per:"per 100g",k:290,p:22,c:12,f:18,cat:"protein"},
+  {id:"chth",n:"鸡腿 Chicken thigh",per:"per 100g",k:209,p:26,c:0,f:11,cat:"protein"},
+  {id:"fis",n:"清蒸鱼 Steamed white fish",per:"per 100g",k:105,p:20,c:0,f:2.5,cat:"protein"},
+  {id:"salm",n:"三文鱼 Salmon",per:"per 100g",k:208,p:20,c:0,f:13,cat:"protein"},
+  {id:"sh_b",n:"白灼虾 Boiled shrimp",per:"per 100g",k:99,p:24,c:0,f:0.3,cat:"protein"},
+  {id:"sh_f",n:"清炒虾仁 Stir-fried shrimp",per:"per 100g",k:120,p:24,c:2,f:3,cat:"protein"},
+  {id:"tofu",n:"豆腐 Firm tofu",per:"per 100g",k:76,p:8,c:2,f:4.5,cat:"protein"},
+  {id:"prot",n:"蛋白粉 Protein powder",per:"per 30g scoop",k:120,p:25,c:3,f:1.5,cat:"protein"},
+  // BEEF & RED MEAT (previously missing)
+  {id:"stk",n:"牛排 Beef steak (grilled)",per:"per 100g",k:217,p:26,c:0,f:12,cat:"protein"},
+  {id:"gbf",n:"牛肉碎 Ground beef (lean)",per:"per 100g",k:215,p:26,c:0,f:12,cat:"protein"},
+  {id:"bris",n:"牛腩 Beef brisket (braised)",per:"per 100g",k:250,p:22,c:0,f:18,cat:"protein"},
+  {id:"ptd",n:"猪里脊 Pork tenderloin",per:"per 100g",k:143,p:22,c:0,f:5.9,cat:"protein"},
+  {id:"pbel",n:"猪五花 Pork belly",per:"per 100g",k:395,p:14,c:0,f:37,cat:"protein"},
+  {id:"lamb",n:"羊排 Lamb chop",per:"per 100g",k:258,p:22,c:0,f:18,cat:"protein"},
+  {id:"ctun",n:"罐头金枪鱼 Canned tuna (in water)",per:"per 100g",k:116,p:26,c:0,f:0.5,cat:"protein"},
+  {id:"dkbf",n:"牛肉干 Beef jerky",per:"per 30g",k:116,p:9,c:3,f:8,cat:"protein"},
+  {id:"dtofu",n:"豆干 Firm dried tofu",per:"per 100g",k:147,p:17,c:4,f:8,cat:"protein"},
+  // DAIRY
+  {id:"gyo",n:"Greek yogurt (plain)",per:"per 100g",k:59,p:10,c:3.6,f:0.4,cat:"dairy"},
+  {id:"wmilk",n:"全脂牛奶 Whole milk",per:"per 240ml",k:149,p:8,c:12,f:8,cat:"dairy"},
+  {id:"smilk",n:"脱脂牛奶 Skim milk",per:"per 240ml",k:86,p:8.4,c:12,f:0.4,cat:"dairy"},
+  {id:"dfbr",n:"豆腐脑 Silken tofu pudding",per:"per 100g",k:55,p:5,c:4,f:2.5,cat:"dairy"},
+  {id:"ched",n:"奶酪 Cheddar cheese",per:"per 30g",k:120,p:7,c:0.4,f:10,cat:"dairy"},
+  {id:"mozt",n:"马苏里拉 Mozzarella",per:"per 30g",k:85,p:6.3,c:0.6,f:6.3,cat:"dairy"},
+  // GRAINS
+  {id:"wric",n:"白米饭 White rice (cooked)",per:"per 100g",k:130,p:2.7,c:28,f:0.3,cat:"grain"},
+  {id:"bric",n:"糙米饭 Brown rice (cooked)",per:"per 100g",k:123,p:2.7,c:26,f:1,cat:"grain"},
+  {id:"oat",n:"燕麦粥 Oatmeal (cooked)",per:"per 100g",k:71,p:2.4,c:12,f:1.4,cat:"grain"},
+  {id:"swpt",n:"番薯 Sweet potato",per:"per 100g",k:86,p:1.6,c:20,f:0.1,cat:"grain"},
+  {id:"wgbr",n:"全麦面包 Whole grain bread",per:"per slice (~30g)",k:80,p:3.5,c:15,f:1,cat:"grain"},
+  {id:"rnood",n:"米粉/河粉 Rice noodles (cooked)",per:"per 100g",k:108,p:2.4,c:24,f:0.2,cat:"grain"},
+  {id:"rcak",n:"米饼 Rice cake",per:"per piece (9g)",k:35,p:0.7,c:7.3,f:0.2,cat:"grain"},
+  {id:"cong",n:"皮蛋瘦肉粥 Congee with pork",per:"per 300ml bowl",k:180,p:12,c:28,f:3,cat:"grain"},
+  {id:"past",n:"意大利面 Pasta (cooked)",per:"per 100g",k:158,p:5.8,c:31,f:0.9,cat:"grain"},
+  {id:"udon",n:"乌冬面 Udon (cooked)",per:"per 100g",k:105,p:3,c:22,f:0.5,cat:"grain"},
+  {id:"corn",n:"玉米 Sweet corn",per:"per 100g",k:86,p:3.3,c:19,f:1.4,cat:"grain"},
+  // VEGETABLES — significantly expanded
+  {id:"broc",n:"西兰花 Broccoli",per:"per 100g",k:35,p:2.4,c:7,f:0.4,cat:"veg"},
+  {id:"spin",n:"菠菜 Spinach",per:"per 100g",k:23,p:2.9,c:3.6,f:0.4,cat:"veg"},
+  {id:"cucu",n:"黄瓜 Cucumber",per:"per 100g",k:16,p:0.7,c:3.6,f:0.1,cat:"veg"},
+  {id:"toma",n:"番茄 Tomato",per:"per 100g",k:18,p:0.9,c:3.9,f:0.2,cat:"veg"},
+  {id:"edam",n:"毛豆 Edamame",per:"per 100g",k:122,p:11,c:10,f:5,cat:"veg"},
+  {id:"kimc",n:"泡菜 Kimchi",per:"per 100g",k:25,p:1.5,c:4.5,f:0.5,cat:"veg"},
+  {id:"egplt",n:"茄子 Eggplant (steamed/boiled)",per:"per 100g",k:25,p:1,c:5.7,f:0.2,cat:"veg"},
+  {id:"egplt2",n:"红烧茄子 Braised eggplant (with oil)",per:"per 100g",k:75,p:1.2,c:8,f:4,cat:"veg"},
+  {id:"bcab",n:"白菜 Chinese cabbage",per:"per 100g",k:13,p:1.2,c:2.2,f:0.1,cat:"veg"},
+  {id:"bspr",n:"豆芽 Bean sprouts",per:"per 100g",k:30,p:3.2,c:5.9,f:0.2,cat:"veg"},
+  {id:"aspa",n:"芦笋 Asparagus",per:"per 100g",k:20,p:2.2,c:3.9,f:0.1,cat:"veg"},
+  {id:"mushr",n:"蘑菇 Mushroom",per:"per 100g",k:22,p:3.1,c:3.3,f:0.3,cat:"veg"},
+  {id:"bpep",n:"彩椒 Bell pepper",per:"per 100g",k:31,p:1,c:7,f:0.3,cat:"veg"},
+  {id:"cflw",n:"花椰菜 Cauliflower",per:"per 100g",k:25,p:1.9,c:5,f:0.3,cat:"veg"},
+  {id:"zucc",n:"西葫芦 Zucchini",per:"per 100g",k:17,p:1.2,c:3.1,f:0.3,cat:"veg"},
+  {id:"lett",n:"生菜 Lettuce",per:"per 100g",k:15,p:1.4,c:2.9,f:0.2,cat:"veg"},
+  {id:"onio",n:"洋葱 Onion",per:"per 100g",k:40,p:1.1,c:9.3,f:0.1,cat:"veg"},
+  {id:"tmeg",n:"番茄炒蛋 Tomato & egg stir-fry",per:"per serving (2 eggs)",k:200,p:12,c:10,f:12,cat:"veg"},
+  {id:"stirveg",n:"清炒时蔬 Stir-fried green veg (with oil)",per:"per serving 150g",k:80,p:2,c:10,f:4,cat:"veg"},
+  // FRUITS — full list
+  {id:"bana",n:"香蕉 Banana",per:"per medium (118g)",k:105,p:1.3,c:27,f:0.4,cat:"fruit"},
+  {id:"appl",n:"苹果 Apple",per:"per medium (182g)",k:95,p:0.5,c:25,f:0.3,cat:"fruit"},
+  {id:"oran",n:"橙子 Orange",per:"per medium (130g)",k:62,p:1.2,c:15,f:0.2,cat:"fruit"},
+  {id:"stra",n:"草莓 Strawberry",per:"per 100g",k:32,p:0.7,c:7.7,f:0.3,cat:"fruit"},
+  {id:"blue",n:"蓝莓 Blueberry",per:"per 100g",k:57,p:0.7,c:14,f:0.3,cat:"fruit"},
+  {id:"wmel",n:"西瓜 Watermelon",per:"per 100g",k:30,p:0.6,c:7.6,f:0.2,cat:"fruit"},
+  {id:"mang",n:"芒果 Mango",per:"per 100g",k:60,p:0.8,c:15,f:0.4,cat:"fruit"},
+  {id:"grap",n:"葡萄 Grapes",per:"per 100g",k:67,p:0.6,c:17,f:0.4,cat:"fruit"},
+  {id:"kiwi",n:"猕猴桃 Kiwi",per:"per fruit (69g)",k:42,p:0.8,c:10,f:0.4,cat:"fruit"},
+  {id:"pear",n:"梨 Pear",per:"per medium (178g)",k:101,p:0.6,c:27,f:0.2,cat:"fruit"},
+  {id:"peac",n:"桃子 Peach",per:"per medium (150g)",k:59,p:1.4,c:14,f:0.4,cat:"fruit"},
+  {id:"cher",n:"樱桃 Cherry",per:"per 100g",k:63,p:1.1,c:16,f:0.2,cat:"fruit"},
+  {id:"avoc",n:"牛油果 Avocado",per:"per half (~68g)",k:114,p:1.3,c:6,f:10.5,cat:"fruit"},
+  {id:"drgf",n:"火龙果 Dragon fruit",per:"per 100g",k:60,p:1.2,c:13,f:0.4,cat:"fruit"},
+  {id:"lyc",n:"荔枝 Lychee",per:"per 100g",k:66,p:0.8,c:17,f:0.4,cat:"fruit"},
+  // FATS
+  {id:"nuts",n:"坚果 Mixed nuts",per:"per 30g",k:173,p:5,c:6,f:15,cat:"fat"},
+  {id:"alm",n:"杏仁 Almonds",per:"per 30g",k:173,p:6,c:6,f:15,cat:"fat"},
+  {id:"pbut",n:"花生酱 Peanut butter",per:"per 2 tbsp (32g)",k:190,p:8,c:6,f:16,cat:"fat"},
+  {id:"olio",n:"橄榄油 Olive oil",per:"per tbsp (14g)",k:119,p:0,c:0,f:13.5,cat:"fat"},
+  // DRINKS & COFFEE
+  {id:"bkc",n:"黑咖啡 Black coffee",per:"per cup",k:2,p:0,c:0,f:0,cat:"drink"},
+  {id:"amer",n:"美式咖啡 Americano (no sugar)",per:"per cup",k:15,p:0.3,c:2,f:0,cat:"drink"},
+  {id:"latt",n:"拿铁 Latte (full milk, medium)",per:"per 350ml",k:190,p:10,c:18,f:8,cat:"drink"},
+  {id:"loat",n:"燕麦拿铁 Oat milk latte",per:"per 350ml",k:170,p:5,c:24,f:6,cat:"drink"},
+  {id:"capp",n:"卡布奇诺 Cappuccino",per:"per medium",k:120,p:7,c:10,f:5,cat:"drink"},
+  {id:"matc",n:"抹茶拿铁 Matcha latte (oat milk)",per:"per medium",k:200,p:5,c:30,f:7,cat:"drink"},
+  {id:"soym",n:"豆浆 Soy milk (unsweetened)",per:"per 240ml",k:80,p:7,c:4,f:4,cat:"drink"},
+  {id:"gtea",n:"绿茶 Green tea",per:"per cup",k:0,p:0,c:0,f:0,cat:"drink"},
+  {id:"oj",n:"橙汁 Orange juice",per:"per 200ml",k:88,p:1.4,c:20,f:0.2,cat:"drink"},
+  {id:"cola",n:"可乐 Coca-Cola",per:"per 330ml can",k:139,p:0,c:35,f:0,cat:"drink"},
+  // CHINESE TAKEOUT
+  {id:"kpc",n:"宫保鸡丁 Kung Pao Chicken",per:"per serving (no rice)",k:350,p:28,c:15,f:20,cat:"cn"},
+  {id:"map",n:"麻婆豆腐 Mapo Tofu",per:"per serving 200g",k:280,p:15,c:12,f:18,cat:"cn"},
+  {id:"swso",n:"糖醋里脊 Sweet & Sour Pork",per:"per serving",k:420,p:22,c:40,f:18,cat:"cn"},
+  {id:"efr",n:"蛋炒饭 Egg fried rice",per:"per bowl 300g",k:450,p:12,c:65,f:15,cat:"cn"},
+  {id:"pkd",n:"北京烤鸭 Peking duck",per:"per pancake wrap",k:180,p:12,c:15,f:8,cat:"cn"},
+  {id:"cfn",n:"炒粉 Stir-fried rice noodles",per:"per serving 300g",k:420,p:14,c:65,f:12,cat:"cn"},
+  {id:"hgow",n:"虾饺 Har Gow steamed dumpling",per:"per piece",k:45,p:3,c:6,f:1,cat:"cn"},
+  {id:"smai",n:"烧卖 Siu Mai",per:"per piece",k:55,p:4,c:5,f:2,cat:"cn"},
+  {id:"wont",n:"云吞汤 Wonton soup",per:"per bowl",k:300,p:15,c:40,f:8,cat:"cn"},
+  // JAPANESE / SUSHI
+  {id:"snig",n:"三文鱼握寿司 Salmon nigiri",per:"per piece",k:63,p:5,c:8,f:1.5,cat:"jp"},
+  {id:"tnig",n:"金枪鱼握寿司 Tuna nigiri",per:"per piece",k:58,p:5,c:8,f:0.8,cat:"jp"},
+  {id:"calr",n:"加州卷 California roll",per:"per 6 pieces",k:250,p:9,c:38,f:7,cat:"jp"},
+  {id:"miso",n:"味噌汤 Miso soup",per:"per bowl",k:40,p:3,c:5,f:1,cat:"jp"},
+  {id:"gyoz",n:"锅贴 Gyoza (pan-fried)",per:"per 6 pieces",k:240,p:10,c:24,f:12,cat:"jp"},
+  {id:"ramen",n:"拉面 Ramen",per:"per bowl ~500ml",k:550,p:25,c:70,f:18,cat:"jp"},
+  {id:"donb",n:"照烧鸡丼 Teriyaki chicken rice bowl",per:"per bowl",k:580,p:32,c:75,f:15,cat:"jp"},
+  // KOREAN
+  {id:"bibi",n:"石锅拌饭 Bibimbap",per:"per bowl",k:550,p:25,c:80,f:15,cat:"kr"},
+  {id:"bulg",n:"韩式烤牛肉 Bulgogi",per:"per 100g",k:200,p:22,c:8,f:9,cat:"kr"},
+  {id:"krfc",n:"韩式炸鸡 Korean fried chicken",per:"per 100g",k:300,p:23,c:15,f:18,cat:"kr"},
+  {id:"japc",n:"杂菜 Japchae (glass noodles)",per:"per 150g",k:280,p:8,c:45,f:8,cat:"kr"},
+  {id:"sund",n:"순두부찌개 Soft tofu stew",per:"per bowl",k:180,p:15,c:12,f:8,cat:"kr"},
+  {id:"tteo",n:"떡볶이 Tteokbokki",per:"per serving 200g",k:320,p:8,c:60,f:6,cat:"kr"},
+  // THAI
+  {id:"pkrp",n:"ผัดกระเพรา Pad Krapow + rice",per:"per plate",k:650,p:35,c:65,f:25,cat:"th"},
+  {id:"pthi",n:"ผัดไทย Pad Thai",per:"per plate",k:550,p:25,c:70,f:18,cat:"th"},
+  {id:"grc",n:"แกงเขียวหวาน Green curry + rice",per:"per plate",k:680,p:28,c:75,f:28,cat:"th"},
+  {id:"tyum",n:"ต้มยำ Tom Yum soup",per:"per bowl",k:100,p:8,c:12,f:3,cat:"th"},
+  {id:"saty",n:"ไก่สะเต๊ะ Chicken satay (3 skewers)",per:"3 skewers + sauce",k:280,p:25,c:12,f:15,cat:"th"},
+  // BURGERS / FAST FOOD
+  {id:"burg",n:"汉堡 Hamburger",per:"per burger",k:550,p:25,c:45,f:28,cat:"fast"},
+  {id:"chsb",n:"芝士汉堡 Cheeseburger",per:"per burger",k:610,p:28,c:46,f:32,cat:"fast"},
+  {id:"ckbg",n:"鸡肉汉堡 Chicken burger",per:"per burger",k:480,p:28,c:40,f:22,cat:"fast"},
+  {id:"frie",n:"薯条 French fries (medium)",per:"medium serving",k:365,p:4,c:48,f:17,cat:"fast"},
+  {id:"pizz",n:"披萨 Pizza margherita",per:"per slice",k:285,p:12,c:36,f:11,cat:"fast"},
+  // SANDWICHES
+  {id:"cksw",n:"鸡肉三明治 Chicken sandwich",per:"per sandwich",k:450,p:30,c:45,f:15,cat:"sand"},
+  {id:"egcs",n:"蛋芝士三明治 Egg & cheese sandwich",per:"per sandwich",k:380,p:18,c:35,f:18,cat:"sand"},
+  {id:"turk",n:"火鸡三明治 Turkey club",per:"per sandwich",k:480,p:35,c:40,f:18,cat:"sand"},
+  {id:"blt",n:"BLT 三明治 BLT",per:"per sandwich",k:380,p:15,c:35,f:20,cat:"sand"},
+  // CHINESE HOME-STYLE & EVERYDAY MEALS — approximate portions
+  {id:"h_ricebowl",n:"家常米饭 Home rice bowl",per:"per bowl 150g",k:195,p:4,c:42,f:0.5,cat:"home"},
+  {id:"h_millet",n:"小米粥 Millet congee",per:"per bowl 300ml",k:140,p:4,c:30,f:1,cat:"home"},
+  {id:"h_dumpling",n:"水饺 Boiled dumplings",per:"per 10 medium",k:500,p:22,c:65,f:17,cat:"home"},
+  {id:"h_bao",n:"包子 Steamed pork bun",per:"per medium bun",k:230,p:9,c:35,f:6,cat:"home"},
+  {id:"h_mantou",n:"馒头 Plain steamed bun",per:"per 100g",k:223,p:7,c:47,f:1,cat:"home"},
+  {id:"h_noodle",n:"汤面 Chinese noodle soup",per:"per bowl",k:430,p:18,c:65,f:10,cat:"home"},
+  {id:"h_beefnoodle",n:"牛肉面 Beef noodle soup",per:"per bowl",k:620,p:32,c:78,f:20,cat:"home"},
+  {id:"h_tomatoegg",n:"番茄炒蛋 Tomato scrambled eggs",per:"per plate",k:320,p:18,c:16,f:21,cat:"home"},
+  {id:"h_chickenrice",n:"鸡胸饭 Chicken breast rice bowl",per:"per bowl",k:520,p:45,c:62,f:10,cat:"home"},
+  {id:"h_hotpot",n:"清汤火锅 Clear-broth hotpot",per:"per moderate meal",k:650,p:45,c:50,f:30,cat:"home"},
+  {id:"h_malatang",n:"麻辣烫 Malatang",per:"per medium bowl",k:700,p:35,c:65,f:34,cat:"home"},
+  {id:"h_youtiao",n:"油条 Chinese fried dough",per:"per stick",k:190,p:4,c:22,f:10,cat:"home"},
+  {id:"h_soyegg",n:"茶叶蛋 Tea egg",per:"per egg",k:80,p:7,c:1,f:5,cat:"home"},
+  {id:"h_soup",n:"紫菜蛋花汤 Seaweed egg-drop soup",per:"per bowl",k:90,p:7,c:5,f:5,cat:"home"},
+  {id:"h_porkveg",n:"青椒肉丝 Pork with peppers",per:"per plate",k:360,p:28,c:16,f:21,cat:"home"},
+  // SNACKS, BAKERY & CONVENIENCE
+  {id:"s_croissant",n:"牛角包 Croissant",per:"per medium",k:270,p:5,c:31,f:14,cat:"snack"},
+  {id:"s_muffin",n:"玛芬 Muffin",per:"per medium",k:360,p:6,c:52,f:15,cat:"snack"},
+  {id:"s_cookie",n:"曲奇 Cookie",per:"per medium",k:150,p:2,c:20,f:7,cat:"snack"},
+  {id:"s_choc",n:"黑巧克力 Dark chocolate",per:"per 20g",k:120,p:2,c:9,f:9,cat:"snack"},
+  {id:"s_chips",n:"薯片 Potato chips",per:"per 30g",k:160,p:2,c:15,f:10,cat:"snack"},
+  {id:"s_moon",n:"月饼 Mooncake",per:"per 100g",k:420,p:8,c:58,f:18,cat:"snack"},
+  {id:"s_bubble",n:"珍珠奶茶 Bubble milk tea",per:"per medium 500ml",k:450,p:6,c:78,f:12,cat:"snack"},
+  {id:"s_proteinbar",n:"蛋白棒 Protein bar",per:"per bar",k:210,p:20,c:23,f:7,cat:"snack"},
+  {id:"s_cracker",n:"苏打饼干 Soda crackers",per:"per 30g",k:135,p:3,c:22,f:4,cat:"snack"},
+  {id:"s_icecream",n:"冰淇淋 Ice cream",per:"per scoop 70g",k:145,p:3,c:17,f:7,cat:"snack"}
+];
+
+const MEALS_T=[
+  {id:"bkf",n:"Breakfast",ic:"🌅"},
+  {id:"pre",n:"Pre-workout snack",ic:"⚡"},
+  {id:"lun",n:"Lunch / Post-workout",ic:"🍱"},
+  {id:"snk",n:"Snack",ic:"🫐"},
+  {id:"din",n:"Dinner",ic:"🍽"}
+];
+const MEALS_R=[
+  {id:"bkf",n:"Breakfast",ic:"🌅"},
+  {id:"lun",n:"Lunch",ic:"🍱"},
+  {id:"snk",n:"Snack",ic:"🫐"},
+  {id:"din",n:"Dinner",ic:"🍽"}
+];
+
+// ============================================================
+// STATE — pre-seeded from training log
+// ============================================================
+const S={days:{
+  "2026-04-02":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith RDL",w:"+10",s:"4",r:"12",n:""},{en:"Smith hip thrust",w:"+15",s:"4",r:"12",n:""}]}},
+  "2026-04-09":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith split squat",w:"+10",s:"4",r:"15",n:""},{en:"Smith RDL",w:"+10",s:"3",r:"15",n:""}]}},
+  "2026-04-16":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith split squat",w:"+10",s:"4",r:"15",n:""},{en:"Smith RDL",w:"+10",s:"3",r:"15",n:""}]}},
+  "2026-04-21":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith split squat",w:"+12.5",s:"4",r:"12",n:""},{en:"Smith hip thrust",w:"+15",s:"4",r:"12",n:""},{en:"Smith RDL",w:"+10",s:"4",r:"15",n:""}]}},
+  "2026-04-22":{tr:{sess:["B"],e:2,notes:"",exs:[{en:"Incline DB press 30°",w:"8",s:"4",r:"10",n:""},{en:"Seated DB shoulder press",w:"6",s:"4",r:"10",n:""}]}},
+  "2026-04-28":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith split squat",w:"+15",s:"3",r:"10",n:""}]}},
+  "2026-04-29":{tr:{sess:["B"],e:2,notes:"",exs:[{en:"Seated DB shoulder press",w:"6",s:"4",r:"10",n:""},{en:"Incline DB press 30°",w:"8",s:"4",r:"10",n:""}]}},
+  "2026-05-02":{tr:{sess:["B"],e:2,notes:"重量进步",exs:[{en:"Lat pulldown",w:"20",s:"4",r:"12",n:""},{en:"Seated DB shoulder press",w:"7",s:"3",r:"15",n:""},{en:"Smith split squat",w:"+10",s:"4",r:"12",n:""}]}},
+  "2026-05-08":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith split squat",w:"+15",s:"4",r:"12",n:""},{en:"Smith RDL",w:"+12.5",s:"4",r:"10",n:""}]}},
+  "2026-05-10":{tr:{sess:["B"],e:2,notes:"",exs:[{en:"Straight arm pulldown",w:"7.5",s:"4",r:"12",n:""},{en:"Incline DB press 30°",w:"8",s:"4",r:"10",n:""},{en:"Lat pulldown",w:"20",s:"4",r:"12",n:""}]}},
+  "2026-05-11":{tr:{sess:["B"],e:2,notes:"",exs:[{en:"Low cable crossover",w:"2.5",s:"4",r:"8",n:""},{en:"Seated DB shoulder press",w:"8",s:"4",r:"12",n:""},{en:"Incline DB press 30°",w:"8",s:"4",r:"10",n:""}]}},
+  "2026-05-13":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith split squat",w:"+15",s:"4",r:"12",n:""},{en:"Smith RDL",w:"+12.5",s:"4",r:"10",n:""}]}}
+}};
+let eid=1;
+let customExDB=[]; // saved custom exercises — persists in localStorage
+let customFoodDB=[]; // saved custom foods — persists in localStorage
+let currentWeight=52; // updated when user logs weight
+
+// ── Dynamic calorie targets (recalculate when weight changes) ──
+let PROFILE={height:162.5,age:26,goal:"Recomposition",weekly:4};
+function calcTGT(w){
+  const bmr=10*w+6.25*PROFILE.height-5*PROFILE.age-161; // Mifflin-St Jeor, female
+  const tdee=bmr*1.55; // moderately active (4×/week training)
+  const tk=Math.round(tdee*0.97); // training day: 3% below TDEE
+  const rk=Math.round(bmr*1.25); // rest day: lightly active
+  const tp=Math.round(w*1.9); // protein: 1.9 g/kg
+  const tc=Math.round(tk*0.45/4); // training carbs: 45% of kcal
+  const rc=Math.round(rk*0.36/4); // rest carbs: 36% of kcal
+  const tf=Math.max(30,Math.round((tk-tp*4-tc*4)/9));
+  const rf=Math.max(30,Math.round((rk-tp*4-rc*4)/9));
+  return {training:{k:tk,p:tp,c:tc,f:tf},rest:{k:rk,p:tp,c:rc,f:rf}};
+}
+let TGT=calcTGT(52);
+
+// ── Calorie burn estimation (MET-based) ──
+// MET = metabolic equivalent; Cal = MET × weight_kg × hours
+const SESS_MET={A:5.0,B:4.5,C:4.0,D:8.0,E:6.5};
+const SESS_DUR={A:50,B:50,C:30,D:40,E:45}; // default minutes per type
+
+function estimateBurn(sessions,wkg,durMin,energy){
+  if(!sessions||sessions.size===0)return 0;
+  const eMod={0:1.0,1:0.85,2:1.0,3:1.1}[energy]||1.0;
+  const mets=[...sessions].map(s=>SESS_MET[s]||5.0);
+  const avgMet=mets.reduce((a,b)=>a+b,0)/mets.length;
+  return Math.round(avgMet*wkg*(durMin/60)*eMod);
+}
+
+function getBurnForDate(date){
+  const day=S.days[date];
+  if(!day?.tr)return 0;
+  const w=day.weight||currentWeight||52;
+  const dur=day.tr.dur||50;
+  const sess=new Set(day.tr.sess||[]);
+  const gym=estimateBurn(sess,w,dur,day.tr.e||2);
+  const sport=(day.tr.activities||[]).reduce((sum,a)=>{const mets=a.type==="cycling"?{easy:4,moderate:7.5,hard:10}[a.intensity]:{easy:4.5,moderate:7,hard:9}[a.intensity];return sum+Math.round(mets*w*((a.duration||0)/60));},0);
+  return gym+sport;
+}
+
+function updateHeader(){
+  const el=document.getElementById("hdr-wt");
+  if(el)el.textContent=currentWeight.toFixed(1);
+}
+
+function today(){return new Date().toISOString().split('T')[0];}
+function getDay(d){if(!S.days[d])S.days[d]={};return S.days[d];}
+function ents(d){return S.days[d]?.nut?.entries||[];}
+function tots(d){return ents(d).reduce((a,e)=>({k:a.k+e.k,p:a.p+e.p,c:a.c+e.c,f:a.f+e.f}),{k:0,p:0,c:0,f:0});}
+
+// ============================================================
+// TRAINING LOG
+// ============================================================
+let selSess=new Set(["A"]), elev=0, cxRows=[], cxId=0;
+document.getElementById("td").value=today();
+
+function renderSessChips(){
+  document.getElementById("sch-wrap").innerHTML=Object.entries(EX).map(([id,s])=>{
+    const on=selSess.has(id);
+    return `<div class="sch${on?" on":""}" id="chip-${id}" onclick="togSess('${id}')"
+      style="${on?`background:${s.col};border-color:${s.col};color:#fff;`:`border-color:${s.col}55;color:${s.col};`}">${s.ic} ${s.name}</div>`;
+  }).join("");
+}
+
+function togSess(id){
+  if(selSess.has(id)){if(selSess.size===1)return;selSess.delete(id);}
+  else selSess.add(id);
+  renderSessChips();drawExs();updBurn();
+}
+
+function drawExs(){
+  let h="";
+  selSess.forEach(sid=>{
+    const s=EX[sid]; let sec="";
+    h+=`<div class="sec-h"><div class="sec-dot" style="background:${s.col}"></div><div class="sec-nm" style="color:${s.col};">${s.ic} ${s.name}</div></div>`;
+    s.exs.forEach((x,i)=>{
+      const k=`${sid}_${i}`;
+      const hist=getExerciseStats(x.en,document.getElementById("td").value);
+      const last=hist.last;
+      const lastText=last?`${last.w||"—"} kg × ${last.r||"—"} reps × ${last.s||"—"} sets · ${fmtShortDate(last.date)}`:"No recorded session yet";
+      const bestText=hist.best?`Best: ${hist.best.w} kg × ${hist.best.r||"—"} · ${fmtShortDate(hist.best.date)}`:"";
+      if(x.sec!==sec){sec=x.sec;h+=`<div style="font-size:10px;color:#aaa;font-style:italic;margin:3px 0 2px 2px;">${x.sec}</div>`;}
+      h+=`<div class="ecard" id="card_${k}"><div class="ehead"><label class="performed"><input type="checkbox" id="done_${k}" onchange="toggleExercise('${k}')"> Performed</label><div class="een" style="margin-top:5px">${x.en}</div><div class="ecn">${x.cn}</div><div class="history-badges"><span class="hbadge">Last: ${lastText}</span>${bestText?`<span class="hbadge best">🏆 ${bestText}</span>`:""}</div></div>
+      <div class="einps">
+        <div class="ig"><label>${x.unit}</label><input type="text" id="w_${k}" value="${last?.w||x.def}"></div>
+        <div class="ig"><label>Sets</label><input type="number" id="s_${k}" value="${last?.s||""}" placeholder="4"></div>
+        <div class="ig"><label>Reps / Time</label><input type="text" id="r_${k}" value="${last?.r||""}" placeholder="12"></div>
+        <div class="ig"><label>Superset with</label><input type="text" id="ss_${k}" placeholder="e.g. lateral raise"></div>
+        <div class="ig"><label>Notes</label><input type="text" id="n_${k}" placeholder="felt strong..."></div>
+      </div></div>`;
+    });
+  });
+  document.getElementById("exlist").innerHTML=h;
+}
+
+function drawCxRows(){
+  document.getElementById("cxlist").innerHTML=cxRows.map(row=>
+    `<div class="cx-row">
+      <input class="cxi-n" id="cxen_${row.id}" type="text" placeholder="Exercise name (e.g. B-stance RDL, 面拉...)" value="${row.en}">
+      <input class="cxi-s" id="cxw_${row.id}" type="text" placeholder="Wt/Time" value="${row.w}">
+      <input class="cxi-s" id="cxs_${row.id}" type="number" placeholder="Sets" value="${row.s}">
+      <input class="cxi-s" id="cxr_${row.id}" type="text" placeholder="Reps" value="${row.r}">
+      <input class="cxi-l" id="cxn_${row.id}" type="text" placeholder="Notes" value="${row.n}">
+      <button class="cx-save" onclick="saveMyEx(${row.id})" title="Save to My exercises permanently">⭐</button>
+      <button class="cx-del" onclick="rmCx(${row.id})">✕</button>
+    </div>`
+  ).join("");
+}
+
+function addCx(){cxRows.push({id:cxId++,en:"",w:"",s:"",r:"",n:""});drawCxRows();document.getElementById(`cxen_${cxId-1}`)?.focus();}
+function rmCx(id){cxRows=cxRows.filter(r=>r.id!==id);drawCxRows();}
+
+// ── My exercises (permanent custom exercise library) ──
+function saveMyEx(rowId){
+  const en=(document.getElementById(`cxen_${rowId}`)?.value||"").trim();
+  if(!en){fb("tfb","Type an exercise name first");return;}
+  if(customExDB.find(x=>x.en.toLowerCase()===en.toLowerCase())){fb("tfb",`"${en}" already in My exercises`);return;}
+  customExDB.push({id:"cex_"+Date.now(),en});
+  persist();drawMyExercises();
+  fb("tfb",`⭐ "${en}" saved — it'll appear in My exercises forever`);
+}
+
+function removeMyEx(id){
+  customExDB=customExDB.filter(x=>x.id!==id);
+  persist();drawMyExercises();
+}
+
+function drawMyExercises(){
+  const sec=document.getElementById("my-ex-section");
+  if(!customExDB.length){sec.style.display="none";return;}
+  sec.style.display="block";
+  document.getElementById("my-ex-list").innerHTML=customExDB.map((x,i)=>{
+    const k=`mex_${i}`;
+    return `<div class="myex-card">
+      <div class="myex-head">
+        <div><div class="een">${x.en}</div><span class="myfd-saved">Saved exercise</span></div>
+        <button class="cx-del" onclick="removeMyEx('${x.id}')" title="Remove from My exercises">✕</button>
+      </div>
+      <div class="einps">
+        <div class="ig"><label>Weight / Time</label><input type="text" id="w_${k}" placeholder="e.g. 15 kg"></div>
+        <div class="ig"><label>Sets</label><input type="number" id="s_${k}" placeholder="4"></div>
+        <div class="ig"><label>Reps / Time</label><input type="text" id="r_${k}" placeholder="12"></div>
+        <div class="ig"><label>Superset with</label><input type="text" id="ss_${k}" placeholder="optional"></div>
+        <div class="ig"><label>Notes</label><input type="text" id="n_${k}" placeholder="..."></div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function setE(n){
+  elev=n;
+  [1,2,3].forEach(i=>{const b=document.getElementById("e"+i);b.style.background=i===n?"#1D9E75":"none";b.style.color=i===n?"#fff":"#888";b.style.borderColor=i===n?"#1D9E75":"#e0e0dd";});
+  updBurn();
+}
+
+// ── Weight input: recalculate targets + header live ──
+function onWtInput(){
+  const v=parseFloat(document.getElementById("tw")?.value);
+  if(v&&v>30&&v<120){
+    currentWeight=v;TGT=calcTGT(v);
+    updateHeader();updBurn();drawMT();
+  }
+}
+
+// ── Burn display in training tab ──
+function updBurn(){
+  const dur=parseInt(document.getElementById("tdur")?.value)||50;
+  const burn=estimateBurn(selSess,currentWeight,dur,elev);
+  const el=document.getElementById("burn-display");
+  if(!el)return;
+  const eMod={0:"",1:" · low energy −15%",2:"",3:" · strong +10%"}[elev]||"";
+  el.innerHTML=burn>0?`<div class="burn-box">
+    <div style="font-size:24px;line-height:1;">🔥</div>
+    <div>
+      <div class="burn-num">~${burn} kcal burned</div>
+      <div class="burn-meta">${[...selSess].map(s=>EX[s].name).join(" + ")} · ${dur} min · ${currentWeight.toFixed(1)} kg${eMod}</div>
+      <div class="burn-meta" style="opacity:.65;">MET-based estimate — actual varies by rest periods &amp; intensity</div>
+    </div>
+  </div>`:"";
+}
+
+function gatherExs(){
+  const ex=[];
+  selSess.forEach(sid=>EX[sid].exs.forEach((x,i)=>{
+    const k=`${sid}_${i}`;
+    const w=document.getElementById(`w_${k}`)?.value||"";
+    const s=document.getElementById(`s_${k}`)?.value||"";
+    const r=document.getElementById(`r_${k}`)?.value||"";
+    const ss=document.getElementById(`ss_${k}`)?.value||"";
+    const n=document.getElementById(`n_${k}`)?.value||"";
+    if(document.getElementById(`done_${k}`)?.checked)ex.push({en:x.en,w,s,r,ss,n});
+  }));
+  // My saved exercises
+  customExDB.forEach((x,i)=>{
+    const k=`mex_${i}`;
+    const w=document.getElementById(`w_${k}`)?.value||"";
+    const s=document.getElementById(`s_${k}`)?.value||"";
+    const r=document.getElementById(`r_${k}`)?.value||"";
+    const ss=document.getElementById(`ss_${k}`)?.value||"";
+    const n=document.getElementById(`n_${k}`)?.value||"";
+    if(w||s||r)ex.push({en:x.en,w,s,r,ss,n,cx:true});
+  });
+  // One-time custom rows
+  cxRows.forEach(row=>{
+    const en=document.getElementById(`cxen_${row.id}`)?.value||"";
+    const w=document.getElementById(`cxw_${row.id}`)?.value||"";
+    const s=document.getElementById(`cxs_${row.id}`)?.value||"";
+    const r=document.getElementById(`cxr_${row.id}`)?.value||"";
+    const n=document.getElementById(`cxn_${row.id}`)?.value||"";
+    if(en)ex.push({en,w,s,r,n,cx:true});
+  });
+  return ex;
+}
+
+function saveT(){
+  const d=document.getElementById("td").value;
+  const wt=parseFloat(document.getElementById("tw")?.value)||null;
+  const dur=parseInt(document.getElementById("tdur")?.value)||50;
+  const day=getDay(d);
+  const activity=gatherActivity(),exs=gatherExs();
+  if(!exs.length&&!activity){fb("tfb","Select at least one performed exercise or add a ride/tennis session");return;}
+  if(activity&&!activity.duration){fb("tfb","Add the activity duration so the session can be tracked");return;}
+  day.tr={sess:exs.length?[...selSess]:[],e:elev,notes:document.getElementById("snotes").value,exs,dur,activities:activity?[activity]:[]};
+  if(wt&&wt>30&&wt<120){
+    day.weight=wt;
+    currentWeight=wt;TGT=calcTGT(wt);
+    updateHeader();
+  }
+  persist();
+  drawExs();renderDashboard();fb("tfb",`✓ Saved for ${d}${wt?" · "+wt+" kg logged":""}${activity?" · "+activity.type+" saved":""}`);
+}
+
+function copyT(){
+  const d=document.getElementById("td").value;
+  const el={0:"—",1:"Low",2:"Good",3:"Strong"}[elev];
+  let t=`${d} — ${[...selSess].map(s=>EX[s].name).join(" + ")}\nEnergy: ${el}\n\n`;
+  gatherExs().forEach(x=>{t+=`${x.en}`;if(x.ss)t+=` ↕ SS: ${x.ss}`;t+=`\n  ${x.w} × ${x.s} sets × ${x.r}`;if(x.n)t+=` — ${x.n}`;t+="\n";});
+  const notes=document.getElementById("snotes").value;
+  if(notes)t+=`\nNotes: ${notes}`;
+  navigator.clipboard.writeText(t).then(()=>fb("tfb","✓ Copied")).catch(()=>alert(t));
+}
+
+function fb(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;setTimeout(()=>el.textContent="",2500);}}
+renderSessChips();drawExs();
+
+// ============================================================
+// NUTRITION LOG
+// ============================================================
+let dtMode="training", selFood={}, openForm={}, selCat={};
+document.getElementById("nd").value=today();
+
+function setDT(t){
+  dtMode=t;
+  document.getElementById("dtT").classList.toggle("on",t==="training");
+  document.getElementById("dtR").classList.toggle("on",t==="rest");
+  renderN();
+}
+
+function renderN(){drawHyd();drawBurnInfo();drawMT();drawMeals();}
+
+function nd(){return document.getElementById("nd").value;}
+function getWater(d){return S.days[d]?.water||0;}
+function adjWater(d,ml){getDay(d).water=Math.max(0,Math.min(4000,(getDay(d).water||0)+ml));persist();drawHyd();}
+
+// ── Burn info + net calories shown in nutrition tab ──
+function drawBurnInfo(){
+  const d=nd(),burn=getBurnForDate(d),tot=tots(d);
+  const el=document.getElementById("burn-info-nut");
+  if(!el)return;
+  if(!burn){el.innerHTML="";return;}
+  const net=Math.round(tot.k-burn);
+  const tgt=TGT[dtMode];
+  const netCol=net<tgt.k*0.75?"#378ADD":net>tgt.k*1.1?"#e05050":"#1D9E75";
+  el.innerHTML=`<div class="net-row">
+    <div class="net-card" style="background:#FDF0EC;border:0.5px solid #E8C4B2;">
+      <div class="net-v" style="color:#993C1D;">🔥 ${burn}</div>
+      <div class="net-l" style="color:#993C1D;">kcal burned (training)</div>
+    </div>
+    <div class="net-card" style="background:#f4f2ee;border:0.5px solid #e0ded8;">
+      <div class="net-v" style="color:${netCol};">${net}</div>
+      <div class="net-l" style="color:#888;">net kcal (intake − burn)</div>
+    </div>
+  </div>`;
+}
+
+function drawHyd(){
+  const d=nd(),ml=getWater(d),tgt=2500,pct=Math.min(100,Math.round(ml/tgt*100));
+  document.getElementById("hydrow").innerHTML=`<div class="hydrow">
+    <div style="font-size:15px;">💧</div>
+    <div class="hydl">Hydration <span style="font-size:10px;color:#aaa;">target 2,500 ml</span></div>
+    <button class="hydbtn" onclick="adjWater('${d}',-250)">−</button>
+    <div class="hydv">${ml} ml</div>
+    <button class="hydbtn" onclick="adjWater('${d}',250)">+</button>
+    <div class="hydtr"><div class="hydtf" style="width:${pct}%"></div></div>
+    <div class="hydp">${pct}%</div>
+  </div>`;
+}
+
+function drawMT(){
+  const d=nd(),tgt=TGT[dtMode],tot=tots(d);
+  const items=[
+    {l:"Calories",v:Math.round(tot.k),t:tgt.k,u:"kcal",c:"#1D9E75"},
+    {l:"Protein",v:Math.round(tot.p*10)/10,t:tgt.p,u:"g",c:"#1D9E75"},
+    {l:"Carbs",v:Math.round(tot.c*10)/10,t:tgt.c,u:"g",c:"#378ADD"},
+    {l:"Fat",v:Math.round(tot.f*10)/10,t:tgt.f,u:"g",c:"#EF9F27"}
+  ];
+  document.getElementById("mtg").innerHTML=items.map(it=>{
+    const rem=Math.round((it.t-it.v)*10)/10;
+    const pct=Math.min(110,Math.round(it.v/it.t*100));
+    const over=pct>=106;
+    return `<div class="mtc"><div class="mtl">${it.l}</div>
+      <div class="mtv">${it.v}<span style="font-size:10px;color:#aaa;font-weight:400;">/${it.t}${it.u}</span></div>
+      <div class="mts${over?" mtover":""}">${rem>=0?rem+it.u+" left":"over "+(rem*-1)+it.u}</div>
+      <div class="mtr"><div class="mtf" style="width:${pct}%;background:${over?"#e05050":it.c};"></div></div>
+    </div>`;
+  }).join("");
+}
+
+function filt(q,cat){
+  let list;
+  if(cat==="myfood"){
+    list=customFoodDB.slice();
+  } else {
+    list=cat==="all"?DB:DB.filter(f=>f.cat===cat);
+  }
+  if(q){const needle=q.toLowerCase().trim();list=list.filter(f=>`${f.n} ${f.per} ${f.cat}`.toLowerCase().includes(needle));}
+  return list.slice(0,30);
+}
+
+function drawMeals(){
+  const d=nd(),es=ents(d);
+  const MEALS=dtMode==="training"?MEALS_T:MEALS_R;
+  let h="";
+  MEALS.forEach(m=>{
+    const me=es.filter(e=>e.mid===m.id);
+    const mk=me.reduce((s,e)=>s+e.k,0);
+    const sf=selFood[m.id],of=openForm[m.id],cat=selCat[m.id]||"all";
+    const results=sf?[]:filt(document.getElementById(`fs-${m.id}`)?.value||"",cat);
+    h+=`<div class="msec">
+      <div class="mhead">
+        <div class="mnam"><span style="font-size:15px;">${m.ic}</span><span class="mttl">${m.n}</span>${mk>0?`<span class="mkcl">${mk} kcal</span>`:""}</div>
+        <button class="addbtn" onclick="togForm('${m.id}')">${of?"✕ Cancel":"+ Add food"}</button>
+      </div>`;
+    if(me.length){
+      h+=`<div class="fents">`;
+      me.forEach(e=>{h+=`<div class="frow">
+        <div class="fnm"><div class="fen">${e.fn}</div><div class="fdt">${e.per} × ${e.qty}</div></div>
+        <div class="fmacs"><span class="bm bp">${e.p}g P</span><span class="bm bc">${e.c}g C</span><span class="bm bf">${e.f}g F</span></div>
+        <span class="fkc">${e.k} kcal</span>
+        <button class="delbtn" onclick="delEnt('${d}',${e.id})">✕</button>
+      </div>`;});
+      h+=`</div>`;
+    }
+    if(of){
+      h+=`<div class="aform">
+        <div class="cchips">${FCATS.map(c=>`<div class="cchip${cat===c.id?" on":""}" onclick="setCat('${m.id}','${c.id}')">${c.ic} ${c.n}</div>`).join("")}</div>
+        ${!sf?`<input class="fsrch" id="fs-${m.id}" type="text" placeholder="Search: 草莓 strawberry · 拿铁 latte · pad thai..." oninput="refilter('${m.id}')">
+        <div class="flist" id="fl-${m.id}">${results.map(f=>`<div class="fitem" onclick="pickF('${m.id}','${f.id}')"><div class="finn">${f.n}</div><div class="fide">${f.per} · ${f.k} kcal · ${f.p}g P · ${f.c}g C · ${f.f}g F</div></div>`).join("")}</div>`:``}
+        ${sf?`<div class="qrow">
+          <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:500;">${sf.n}</div><div style="font-size:11px;color:#888;">${sf.per}</div></div>
+          <input type="number" id="fq-${m.id}" min="0.1" step="0.1" value="1" oninput="updPrev('${m.id}')">
+          <span class="qunit">× serving</span>
+          <span class="qprev" id="qp-${m.id}">${sf.k} kcal</span>
+          <button class="qadd" onclick="confirmF('${m.id}','${d}')">Add</button>
+        </div>`:``}
+        <div style="font-size:10px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-top:8px;margin-bottom:5px;">Or enter custom</div>
+        <div class="custg">
+          <input id="cfn-${m.id}" type="text" placeholder="Food name">
+          <input id="cfk-${m.id}" type="number" placeholder="kcal">
+          <input id="cfp-${m.id}" type="number" placeholder="P (g)">
+          <input id="cfc-${m.id}" type="number" placeholder="C (g)">
+          <input id="cff-${m.id}" type="number" placeholder="F (g)">
+        </div>
+        <div style="display:flex;gap:7px;margin-top:6px;">
+          <button class="custbtn" style="flex:1;" onclick="addCust('${m.id}','${d}')">Add once</button>
+          <button class="custbtn" style="flex:1.4;border-color:#7B5EA755;color:#7B5EA7;" onclick="addSaveFood('${m.id}','${d}')">⭐ Add &amp; save to My foods</button>
+        </div>
+      </div>`;
+    }
+    h+=`</div>`;
+  });
+  document.getElementById("meals").innerHTML=h;
+}
+
+function setCat(mid,cat){selCat[mid]=cat;drawMeals();setTimeout(()=>{const el=document.getElementById(`fs-${mid}`);if(el)el.focus();},30);}
+function refilter(mid){
+  const q=document.getElementById(`fs-${mid}`)?.value||"",cat=selCat[mid]||"all";
+  const el=document.getElementById(`fl-${mid}`);
+  if(el)el.innerHTML=filt(q,cat).map(f=>`<div class="fitem" onclick="pickF('${mid}','${f.id}')"><div class="finn">${f.n}</div><div class="fide">${f.per} · ${f.k} kcal · ${f.p}g P · ${f.c}g C · ${f.f}g F</div></div>`).join("");
+}
+function pickF(mid,fid){
+  // check built-in DB first, then custom foods
+  selFood[mid]=DB.find(f=>f.id===fid)||customFoodDB.find(f=>f.id===fid);
+  drawMeals();
+}
+function updPrev(mid){
+  const sf=selFood[mid];if(!sf)return;
+  const q=parseFloat(document.getElementById(`fq-${mid}`)?.value)||1;
+  const el=document.getElementById(`qp-${mid}`);if(el)el.textContent=`${Math.round(sf.k*q)} kcal`;
+}
+function confirmF(mid,date){
+  const sf=selFood[mid];if(!sf)return;
+  const q=parseFloat(document.getElementById(`fq-${mid}`)?.value)||1;
+  pushEnt(date,mid,sf.n,sf.per,q,Math.round(sf.k*q),Math.round(sf.p*q*10)/10,Math.round(sf.c*q*10)/10,Math.round(sf.f*q*10)/10);
+  selFood[mid]=null;openForm[mid]=false;persist();renderN();
+}
+function addCust(mid,date){
+  const fn=document.getElementById(`cfn-${mid}`)?.value?.trim();
+  const k=parseFloat(document.getElementById(`cfk-${mid}`)?.value)||0;
+  const p=parseFloat(document.getElementById(`cfp-${mid}`)?.value)||0;
+  const c=parseFloat(document.getElementById(`cfc-${mid}`)?.value)||0;
+  const f=parseFloat(document.getElementById(`cff-${mid}`)?.value)||0;
+  if(!fn||!k){fb("nfb","Enter a name and calories");return;}
+  pushEnt(date,mid,fn,"custom",1,k,p,c,f);
+  openForm[mid]=false;persist();renderN();
+}
+function addSaveFood(mid,date){
+  // Adds to today's log AND saves to My foods permanently
+  const fn=document.getElementById(`cfn-${mid}`)?.value?.trim();
+  const k=parseFloat(document.getElementById(`cfk-${mid}`)?.value)||0;
+  const p=parseFloat(document.getElementById(`cfp-${mid}`)?.value)||0;
+  const c=parseFloat(document.getElementById(`cfc-${mid}`)?.value)||0;
+  const f=parseFloat(document.getElementById(`cff-${mid}`)?.value)||0;
+  if(!fn||!k){fb("nfb","Enter a name and calories to save");return;}
+  // Add to today's meal log
+  pushEnt(date,mid,fn,"custom",1,k,p,c,f);
+  // Save to My foods library if not already there
+  if(!customFoodDB.find(x=>x.n.toLowerCase()===fn.toLowerCase())){
+    customFoodDB.push({id:"cfd_"+Date.now(),n:fn,per:"custom serving",k,p,c,f,cat:"myfood"});
+    fb("nfb",`⭐ "${fn}" saved to My foods — find it under ⭐ My foods category`);
+  } else {
+    fb("nfb",`Added to log (already in ⭐ My foods)`);
+  }
+  openForm[mid]=false;persist();renderN();
+}
+function removeMyFood(id){
+  customFoodDB=customFoodDB.filter(x=>x.id!==id);
+  persist();fb("nfb","Removed from My foods");
+}
+function pushEnt(date,mid,fn,per,qty,k,p,c,f){
+  const day=getDay(date);
+  if(!day.nut)day.nut={type:dtMode,entries:[]};
+  day.nut.entries.push({id:eid++,mid,fn,per,qty,k,p,c,f});
+}
+function delEnt(date,id){
+  if(!S.days[date]?.nut)return;
+  S.days[date].nut.entries=S.days[date].nut.entries.filter(e=>e.id!==id);
+  persist();renderN();
+}
+function togForm(mid){
+  openForm[mid]=!openForm[mid];
+  if(!openForm[mid]){selFood[mid]=null;selCat[mid]="all";}
+  drawMeals();
+  if(openForm[mid])setTimeout(()=>{const el=document.getElementById(`fs-${mid}`);if(el)el.focus();},30);
+}
+renderN();
+
+// ============================================================
+// MONTHLY REVIEW
+// ============================================================
+let ry=new Date().getFullYear(),rm=new Date().getMonth();
+let sCharts={},nutChart=null,wtChart=null,curRTab="tr";
+
+function setRTab(t){
+  curRTab=t;
+  document.getElementById("rt-tr").classList.toggle("on",t==="tr");
+  document.getElementById("rt-nut").classList.toggle("on",t==="nut");
+  document.getElementById("rev-tr").style.display=t==="tr"?"block":"none";
+  document.getElementById("rev-nut").style.display=t==="nut"?"block":"none";
+  if(t==="tr"){drawTrStats();drawCal();drawWtChart();drawCharts();drawPRs();}
+  else drawNutRev();
+}
+
+function chMon(d){rm+=d;if(rm<0){rm=11;ry--;}if(rm>11){rm=0;ry++;}renderR();}
+function dkey(d){return `${ry}-${String(rm+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;}
+
+function renderR(){
+  const MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  document.getElementById("montitle").textContent=`${MN[rm]} ${ry}`;
+  if(curRTab==="tr"){drawTrStats();drawCal();drawWtChart();drawCharts();drawPRs();}
+  else drawNutRev();
+}
+
+// ── Weight trend chart ──
+function drawWtChart(){
+  const dim=new Date(ry,rm+1,0).getDate();
+  const pts=[];
+  for(let d=1;d<=dim;d++){const k=dkey(d);const day=S.days[k];if(day?.weight)pts.push({d,w:day.weight});}
+  const wrap=document.getElementById("wt-chart-wrap");
+  if(wrap) wrap.style.display=pts.length>=2?"block":"none";
+  if(pts.length<2)return;
+  if(wtChart){try{wtChart.destroy();}catch(e){}}
+  const ctx=document.getElementById("wtchart");
+  if(!ctx)return;
+  const baseline=pts[0].w; // starting weight this period
+  wtChart=new Chart(ctx,{
+    type:"line",
+    data:{
+      labels:pts.map(p=>String(p.d)),
+      datasets:[
+        {label:"Weight (kg)",data:pts.map(p=>p.w),borderColor:"#1D9E75",backgroundColor:"#1D9E7520",borderWidth:2,pointRadius:4,pointBackgroundColor:"#1D9E75",fill:true,tension:0.3},
+        {type:"line",label:`Baseline (${baseline} kg)`,data:Array(pts.length).fill(baseline),borderColor:"#aaa",borderWidth:1,borderDash:[5,5],pointRadius:0,fill:false}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:"bottom",labels:{font:{size:10},boxWidth:12}},tooltip:{callbacks:{label:c=>`${c.parsed.y.toFixed(1)} kg`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:"#f0ede8"},ticks:{font:{size:10},callback:v=>v.toFixed(1)+" kg"},beginAtZero:false}}
+    }
+  });
+}
+
+function drawTrStats(){
+  const dim=new Date(ry,rm+1,0).getDate();
+  let tot=0,byT={A:0,B:0,C:0,D:0,E:0};
+  for(let d=1;d<=dim;d++){const day=S.days[dkey(d)];if(day?.tr){tot++;(day.tr.sess||[]).forEach(s=>{if(byT[s]!==undefined)byT[s]++;});}}
+  const tp=Object.entries(byT).filter(([,v])=>v>0).map(([k,v])=>`<div class="sc"><div class="sv" style="color:${SCOL[k]};">${v}</div><div class="sl">${EX[k].ic} ${EX[k].name}</div></div>`).join("");
+  document.getElementById("rstats").innerHTML=`<div class="sc"><div class="sv">${tot}</div><div class="sl">Total sessions</div></div>${tp}`;
+}
+
+function drawCal(){
+  const dim=new Date(ry,rm+1,0).getDate(),fd=new Date(ry,rm,1).getDay(),ts=today();
+  const dow=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  let h=dow.map(d=>`<div class="cdow">${d}</div>`).join("");
+  for(let i=0;i<fd;i++)h+=`<div></div>`;
+  for(let d=1;d<=dim;d++){
+    const k=dkey(d),day=S.days[k],it=k===ts;
+    const dots=(day?.tr?.sess||[]).map(s=>`<div class="sdot" style="background:${SCOL[s]}22;color:${SCOL[s]};">${s}</div>`).join("");
+    h+=`<button class="cday${it?" istoday":""}" onclick="openDay('${k}')" title="Open ${k}"><div class="cnum">${d}</div>
+      ${dots?`<div class="sdots">${dots}</div>`:""}
+      ${day?.nut?.entries?.length?`<div class="ndot"></div>`:""}
+    </button>`;
+  }
+  document.getElementById("rcal").innerHTML=`<div class="calgrid">${h}</div>`;
+}
+
+function getLH(en){
+  const pts=[];
+  Object.keys(S.days).sort().forEach(k=>{
+    const day=S.days[k];if(!day?.tr?.exs)return;
+    const ex=day.tr.exs.find(e=>e.en===en);
+    if(ex?.w){const w=parseFloat(ex.w.replace("+","").replace("BW","0"))||0;if(w>0)pts.push({date:k,w});}
+  });
+  return pts;
+}
+
+function parseLoad(v){return parseFloat(String(v||"").replace("+","").replace("BW","0"))||0;}
+function parseReps(v){return parseFloat(String(v||"").replace(/[^0-9.].*/,""))||0;}
+function exerciseScore(ex){const w=parseLoad(ex.w),r=parseReps(ex.r);return w>0?w*(1+r/30):r;}
+function fmtShortDate(d){if(!d)return"";const x=new Date(d+"T12:00:00");return`${x.getMonth()+1}/${x.getDate()}`;}
+function getExerciseStats(en,beforeDate="9999-12-31"){
+  const rows=[];Object.keys(S.days).sort().forEach(date=>{if(date>=beforeDate)return;(S.days[date]?.tr?.exs||[]).filter(e=>e.en===en).forEach(e=>rows.push({...e,date,score:exerciseScore(e)}));});
+  return{first:rows[0]||null,last:rows[rows.length-1]||null,best:rows.length?rows.reduce((a,b)=>b.score>a.score?b:a):null};
+}
+
+function renderActivityFields(){
+  const t=document.getElementById("activity-type").value,el=document.getElementById("activity-fields");
+  el.innerHTML=t==="cycling"?`<div class="activity-grid"><label>Ride type<select id="activity-detail"><option>Outdoor road</option><option>Indoor bike</option><option>Commute</option><option>Interval ride</option></select></label><label>Elevation (m)<input id="activity-extra" type="number" min="0" placeholder="optional"></label><label style="grid-column:span 2">Notes<input id="activity-notes" placeholder="Route, weather, average speed…"></label></div>`:t==="tennis"?`<div class="activity-grid"><label>Session<select id="activity-detail"><option>Singles match</option><option>Doubles match</option><option>Practice / drills</option><option>Lesson</option></select></label><label>Sets played<input id="activity-extra" type="number" min="0" placeholder="optional"></label><label style="grid-column:span 2">Notes<input id="activity-notes" placeholder="Opponent, score, serve or movement notes…"></label></div>`:"";
+}
+function gatherActivity(){const type=document.getElementById("activity-type").value;if(!type)return null;return{type,duration:+document.getElementById("activity-duration").value||0,distance:+document.getElementById("activity-distance").value||0,intensity:document.getElementById("activity-intensity").value,detail:document.getElementById("activity-detail")?.value||"",extra:+document.getElementById("activity-extra")?.value||0,notes:document.getElementById("activity-notes")?.value||""};}
+
+function drawCharts(){
+  Object.values(sCharts).forEach(c=>{try{c.destroy();}catch(e){}});
+  sCharts={};
+  const lifts=[{n:"Smith split squat",lbl:"分腿蹲",col:"#1D9E75"},{n:"Smith RDL",lbl:"硬拉",col:"#378ADD"},{n:"Seated DB shoulder press",lbl:"哑铃肩推",col:"#EF9F27"}];
+  let h="";
+  lifts.forEach((l,i)=>{
+    const pts=getLH(l.n),lat=pts.length?pts[pts.length-1].w:0,fst=pts.length?pts[0].w:0;
+    const d=pts.length>1?((lat-fst)/fst*100).toFixed(0):0;
+    h+=`<div class="cc"><div class="cct">${l.lbl}</div><div class="ccv">${lat?lat+"kg":"-"}${d>0?` <span style="font-size:10px;background:#E1F5EE;color:#0F6E56;padding:1px 5px;border-radius:99px;">+${d}%</span>`:""}</div><div class="ccw"><canvas id="sc${i}"></canvas></div></div>`;
+  });
+  document.getElementById("rcharts").innerHTML=h;
+  lifts.forEach((l,i)=>{
+    const pts=getLH(l.n);if(!pts.length)return;
+    const ctx=document.getElementById(`sc${i}`);if(!ctx)return;
+    sCharts[i]=new Chart(ctx,{type:"line",data:{labels:pts.map(p=>{const d=new Date(p.date);return`${d.getMonth()+1}/${d.getDate()}`;}),datasets:[{data:pts.map(p=>p.w),borderColor:l.col,backgroundColor:l.col+"20",borderWidth:2,pointRadius:3,pointBackgroundColor:l.col,fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.parsed.y}kg`}}},scales:{x:{display:false},y:{display:false,beginAtZero:false}}}});
+  });
+}
+
+function drawPRs(){
+  const lifts=Object.values(EX).flatMap(s=>s.exs).filter(x=>![/sec|reps|min/i.test(x.unit)]).map(x=>({n:x.en,cn:x.cn}));
+  document.getElementById("rprs").innerHTML=lifts.map(l=>{
+    const h=getExerciseStats(l.n),first=h.first,best=h.best;if(!best)return"";const d=first?.score?Math.round((best.score-first.score)/first.score*100):0;
+    return `<div class="prrow"><div><div class="prex">${l.n}</div><div class="prcn">${l.cn}</div></div><div class="prv"><div class="prcur">${best.w} kg × ${best.r||"—"}</div><div class="prch">${d>0?"+"+d+"% estimated strength · ":""}${fmtShortDate(best.date)}</div></div></div>`;
+  }).join("")||`<div class="muted">Log a performed exercise to establish your first personal best.</div>`;
+}
+
+function drawNutRev(){
+  const dim=new Date(ry,rm+1,0).getDate();
+  let logd=0,totK=0,totP=0,totC=0,totF=0;
+  const bars=[],bcols=[];
+  for(let d=1;d<=dim;d++){
+    const k=dkey(d),day=S.days[k],es=day?.nut?.entries||[];
+    if(es.length){
+      const t=es.reduce((a,e)=>({k:a.k+e.k,p:a.p+e.p,c:a.c+e.c,f:a.f+e.f}),{k:0,p:0,c:0,f:0});
+      logd++;totK+=t.k;totP+=t.p;totC+=t.c;totF+=t.f;
+      bars.push({d,k:Math.round(t.k),type:day.nut.type||"training"});
+      bcols.push(day.nut.type==="training"?"#1D9E7588":"#EF9F2788");
+    }
+  }
+  const avgK=logd?Math.round(totK/logd):0;
+  const avgP=logd?Math.round(totP/logd):0;
+  const avgC=logd?Math.round(totC/logd):0;
+  const avgF=logd?Math.round(totF/logd):0;
+
+  document.getElementById("nutstats").innerHTML=`
+    <div class="nsc"><div class="nsv">${logd}</div><div class="nsl">Days logged</div></div>
+    <div class="nsc"><div class="nsv">${avgK}</div><div class="nsl">Avg kcal / day</div></div>
+    <div class="nsc"><div class="nsv">${avgP}g</div><div class="nsl">Avg protein / day</div></div>`;
+
+  if(nutChart){try{nutChart.destroy();}catch(e){}}
+  const ctx=document.getElementById("nutchart");
+  if(ctx&&bars.length){
+    nutChart=new Chart(ctx,{
+      type:"bar",
+      data:{
+        labels:bars.map(b=>String(b.d)),
+        datasets:[
+          {label:"Calories logged",data:bars.map(b=>b.k),backgroundColor:bcols,borderRadius:4,borderSkipped:false},
+          {type:"line",label:"Training target (1,850)",data:Array(bars.length).fill(1850),borderColor:"#1D9E75",borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false},
+          {type:"line",label:"Rest target (1,550)",data:Array(bars.length).fill(1550),borderColor:"#EF9F27",borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:10},boxWidth:12,padding:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:"#f0ede8"},ticks:{font:{size:10}},beginAtZero:false}}}
+    });
+  } else if(ctx){
+    const c=ctx.getContext("2d");c.fillStyle="#aaa";c.font="13px -apple-system";c.fillText("No nutrition data logged this month yet.",20,80);
+  }
+
+  document.getElementById("nutmacros").innerHTML=`
+    <div class="cc"><div class="cct">Avg protein</div><div class="ccv" style="color:#1D9E75;">${avgP}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Target 100g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,Math.round(avgP/100*100))}%;background:#1D9E75;border-radius:99px;"></div></div></div>
+    <div class="cc"><div class="cct">Avg carbs</div><div class="ccv" style="color:#378ADD;">${avgC}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Train target 210g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,Math.round(avgC/210*100))}%;background:#378ADD;border-radius:99px;"></div></div></div>
+    <div class="cc"><div class="cct">Avg fat</div><div class="ccv" style="color:#EF9F27;">${avgF}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Target 66–68g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,Math.round(avgF/68*100))}%;background:#EF9F27;border-radius:99px;"></div></div></div>`;
+}
+
+// ============================================================
+// IMPORT / EXPORT — full cross-device sync
+// ============================================================
+let _pendingImport = null;
+
+function downloadExport(){
+  const payload={
+    version:"4",
+    exported:new Date().toISOString(),
+    days:S.days,
+    customExercises:customExDB,
+    customFoods:customFoodDB
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=`gillian_tracker_${today()}.json`;
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+  try{localStorage.setItem("gt_last_export",new Date().toISOString());}catch(e){}
+  updateSyncBar();
+  sfb("✓ File downloaded — transfer it to your other device, then tap Import there");
+}
+
+function triggerImport(){
+  const el=document.getElementById("import-file-input");
+  if(el){el.value="";el.click();}
+}
+
+function handleImportFile(ev){
+  const file=ev.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data.days)throw new Error("Invalid format");
+      _pendingImport=data;
+      const trDays=Object.values(data.days).filter(d=>d.tr).length;
+      const nutDays=Object.values(data.days).filter(d=>d.nut?.entries?.length).length;
+      const exCount=(data.customExercises||[]).length;
+      const fdCount=(data.customFoods||[]).length;
+      const exported=data.exported?new Date(data.exported).toLocaleDateString():"unknown date";
+      document.getElementById("import-info").innerHTML=
+        `<strong>${file.name}</strong> &nbsp;·&nbsp; exported ${exported}<br>
+         Contains: <strong>${trDays}</strong> training sessions &nbsp;·&nbsp; <strong>${nutDays}</strong> nutrition days &nbsp;·&nbsp; <strong>${exCount}</strong> custom exercises &nbsp;·&nbsp; <strong>${fdCount}</strong> custom foods`;
+      document.getElementById("import-preview").style.display="block";
+    }catch(err){
+      sfb("✗ Unrecognised file — please use a file exported from this tracker");
+    }
+  };
+  reader.readAsText(file);
+}
+
+function confirmImport(mode){
+  if(!_pendingImport)return;
+  const data=_pendingImport;
+  if(mode==="replace"){
+    S.days=data.days;
+    customExDB=data.customExercises||[];
+    customFoodDB=data.customFoods||[];
+  }else{
+    // Merge: incoming data wins on the same date key
+    Object.assign(S.days,data.days);
+    (data.customExercises||[]).forEach(ex=>{
+      if(!customExDB.find(x=>x.en===ex.en))customExDB.push(ex);
+    });
+    (data.customFoods||[]).forEach(fd=>{
+      if(!customFoodDB.find(x=>x.n===fd.n))customFoodDB.push(fd);
+    });
+  }
+  persist();
+  // Restore latest weight from merged data
+  const wtKeys=Object.keys(S.days).filter(d=>S.days[d].weight).sort();
+  if(wtKeys.length){
+    currentWeight=S.days[wtKeys[wtKeys.length-1]].weight;
+    TGT=calcTGT(currentWeight);updateHeader();
+  }
+  drawMyExercises();renderN();
+  try{localStorage.setItem("gt_last_import",new Date().toISOString());}catch(e){}
+  _pendingImport=null;cancelImport();updateSyncBar();
+  const n=Object.keys(data.days).length;
+  sfb(`✓ ${mode==="replace"?"Replaced all data with":"Merged"} ${n} day(s) from import`);
+}
+
+function cancelImport(){
+  _pendingImport=null;
+  document.getElementById("import-preview").style.display="none";
+  const el=document.getElementById("import-file-input");
+  if(el)el.value="";
+}
+
+function sfb(msg){
+  const el=document.getElementById("sync-fb");
+  if(el){el.textContent=msg;setTimeout(()=>{if(el.textContent===msg)el.textContent="";},4500);}
+}
+
+function fmtTs(iso){
+  const d=new Date(iso);
+  return `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`;
+}
+
+function updateSyncBar(){
+  const el=document.getElementById("sync-status");
+  if(!el)return;
+  const days=Object.keys(S.days).length;
+  let s=`${days} day${days!==1?"s":""} in storage`;
+  try{
+    const le=localStorage.getItem("gt_last_export");
+    const li=localStorage.getItem("gt_last_import");
+    if(le)s+=` · last export ${fmtTs(le)}`;
+    if(li)s+=` · last import ${fmtTs(li)}`;
+  }catch(e){}
+  el.textContent=s;
+}
+
+// ============================================================
+// SUPABASE AUTH + LOCAL-FIRST CLOUD SYNC
+// ============================================================
+let cloudClient=null,cloudUser=null,cloudTimer=null,cloudApplying=false,cloudReady=false;
+function cloudConfig(){
+  let saved={};try{saved=JSON.parse(localStorage.getItem("gt_supabase_config")||"{}");}catch(e){}
+  return{url:window.TRACKER_SUPABASE.url||window.TRACKER_CONFIG?.supabaseUrl||saved.url||"",key:window.TRACKER_SUPABASE.key||window.TRACKER_CONFIG?.supabaseAnonKey||saved.key||""};
+}
+function setCloudStatus(text,state=""){
+  const el=document.getElementById("cloud-status"),dot=document.getElementById("cloud-dot");if(el)el.textContent=text;if(dot)dot.className=`cloud-dot ${state}`;
+}
+function saveCloudConfig(){
+  const url=document.getElementById("cloud-url").value.trim(),key=document.getElementById("cloud-key").value.trim();
+  if(!url||!key){fb("cloud-fb","Enter both the project URL and publishable key");return;}
+  localStorage.setItem("gt_supabase_config",JSON.stringify({url,key}));location.reload();
+}
+function cloudPayload(){return{version:5,days:S.days,customExercises:customExDB,customFoods:customFoodDB,profile:PROFILE};}
+function applyCloudPayload(data){
+  if(!data?.days)return;cloudApplying=true;S.days={...data.days};customExDB=data.customExercises||[];customFoodDB=data.customFoods||[];PROFILE={...PROFILE,...(data.profile||{})};
+  localStorage.setItem("gt_v3",JSON.stringify(S.days));localStorage.setItem("gt_cex",JSON.stringify(customExDB));localStorage.setItem("gt_cfd",JSON.stringify(customFoodDB));localStorage.setItem("gt_profile",JSON.stringify(PROFILE));
+  const keys=Object.keys(S.days).filter(d=>S.days[d].weight).sort();if(keys.length)currentWeight=S.days[keys[keys.length-1]].weight;TGT=calcTGT(currentWeight);updateHeader();drawExs();drawMyExercises();renderN();renderDashboard();cloudApplying=false;
+}
+async function initCloud(){
+  const cfg=cloudConfig();document.getElementById("cloud-url").value=cfg.url;document.getElementById("cloud-key").value=cfg.key;
+  if(!cfg.url||!cfg.key||!window.supabase){setCloudStatus("Cloud connection not configured");document.getElementById("cloud-config").open=true;return;}
+  try{
+    cloudClient=window.supabase.createClient(cfg.url,cfg.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    const{data:{session}}=await cloudClient.auth.getSession();await handleCloudSession(session);
+    cloudClient.auth.onAuthStateChange((_event,session)=>setTimeout(()=>handleCloudSession(session),0));
+  }catch(e){setCloudStatus("Could not connect to Supabase","err");fb("cloud-fb",e.message||"Connection failed");}
+}
+async function handleCloudSession(session){
+  cloudUser=session?.user||null;document.getElementById("cloud-auth").style.display=cloudUser?"none":"block";document.getElementById("cloud-user").style.display=cloudUser?"block":"none";document.getElementById("cloud-signout").style.display=cloudUser?"block":"none";
+  if(!cloudUser){cloudReady=false;setCloudStatus("Not signed in");return;}
+  document.getElementById("cloud-user").textContent=`Signed in as ${cloudUser.email}`;setCloudStatus("Loading cloud data…","busy");await reconcileCloud();
+}
+async function sendMagicLink(){
+  if(!cloudClient){fb("cloud-fb","Save the Supabase connection first");return;}const email=document.getElementById("cloud-email").value.trim();if(!email){fb("cloud-fb","Enter your email address");return;}
+  setCloudStatus("Sending sign-in link…","busy");const redirect=location.origin+location.pathname;const{error}=await cloudClient.auth.signInWithOtp({email,options:{emailRedirectTo:redirect}});if(error){setCloudStatus("Sign-in link failed","err");fb("cloud-fb",error.message);}else{setCloudStatus("Check your email","ok");fb("cloud-fb","✓ Magic link sent. Open it on this device.");}
+}
+async function cloudSignOut(){if(cloudClient)await cloudClient.auth.signOut();cloudUser=null;cloudReady=false;setCloudStatus("Signed out");}
+async function reconcileCloud(){
+  const{data,error}=await cloudClient.from("wellness_tracker_state").select("data,updated_at").eq("user_id",cloudUser.id).maybeSingle();if(error){setCloudStatus("Cloud read failed","err");fb("cloud-fb",error.message);return;}
+  const localStamp=localStorage.getItem("gt_local_updated")||"";if(!data){cloudReady=true;await pushCloud();return;}
+  if(localStamp&&localStamp>data.updated_at){cloudReady=true;await pushCloud();}else{applyCloudPayload(data.data);localStorage.setItem("gt_local_updated",data.updated_at);cloudReady=true;setCloudStatus(`Synced ${fmtTs(data.updated_at)}`,"ok");}
+}
+function scheduleCloudSync(){if(!cloudReady||!cloudUser||cloudApplying)return;clearTimeout(cloudTimer);setCloudStatus("Saving…","busy");cloudTimer=setTimeout(pushCloud,900);}
+async function pushCloud(){
+  if(!cloudClient||!cloudUser)return;const now=new Date().toISOString();setCloudStatus("Saving…","busy");const{error}=await cloudClient.from("wellness_tracker_state").upsert({user_id:cloudUser.id,data:cloudPayload(),updated_at:now},{onConflict:"user_id"});
+  if(error){setCloudStatus(navigator.onLine?"Sync failed":"Offline — saved locally","err");return;}localStorage.setItem("gt_local_updated",now);cloudReady=true;setCloudStatus(`Synced ${fmtTs(now)}`,"ok");
+}
+window.addEventListener("online",()=>{if(cloudUser){cloudReady=true;scheduleCloudSync();}});window.addEventListener("offline",()=>setCloudStatus("Offline — saved locally","busy"));
+
+// ============================================================
+// TAB NAV
+// ============================================================
+function showTab(t){
+  ["D","T","N","R","S"].forEach(id=>{
+    document.getElementById("tab-"+id).style.display=id===t?"block":"none";
+    document.getElementById("nb-"+id).classList.toggle("on",id===t);
+  });
+  if(t==="R")renderR();
+  if(t==="N")renderN();
+  if(t==="D")renderDashboard();
+}
+
+function toggleExercise(k){document.getElementById(`card_${k}`)?.classList.toggle("is-done",document.getElementById(`done_${k}`)?.checked);}
+function openDay(d){document.getElementById("nd").value=d;showTab("N");}
+function openTodayHistory(){openDay(today());}
+const PLATE=[{id:"protein",ic:"🍗",n:"Protein"},{id:"veg",ic:"🥦",n:"Vegetables"},{id:"carb",ic:"🍚",n:"Smart carbs"},{id:"fruit",ic:"🍓",n:"Fruit"}];
+function togglePlate(id){const day=getDay(today());day.plate=day.plate||{};day.plate[id]=!day.plate[id];persist();renderDashboard();}
+function saveRecovery(){const day=getDay(today());day.recovery={sleep:parseFloat(document.getElementById("rec-sleep").value)||null,soreness:document.getElementById("rec-sore").value};persist();fb("rec-fb","✓ Check-in saved");renderDashboard();}
+function renderDashboard(){
+  const d=today(),day=S.days[d]||{},tot=tots(d),water=getWater(d),trained=!!day.tr;
+  document.getElementById("dash-date").textContent=new Date(d+"T12:00:00").toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+  document.getElementById("today-grid").innerHTML=`<div class="today-card"><div class="today-v">${trained?"✓":"—"}</div><div class="today-l">Workout</div></div><div class="today-card"><div class="today-v">${Math.round(tot.p)}g</div><div class="today-l">Protein</div></div><div class="today-card"><div class="today-v">${water}ml</div><div class="today-l">Water</div></div><div class="today-card"><div class="today-v">${day.recovery?.sleep||"—"}</div><div class="today-l">Sleep hours</div></div>`;
+  document.getElementById("plate-grid").innerHTML=PLATE.map(x=>`<button class="plate-btn${day.plate?.[x.id]?" on":""}" onclick="togglePlate('${x.id}')">${x.ic}<br>${x.n}${day.plate?.[x.id]?" ✓":""}</button>`).join("");
+  const now=new Date(d+"T12:00:00"),dow=now.getDay(),start=new Date(now);start.setDate(now.getDate()-((dow+6)%7));let sessions=0,logged=0;
+  for(let i=0;i<7;i++){const x=new Date(start);x.setDate(start.getDate()+i);const k=x.toISOString().split("T")[0];if(S.days[k]?.tr)sessions++;if(S.days[k]?.nut?.entries?.length)logged++;}
+  document.getElementById("week-summary").innerHTML=`<strong>${sessions}</strong> workouts · <strong>${logged}</strong> nutrition days logged. Aim for consistency, not a perfect streak.`;
+  if(day.recovery){document.getElementById("rec-sleep").value=day.recovery.sleep||"";document.getElementById("rec-sore").value=day.recovery.soreness||"";}
+}
+function saveSettings(){
+  const p={height:+document.getElementById("set-height").value||162.5,age:+document.getElementById("set-age").value||26,goal:document.getElementById("set-goal").value,weekly:+document.getElementById("set-weekly").value||4};
+  PROFILE=p;localStorage.setItem("gt_profile",JSON.stringify(p));TGT=calcTGT(currentWeight);renderN();updateHeader();fb("sfb-settings","✓ Settings and nutrition targets updated");
+}
+
+// Init review month title
+const _MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
+document.getElementById("montitle").textContent=`${_MN[rm]} ${ry}`;
+
+// ============================================================
+// LOCAL STORAGE — auto-save so data survives tab close
+// ============================================================
+function persist(){
+  try{
+    localStorage.setItem("gt_v3",JSON.stringify(S.days));
+    localStorage.setItem("gt_cex",JSON.stringify(customExDB));
+    localStorage.setItem("gt_cfd",JSON.stringify(customFoodDB));
+    localStorage.setItem("gt_local_updated",new Date().toISOString());
+  }catch(e){}
+  scheduleCloudSync();
+}
+function hydrate(){
+  try{
+    const d=localStorage.getItem("gt_v3");
+    if(d)Object.assign(S.days,JSON.parse(d));
+    const ce=localStorage.getItem("gt_cex");
+    if(ce)customExDB=JSON.parse(ce);
+    const cf=localStorage.getItem("gt_cfd");
+    if(cf)customFoodDB=JSON.parse(cf);
+    const pr=localStorage.getItem("gt_profile");
+    if(pr){PROFILE={...PROFILE,...JSON.parse(pr)};document.getElementById("set-height").value=PROFILE.height;document.getElementById("set-age").value=PROFILE.age;document.getElementById("set-goal").value=PROFILE.goal;document.getElementById("set-weekly").value=PROFILE.weekly;}
+  }catch(e){}
+}
+
+// ── Initialise ──
+hydrate();
+
+// Restore currentWeight from the most recently logged weight entry
+const _wtKeys=Object.keys(S.days).filter(d=>S.days[d].weight).sort();
+if(_wtKeys.length){
+  currentWeight=S.days[_wtKeys[_wtKeys.length-1]].weight;
+  TGT=calcTGT(currentWeight);
+}
+updateHeader();
+drawExs();         // refresh last-session values from hydrated history
+drawMyExercises(); // show saved custom exercises immediately
+renderN();         // re-render nutrition with saved data
+updateSyncBar();   // show backup status on load
+renderDashboard(); // dashboard is the calm default view
+initCloud();        // cloud sync is optional; local mode still works
+</script>
+</body>
+</html>
