@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Wellness">
 <script src="./pwa.js" defer></script>
-<style>@media(max-width:480px){.qrow{flex-wrap:wrap;row-gap:10px}.qrow>div:first-child{flex:1 0 100%!important;min-width:0!important}}body{padding-top:max(16px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom));padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));}</style>
+<style>@media(max-width:480px){.frow{flex-wrap:wrap}.frow .fnm{flex-basis:100%}.qrow{flex-wrap:wrap;row-gap:10px}.qrow>div:first-child{flex:1 0 100%!important;min-width:0!important}}body{padding-top:max(16px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom));padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));}</style>
 <title>Gillian Wellness Tracker v3</title>
 <script src="./vendor/chart.umd.js"></script>
 <script src="config.js"></script>
@@ -334,10 +334,10 @@ textarea:focus{outline:none;border-color:#1D9E75;}
 
 <!-- ====== TRAINING ====== -->
 <div id="tab-T" style="display:none;">
-  <div style="font-size:12px;color:#888;margin-bottom:8px;">Pick one or more session types — you can mix them freely in one day.</div>
+  <div style="font-size:12px;color:#888;margin-bottom:8px;">选择动作分类或搜索整个动作库。勾选已完成的动作后填写；切换分类、搜索和日期会保留当前页面的草稿，点击 Save session 才保存记录。</div>
   <div class="sch-wrap" id="sch-wrap"></div>
   <div class="row">
-    <label for="td">Date</label><input type="date" id="td" onchange="drawExs()">
+    <label for="td">Date</label><input type="date" id="td" onchange="loadTrainingDate()">
     <label for="tw" style="margin-left:4px;">Weight</label>
     <input type="number" class="sminput" id="tw" step="0.1" min="30" max="120" placeholder="52.0" oninput="onWtInput()" title="Log today's body weight (kg)">
     <span style="font-size:11px;color:#888;">kg</span>
@@ -362,6 +362,7 @@ textarea:focus{outline:none;border-color:#1D9E75;}
     </div>
     <div class="activity-fields" id="activity-fields"></div>
   </div>
+  <div class="section-card"><div class="row" style="margin-bottom:8px"><button class="btn2" id="recent-exercises" aria-pressed="true" onclick="toggleRecentExercises()">你的近期动作</button><span class="muted" id="exercise-count"></span></div><input class="fsrch" id="exercise-search" aria-label="Search gym exercises" placeholder="搜索全部动作：卧推 / bench · abductor · 划船 / row" oninput="drawExs()"><div class="muted">重量口径：哑铃按每只；Smith 加片重量与杠铃总重分开记录。组次不同可填 15 / 25 / 20，超级组填配对动作。</div><details style="margin-top:10px"><summary style="font-size:12px;cursor:pointer">导入你提供的 5 次训练（2026 年）</summary><div class="muted" style="margin:8px 0">9/4、9/15、9/17、11/6、11/11。先登录并完成同步；仅补入没有训练记录的日期，已有日期跳过。原始记录未写明的次数、总时长保持空白。</div><button class="btn2" onclick="importRecentTraining()">导入这 5 次训练</button><div class="muted" id="training-import-result" role="status"></div></details></div>
   <div id="exlist"></div>
   <div class="slbl" style="margin-top:2px;">Custom / unlisted exercises</div>
   <div id="cxlist"></div>
@@ -417,6 +418,7 @@ textarea:focus{outline:none;border-color:#1D9E75;}
       <div class="cfull"><div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Body weight (kg) — dotted line = 52 kg baseline</div><div class="cfullw"><canvas id="wtchart"></canvas></div></div>
     </div>
     <div class="slbl" style="margin-top:4px;">Strength progression (all time)</div>
+    <label class="muted" for="progress-exercise">选择动作查看历史负重</label><select id="progress-exercise" style="width:100%;padding:9px;margin:6px 0 10px" onchange="drawCharts(this.value)"></select>
     <div class="cgrid" id="rcharts"></div>
     <div class="slbl">Current bests</div>
     <div class="prcard" id="rprs"></div>
@@ -436,58 +438,1687 @@ textarea:focus{outline:none;border-color:#1D9E75;}
 // Safe for public GitHub Pages: use only a Supabase publishable key here, never a secret key.
 window.TRACKER_SUPABASE=window.TRACKER_SUPABASE||{url:"",key:""};
 // ============================================================
-// EXERCISE DATABASE — 5 session types
+// EXERCISE DATABASE — 90 movements, 5 existing category IDs
 // ============================================================
 const EX = {
-  A:{name:"Glute & leg",ic:"🦵",col:"#1D9E75",exs:[
-    {en:"Smith split squat",cn:"史密斯机分腿蹲",unit:"kg added",def:"15",prev:"+15 kg × 12/side × 4",sec:"Main"},
-    {en:"Smith RDL",cn:"史密斯机罗马尼亚硬拉",unit:"kg added",def:"12.5",prev:"+12.5 kg × 10 × 4",sec:"Main"},
-    {en:"Smith hip thrust",cn:"史密斯机臀推",unit:"kg added",def:"15",prev:"+15 kg × 12 × 4 (bring back!)",sec:"Main"},
-    {en:"Hyperextension",cn:"自重背伸",unit:"BW or kg",def:"BW",prev:"BW × 10 × 3–4",sec:"Accessory"}
-  ]},
-  B:{name:"Upper body",ic:"💪",col:"#378ADD",exs:[
-    {en:"Incline DB press 30°",cn:"上斜哑铃卧推",unit:"kg/hand",def:"8",prev:"8 kg × 10–12 × 4 — try 9 kg",sec:"Push"},
-    {en:"Seated DB shoulder press",cn:"坐姿哑铃肩推",unit:"kg/hand",def:"8",prev:"8 kg × 12 × 4",sec:"Push"},
-    {en:"Low cable crossover",cn:"低位绳索夹胸",unit:"kg/side",def:"2.5",prev:"2.5 kg × 8 × 4",sec:"Push"},
-    {en:"Lat pulldown",cn:"高位下拉",unit:"kg",def:"20",prev:"20 kg × 12 × 4",sec:"Pull"},
-    {en:"Straight arm pulldown",cn:"直臂下拉",unit:"kg",def:"7.5",prev:"7.5 kg × 12 × 4",sec:"Pull"},
-    {en:"Roman chair row",cn:"推罗马椅划船",unit:"kg",def:"10",prev:"10 kg × 12 × 4",sec:"Pull"},
-    {en:"Face pull",cn:"面拉",unit:"kg",def:"10",prev:"10 kg × 15 × 4",sec:"Pull"},
-    {en:"Lateral raise",cn:"侧平举",unit:"kg",def:"2",prev:"2 kg × 15 × 4",sec:"Shoulder health"},
-    {en:"Y-raise",cn:"Y字训练",unit:"kg",def:"2",prev:"2 kg × 15 × 4",sec:"Shoulder health"}
-  ]},
-  C:{name:"Core",ic:"🔥",col:"#EF9F27",exs:[
-    {en:"Plank hold",cn:"平板支撑",unit:"sec",def:"45",prev:"45 sec × 3 sets",sec:"Anti-extension"},
-    {en:"Dead bug",cn:"死虫动作",unit:"reps/side",def:"10",prev:"10/side × 3 sets",sec:"Anti-extension"},
-    {en:"Bicycle crunch",cn:"自行车卷腹",unit:"reps",def:"20",prev:"20 × 3 sets",sec:"Flexion"},
-    {en:"Cable woodchop",cn:"绳索砍树",unit:"kg/side",def:"10",prev:"10 kg × 12/side × 3",sec:"Rotation"},
-    {en:"Hanging knee raise",cn:"悬挂举腿",unit:"reps",def:"15",prev:"15 × 3 sets",sec:"Lower abs"},
-    {en:"Ab wheel rollout",cn:"腹轮",unit:"reps",def:"8",prev:"8 × 3 sets",sec:"Anti-extension"},
-    {en:"Russian twist",cn:"俄罗斯转体",unit:"reps",def:"20",prev:"20 × 3 sets",sec:"Rotation"}
-  ]},
-  D:{name:"Cardio / HIIT",ic:"🏃",col:"#993C1D",exs:[
-    {en:"Treadmill HIIT",cn:"跑步机间歇",unit:"min",def:"20",prev:"20 min — 1min hard / 1min easy × 10",sec:"HIIT"},
-    {en:"Bike HIIT",cn:"单车间歇",unit:"min",def:"15",prev:"15 min — 30s all-out / 30s easy",sec:"HIIT"},
-    {en:"Jump rope",cn:"跳绳",unit:"min",def:"10",prev:"10 min",sec:"HIIT"},
-    {en:"Elliptical steady state",cn:"椭圆机",unit:"min",def:"20",prev:"20 min level 5–7",sec:"Steady state"},
-    {en:"Rowing machine",cn:"划船机",unit:"min",def:"15",prev:"15 min",sec:"Steady state"},
-    {en:"Stairmaster",cn:"爬楼机",unit:"min",def:"15",prev:"15 min level 8–10",sec:"Steady state"}
-  ]},
-  E:{name:"Full body",ic:"⚡",col:"#7B5EA7",exs:[
-    {en:"Goblet squat",cn:"高脚杯深蹲",unit:"kg",def:"16",prev:"16 kg × 15 × 3",sec:"Lower"},
-    {en:"Push-up",cn:"俯卧撑",unit:"reps",def:"15",prev:"15 × 3 sets",sec:"Upper"},
-    {en:"Dumbbell RDL",cn:"哑铃罗马尼亚硬拉",unit:"kg/hand",def:"12",prev:"12 kg × 12 × 3",sec:"Lower"},
-    {en:"Cable row",cn:"绳索划船",unit:"kg",def:"15",prev:"15 kg × 12 × 3",sec:"Upper"},
-    {en:"Box step-up",cn:"踏箱",unit:"kg/hand",def:"8",prev:"8 kg × 12/leg × 3",sec:"Lower"},
-    {en:"Battle rope",cn:"战绳",unit:"sec",def:"30",prev:"30s × 5 rounds",sec:"Conditioning"}
-  ]}
+  "A": {
+    "name": "Glute & leg",
+    "ic": "🦵",
+    "col": "#1D9E75",
+    "exs": [
+      {
+        "en": "Smith split squat",
+        "cn": "史密斯机分腿蹲",
+        "unit": "kg added",
+        "def": "+15",
+        "prev": "",
+        "sec": "Main",
+        "mode": "external",
+        "sid": "A",
+        "recent": {
+          "en": "Smith split squat",
+          "w": "+15",
+          "s": "3",
+          "r": "12",
+          "n": "原称Smith单腿蹲；是否每侧12次未注明",
+          "ss": "",
+          "unit": "kg added",
+          "mode": "external",
+          "sid": "A",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Smith RDL",
+        "cn": "史密斯机罗马尼亚硬拉",
+        "unit": "kg added",
+        "def": "",
+        "prev": "",
+        "sec": "Main",
+        "mode": "external",
+        "sid": "A"
+      },
+      {
+        "en": "Smith hip thrust",
+        "cn": "史密斯机臀推",
+        "unit": "kg added",
+        "def": "",
+        "prev": "",
+        "sec": "Main",
+        "mode": "external",
+        "sid": "A"
+      },
+      {
+        "en": "Hyperextension",
+        "cn": "自重背伸",
+        "unit": "BW / kg added",
+        "def": "",
+        "prev": "",
+        "sec": "Accessory",
+        "mode": "bodyweight",
+        "sid": "A"
+      },
+      {
+        "en": "Barbell back squat",
+        "cn": "杠铃背蹲",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Barbell front squat",
+        "cn": "杠铃前蹲",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Smith squat",
+        "cn": "史密斯深蹲",
+        "unit": "kg added",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Leg press",
+        "cn": "腿举机",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Hack squat",
+        "cn": "哈克深蹲",
+        "unit": "kg added",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Barbell RDL",
+        "cn": "杠铃罗马尼亚硬拉 RMN",
+        "unit": "kg (注明含杆或加片)",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "+15",
+        "sid": "A",
+        "recent": {
+          "en": "Barbell RDL",
+          "w": "+15",
+          "s": "3",
+          "r": "10",
+          "n": "原记录+15kg，是否含杆未注明",
+          "ss": "",
+          "unit": "kg (注明含杆或加片)",
+          "mode": "external",
+          "sid": "A",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Conventional deadlift",
+        "cn": "传统硬拉",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Sumo deadlift",
+        "cn": "相扑硬拉",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Bulgarian split squat",
+        "cn": "保加利亚分腿蹲",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Reverse lunge",
+        "cn": "反向弓步蹲",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Walking lunge",
+        "cn": "行走弓步",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Barbell hip thrust",
+        "cn": "杠铃臀推",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Glute bridge",
+        "cn": "臀桥",
+        "unit": "kg added",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Leg extension",
+        "cn": "腿屈伸",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Seated leg curl",
+        "cn": "坐姿腿弯举",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Lying leg curl",
+        "cn": "俯卧腿弯举",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Hip abductor machine",
+        "cn": "髋外展机 abductor",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "20",
+        "sid": "A",
+        "recent": {
+          "en": "Hip abductor machine",
+          "w": "20",
+          "s": "3",
+          "r": "15 / 25 / 20",
+          "n": "逐组次数",
+          "ss": "",
+          "unit": "kg on machine",
+          "mode": "external",
+          "sid": "A",
+          "date": "2026-11-06"
+        }
+      },
+      {
+        "en": "Hip adductor machine",
+        "cn": "髋内收机",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Cable glute kickback",
+        "cn": "绳索臀后踢",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Standing calf raise",
+        "cn": "站姿提踵",
+        "unit": "kg added",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Seated calf raise",
+        "cn": "坐姿提踵",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      }
+    ]
+  },
+  "B": {
+    "name": "Upper body",
+    "ic": "💪",
+    "col": "#378ADD",
+    "exs": [
+      {
+        "en": "Incline DB press 30°",
+        "cn": "上斜哑铃卧推",
+        "unit": "kg/hand",
+        "def": "",
+        "prev": "",
+        "sec": "Push",
+        "mode": "external",
+        "sid": "B"
+      },
+      {
+        "en": "Seated DB shoulder press",
+        "cn": "坐姿哑铃肩推",
+        "unit": "kg/hand",
+        "def": "6",
+        "prev": "",
+        "sec": "Push",
+        "mode": "external",
+        "sid": "B",
+        "recent": {
+          "en": "Seated DB shoulder press",
+          "w": "6",
+          "s": "3",
+          "r": "12",
+          "n": "",
+          "ss": "",
+          "unit": "kg/hand",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-06"
+        }
+      },
+      {
+        "en": "Low cable crossover",
+        "cn": "低位绳索夹胸",
+        "unit": "kg/side",
+        "def": "",
+        "prev": "",
+        "sec": "Push",
+        "mode": "external",
+        "sid": "B"
+      },
+      {
+        "en": "Lat pulldown",
+        "cn": "高位下拉",
+        "unit": "kg",
+        "def": "25",
+        "prev": "",
+        "sec": "Pull",
+        "mode": "external",
+        "sid": "B",
+        "recent": {
+          "en": "Lat pulldown",
+          "w": "25",
+          "s": "2",
+          "r": "8",
+          "n": "",
+          "ss": "",
+          "unit": "kg",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-09-17"
+        }
+      },
+      {
+        "en": "Straight arm pulldown",
+        "cn": "直臂下拉",
+        "unit": "kg",
+        "def": "10",
+        "prev": "",
+        "sec": "Pull",
+        "mode": "external",
+        "sid": "B",
+        "recent": {
+          "en": "Straight arm pulldown",
+          "w": "10",
+          "s": "3",
+          "r": "8",
+          "n": "",
+          "ss": "",
+          "unit": "kg",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Roman chair row",
+        "cn": "推罗马椅划船",
+        "unit": "kg",
+        "def": "",
+        "prev": "",
+        "sec": "Pull",
+        "mode": "external",
+        "sid": "B"
+      },
+      {
+        "en": "Face pull",
+        "cn": "面拉",
+        "unit": "kg",
+        "def": "12.5",
+        "prev": "",
+        "sec": "Pull",
+        "mode": "external",
+        "sid": "B",
+        "recent": {
+          "en": "Face pull",
+          "w": "12.5",
+          "s": "3",
+          "r": "12",
+          "n": "",
+          "ss": "",
+          "unit": "kg",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Lateral raise",
+        "cn": "侧平举",
+        "unit": "kg/hand",
+        "def": "2",
+        "prev": "",
+        "sec": "Shoulder health",
+        "mode": "external",
+        "sid": "B",
+        "recent": {
+          "en": "Lateral raise",
+          "w": "2",
+          "s": "3",
+          "r": "15",
+          "n": "每手2kg",
+          "ss": "Y-raise",
+          "unit": "kg/hand",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Y-raise",
+        "cn": "Y字训练",
+        "unit": "kg/hand",
+        "def": "2",
+        "prev": "",
+        "sec": "Shoulder health",
+        "mode": "external",
+        "sid": "B",
+        "recent": {
+          "en": "Y-raise",
+          "w": "2",
+          "s": "3",
+          "r": "10",
+          "n": "每手2kg",
+          "ss": "Lateral raise",
+          "unit": "kg/hand",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Smith bench press",
+        "cn": "史密斯卧推",
+        "unit": "kg added",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "+5",
+        "sid": "B",
+        "recent": {
+          "en": "Smith bench press",
+          "w": "+5",
+          "s": "3",
+          "r": "10",
+          "n": "加片重量，不含杆",
+          "ss": "",
+          "unit": "kg added",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Barbell bench press",
+        "cn": "杠铃平板卧推",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Flat DB bench press",
+        "cn": "平板哑铃卧推",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Incline barbell bench press",
+        "cn": "上斜杠铃卧推",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Machine chest press",
+        "cn": "器械推胸",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Pec deck fly",
+        "cn": "蝴蝶机夹胸",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Cable chest fly",
+        "cn": "绳索夹胸",
+        "unit": "kg/side",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Barbell overhead press",
+        "cn": "杠铃推肩",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Single-arm DB row",
+        "cn": "单臂哑铃划船",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B",
+        "recent": {
+          "en": "Single-arm DB row",
+          "w": "",
+          "s": "",
+          "r": "",
+          "n": "原记录未填重量、组数、次数",
+          "ss": "",
+          "unit": "kg/hand",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-09-17"
+        }
+      },
+      {
+        "en": "Lunge-stance DB row",
+        "cn": "弓步哑铃划船",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "8",
+        "sid": "B",
+        "recent": {
+          "en": "Lunge-stance DB row",
+          "w": "8",
+          "s": "3",
+          "r": "12",
+          "n": "",
+          "ss": "",
+          "unit": "kg/hand",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Barbell bent-over row",
+        "cn": "杠铃俯身划船",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Chest-supported DB row",
+        "cn": "胸托哑铃划船",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Seated row machine",
+        "cn": "坐姿划船机",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Single-arm cable row",
+        "cn": "单臂绳索划船",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Cable pulldown (unspecified)",
+        "cn": "绳索下拉（原记录，握法未注明）",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B",
+        "recent": {
+          "en": "Cable pulldown (unspecified)",
+          "w": "",
+          "s": "",
+          "r": "",
+          "n": "原记录未填握法、重量、组数、次数",
+          "ss": "",
+          "unit": "kg on machine",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-09-17"
+        }
+      },
+      {
+        "en": "Reverse pec deck",
+        "cn": "反向蝴蝶机／后束飞鸟",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "DB rear delt fly",
+        "cn": "哑铃俯身反向飞鸟",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Cable lateral raise",
+        "cn": "绳索侧平举",
+        "unit": "kg/side",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "DB biceps curl",
+        "cn": "哑铃弯举",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Hammer curl",
+        "cn": "锤式弯举",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Cable triceps pushdown",
+        "cn": "绳索三头下压",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Overhead triceps extension",
+        "cn": "过顶三头臂屈伸",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Assisted pull-up",
+        "cn": "辅助引体向上",
+        "unit": "kg assistance",
+        "mode": "assistance",
+        "prev": "",
+        "sec": "Pull",
+        "def": "22",
+        "sid": "B",
+        "recent": {
+          "en": "Assisted pull-up",
+          "w": "22",
+          "s": "4",
+          "r": "6",
+          "n": "22kg 为辅助重量",
+          "ss": "",
+          "unit": "kg assistance",
+          "mode": "assistance",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Pull-up",
+        "cn": "自重引体向上",
+        "unit": "BW / kg added",
+        "mode": "bodyweight",
+        "prev": "",
+        "sec": "Pull",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Dip",
+        "cn": "双杠臂屈伸",
+        "unit": "BW / kg added",
+        "mode": "bodyweight",
+        "prev": "",
+        "sec": "Push",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Lisa back routine",
+        "cn": "Lisa 背（个人组合）",
+        "unit": "kg/hand",
+        "mode": "unknown",
+        "prev": "",
+        "sec": "Your routines",
+        "def": "4",
+        "sid": "B",
+        "recent": {
+          "en": "Lisa back routine",
+          "w": "4",
+          "s": "2",
+          "r": "",
+          "n": "每手4kg；原记录2组SPS，组合细节未注明",
+          "ss": "",
+          "unit": "kg/hand",
+          "mode": "unknown",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Lisa shoulder DB routine",
+        "cn": "Lisa 肩部哑铃组合",
+        "unit": "kg/hand",
+        "mode": "unknown",
+        "prev": "",
+        "sec": "Your routines",
+        "def": "2",
+        "sid": "B",
+        "recent": {
+          "en": "Lisa shoulder DB routine",
+          "w": "2",
+          "s": "2",
+          "r": "",
+          "n": "每手2kg；原记录2组SPS",
+          "ss": "",
+          "unit": "kg/hand",
+          "mode": "unknown",
+          "sid": "B",
+          "date": "2026-11-06"
+        }
+      },
+      {
+        "en": "Lisa shoulder plate routine",
+        "cn": "Lisa 肩部杠铃片组合",
+        "unit": "kg plate",
+        "mode": "unknown",
+        "prev": "",
+        "sec": "Your routines",
+        "def": "5",
+        "sid": "B",
+        "recent": {
+          "en": "Lisa shoulder plate routine",
+          "w": "5",
+          "s": "2",
+          "r": "",
+          "n": "5kg杠铃片；原记录2组SPS",
+          "ss": "",
+          "unit": "kg plate",
+          "mode": "unknown",
+          "sid": "B",
+          "date": "2026-11-06"
+        }
+      }
+    ]
+  },
+  "C": {
+    "name": "Core",
+    "ic": "🔥",
+    "col": "#EF9F27",
+    "exs": [
+      {
+        "en": "Plank hold",
+        "cn": "平板支撑",
+        "unit": "sec",
+        "def": "",
+        "prev": "",
+        "sec": "Anti-extension",
+        "mode": "timed",
+        "sid": "C"
+      },
+      {
+        "en": "Dead bug",
+        "cn": "死虫动作",
+        "unit": "reps/side",
+        "def": "",
+        "prev": "",
+        "sec": "Anti-extension",
+        "mode": "reps",
+        "sid": "C"
+      },
+      {
+        "en": "Bicycle crunch",
+        "cn": "自行车卷腹",
+        "unit": "reps",
+        "def": "",
+        "prev": "",
+        "sec": "Flexion",
+        "mode": "reps",
+        "sid": "C"
+      },
+      {
+        "en": "Cable woodchop",
+        "cn": "绳索砍树",
+        "unit": "kg/side",
+        "def": "",
+        "prev": "",
+        "sec": "Rotation",
+        "mode": "external",
+        "sid": "C"
+      },
+      {
+        "en": "Hanging knee raise",
+        "cn": "悬挂举腿",
+        "unit": "reps",
+        "def": "",
+        "prev": "",
+        "sec": "Lower abs",
+        "mode": "reps",
+        "sid": "C"
+      },
+      {
+        "en": "Ab wheel rollout",
+        "cn": "腹轮",
+        "unit": "reps",
+        "def": "",
+        "prev": "",
+        "sec": "Anti-extension",
+        "mode": "reps",
+        "sid": "C"
+      },
+      {
+        "en": "Russian twist",
+        "cn": "俄罗斯转体",
+        "unit": "reps",
+        "def": "",
+        "prev": "",
+        "sec": "Rotation",
+        "mode": "reps",
+        "sid": "C"
+      },
+      {
+        "en": "Pallof press",
+        "cn": "帕洛夫抗旋转推",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "C"
+      },
+      {
+        "en": "Cable crunch",
+        "cn": "绳索卷腹",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "C"
+      },
+      {
+        "en": "Side plank",
+        "cn": "侧平板支撑",
+        "unit": "sec",
+        "mode": "timed",
+        "prev": "",
+        "sec": "Core",
+        "def": "",
+        "sid": "C"
+      },
+      {
+        "en": "Bird dog",
+        "cn": "鸟狗",
+        "unit": "reps/side",
+        "mode": "reps",
+        "prev": "",
+        "sec": "Core",
+        "def": "",
+        "sid": "C"
+      }
+    ]
+  },
+  "D": {
+    "name": "Cardio / HIIT",
+    "ic": "🏃",
+    "col": "#993C1D",
+    "exs": [
+      {
+        "en": "Treadmill HIIT",
+        "cn": "跑步机间歇",
+        "unit": "min",
+        "def": "",
+        "prev": "",
+        "sec": "HIIT",
+        "mode": "timed",
+        "sid": "D"
+      },
+      {
+        "en": "Bike HIIT",
+        "cn": "单车间歇",
+        "unit": "min",
+        "def": "",
+        "prev": "",
+        "sec": "HIIT",
+        "mode": "timed",
+        "sid": "D"
+      },
+      {
+        "en": "Jump rope",
+        "cn": "跳绳",
+        "unit": "min",
+        "def": "",
+        "prev": "",
+        "sec": "HIIT",
+        "mode": "timed",
+        "sid": "D"
+      },
+      {
+        "en": "Elliptical steady state",
+        "cn": "椭圆机",
+        "unit": "min",
+        "def": "10",
+        "prev": "",
+        "sec": "Steady state",
+        "mode": "timed",
+        "sid": "D",
+        "recent": {
+          "en": "Elliptical steady state",
+          "w": "10",
+          "s": "",
+          "r": "",
+          "n": "阻力档位2；器械显示70 kcal，仅备注，不当作实测消耗",
+          "ss": "",
+          "unit": "min",
+          "mode": "timed",
+          "sid": "D",
+          "date": "2026-09-04"
+        }
+      },
+      {
+        "en": "Rowing machine",
+        "cn": "划船机",
+        "unit": "min",
+        "def": "",
+        "prev": "",
+        "sec": "Steady state",
+        "mode": "timed",
+        "sid": "D"
+      },
+      {
+        "en": "Stairmaster",
+        "cn": "爬楼机",
+        "unit": "min",
+        "def": "30",
+        "prev": "",
+        "sec": "Steady state",
+        "mode": "timed",
+        "sid": "D",
+        "recent": {
+          "en": "Stairmaster",
+          "w": "30",
+          "s": "",
+          "r": "",
+          "n": "30分钟",
+          "ss": "",
+          "unit": "min",
+          "mode": "timed",
+          "sid": "D",
+          "date": "2026-09-17"
+        }
+      },
+      {
+        "en": "Incline treadmill walk",
+        "cn": "跑步机爬坡走／热身",
+        "unit": "min",
+        "mode": "timed",
+        "prev": "",
+        "sec": "Steady state",
+        "def": "10",
+        "sid": "D",
+        "recent": {
+          "en": "Incline treadmill walk",
+          "w": "10",
+          "s": "",
+          "r": "",
+          "n": "爬坡热身10分钟",
+          "ss": "",
+          "unit": "min",
+          "mode": "timed",
+          "sid": "D",
+          "date": "2026-09-04"
+        }
+      },
+      {
+        "en": "Stationary bike",
+        "cn": "固定单车",
+        "unit": "min",
+        "mode": "timed",
+        "prev": "",
+        "sec": "Steady state",
+        "def": "",
+        "sid": "D"
+      }
+    ]
+  },
+  "E": {
+    "name": "Full body",
+    "ic": "⚡",
+    "col": "#7B5EA7",
+    "exs": [
+      {
+        "en": "Goblet squat",
+        "cn": "高脚杯深蹲",
+        "unit": "kg",
+        "def": "",
+        "prev": "",
+        "sec": "Lower",
+        "mode": "external",
+        "sid": "E"
+      },
+      {
+        "en": "Push-up",
+        "cn": "俯卧撑",
+        "unit": "reps",
+        "def": "",
+        "prev": "",
+        "sec": "Upper",
+        "mode": "reps",
+        "sid": "E"
+      },
+      {
+        "en": "Dumbbell RDL",
+        "cn": "哑铃罗马尼亚硬拉",
+        "unit": "kg/hand",
+        "def": "",
+        "prev": "",
+        "sec": "Lower",
+        "mode": "external",
+        "sid": "E"
+      },
+      {
+        "en": "Cable row",
+        "cn": "绳索划船",
+        "unit": "kg",
+        "def": "",
+        "prev": "",
+        "sec": "Upper",
+        "mode": "external",
+        "sid": "E"
+      },
+      {
+        "en": "Box step-up",
+        "cn": "踏箱",
+        "unit": "kg/hand",
+        "def": "",
+        "prev": "",
+        "sec": "Lower",
+        "mode": "external",
+        "sid": "E"
+      },
+      {
+        "en": "Battle rope",
+        "cn": "战绳",
+        "unit": "sec",
+        "def": "",
+        "prev": "",
+        "sec": "Conditioning",
+        "mode": "timed",
+        "sid": "E"
+      },
+      {
+        "en": "Kettlebell swing",
+        "cn": "壶铃摆动",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "E"
+      },
+      {
+        "en": "Farmer carry",
+        "cn": "农夫走",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "E"
+      },
+      {
+        "en": "Burpee",
+        "cn": "波比跳",
+        "unit": "reps",
+        "mode": "reps",
+        "prev": "",
+        "sec": "Conditioning",
+        "def": "",
+        "sid": "E"
+      }
+    ]
+  }
+};
+const RECENT_TRAINING={
+  "2026-11-11": [
+    {
+      "en": "Straight arm pulldown",
+      "w": "10",
+      "s": "3",
+      "r": "8",
+      "n": "",
+      "ss": "",
+      "unit": "kg",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa back routine",
+      "w": "4",
+      "s": "2",
+      "r": "",
+      "n": "每手4kg；原记录2组SPS，组合细节未注明",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Lunge-stance DB row",
+      "w": "8",
+      "s": "3",
+      "r": "12",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Face pull",
+      "w": "12.5",
+      "s": "3",
+      "r": "12",
+      "n": "",
+      "ss": "",
+      "unit": "kg",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Assisted pull-up",
+      "w": "22",
+      "s": "4",
+      "r": "6",
+      "n": "22kg 为辅助重量",
+      "ss": "",
+      "unit": "kg assistance",
+      "mode": "assistance",
+      "sid": "B"
+    },
+    {
+      "en": "Lateral raise",
+      "w": "2",
+      "s": "3",
+      "r": "15",
+      "n": "每手2kg",
+      "ss": "Y-raise",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Y-raise",
+      "w": "2",
+      "s": "3",
+      "r": "10",
+      "n": "每手2kg",
+      "ss": "Lateral raise",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Barbell RDL",
+      "w": "+15",
+      "s": "3",
+      "r": "10",
+      "n": "原记录+15kg，是否含杆未注明",
+      "ss": "",
+      "unit": "kg (注明含杆或加片)",
+      "mode": "external",
+      "sid": "A"
+    },
+    {
+      "en": "Smith bench press",
+      "w": "+5",
+      "s": "3",
+      "r": "10",
+      "n": "加片重量，不含杆",
+      "ss": "",
+      "unit": "kg added",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Smith split squat",
+      "w": "+15",
+      "s": "3",
+      "r": "12",
+      "n": "原称Smith单腿蹲；是否每侧12次未注明",
+      "ss": "",
+      "unit": "kg added",
+      "mode": "external",
+      "sid": "A"
+    }
+  ],
+  "2026-11-06": [
+    {
+      "en": "Hip abductor machine",
+      "w": "20",
+      "s": "3",
+      "r": "15 / 25 / 20",
+      "n": "逐组次数",
+      "ss": "",
+      "unit": "kg on machine",
+      "mode": "external",
+      "sid": "A"
+    },
+    {
+      "en": "Lisa shoulder DB routine",
+      "w": "2",
+      "s": "2",
+      "r": "",
+      "n": "每手2kg；原记录2组SPS",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa shoulder plate routine",
+      "w": "5",
+      "s": "2",
+      "r": "",
+      "n": "5kg杠铃片；原记录2组SPS",
+      "ss": "",
+      "unit": "kg plate",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa back routine",
+      "w": "4",
+      "s": "2",
+      "r": "",
+      "n": "每手4kg；原记录2组SPS",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Seated DB shoulder press",
+      "w": "6",
+      "s": "3",
+      "r": "12",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Barbell RDL",
+      "w": "+15",
+      "s": "3",
+      "r": "10",
+      "n": "原记录+15kg，是否含杆未注明",
+      "ss": "",
+      "unit": "kg (注明含杆或加片)",
+      "mode": "external",
+      "sid": "A"
+    },
+    {
+      "en": "Smith bench press",
+      "w": "+5",
+      "s": "3",
+      "r": "10",
+      "n": "加片重量，不含杆",
+      "ss": "",
+      "unit": "kg added",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Smith split squat",
+      "w": "+15",
+      "s": "3",
+      "r": "12",
+      "n": "原称Smith单腿蹲；是否每侧12次未注明",
+      "ss": "",
+      "unit": "kg added",
+      "mode": "external",
+      "sid": "A"
+    }
+  ],
+  "2026-09-17": [
+    {
+      "en": "Single-arm DB row",
+      "w": "",
+      "s": "",
+      "r": "",
+      "n": "原记录未填重量、组数、次数",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Cable pulldown (unspecified)",
+      "w": "",
+      "s": "",
+      "r": "",
+      "n": "原记录未填握法、重量、组数、次数",
+      "ss": "",
+      "unit": "kg on machine",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Stairmaster",
+      "w": "30",
+      "s": "",
+      "r": "",
+      "n": "30分钟",
+      "ss": "",
+      "unit": "min",
+      "mode": "timed",
+      "sid": "D"
+    },
+    {
+      "en": "Straight arm pulldown",
+      "w": "10",
+      "s": "3",
+      "r": "8",
+      "n": "",
+      "ss": "",
+      "unit": "kg",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Face pull",
+      "w": "12.5",
+      "s": "3",
+      "r": "12",
+      "n": "",
+      "ss": "",
+      "unit": "kg",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lat pulldown",
+      "w": "25",
+      "s": "2",
+      "r": "8",
+      "n": "",
+      "ss": "",
+      "unit": "kg",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lateral raise",
+      "w": "2",
+      "s": "3",
+      "r": "15",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa back routine",
+      "w": "4",
+      "s": "2",
+      "r": "",
+      "n": "每手4kg；2组SPS",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Y-raise",
+      "w": "2",
+      "s": "3",
+      "r": "15",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lunge-stance DB row",
+      "w": "8",
+      "s": "3",
+      "r": "10",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    }
+  ],
+  "2026-09-15": [
+    {
+      "en": "Smith split squat",
+      "w": "+15",
+      "s": "3",
+      "r": "12",
+      "n": "原称Smith单腿蹲；是否每侧12次未注明",
+      "ss": "",
+      "unit": "kg added",
+      "mode": "external",
+      "sid": "A"
+    },
+    {
+      "en": "Barbell RDL",
+      "w": "+15",
+      "s": "3",
+      "r": "10",
+      "n": "原记录+15kg，是否含杆未注明",
+      "ss": "",
+      "unit": "kg (注明含杆或加片)",
+      "mode": "external",
+      "sid": "A"
+    },
+    {
+      "en": "Smith bench press",
+      "w": "+5",
+      "s": "3",
+      "r": "10",
+      "n": "加片重量，不含杆",
+      "ss": "",
+      "unit": "kg added",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Seated DB shoulder press",
+      "w": "6",
+      "s": "3",
+      "r": "12",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa shoulder DB routine",
+      "w": "2",
+      "s": "2",
+      "r": "",
+      "n": "每手2kg；2组SPS",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa shoulder plate routine",
+      "w": "5",
+      "s": "2",
+      "r": "",
+      "n": "5kg杠铃片；2组SPS",
+      "ss": "",
+      "unit": "kg plate",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Assisted pull-up",
+      "w": "22",
+      "s": "3",
+      "r": "10",
+      "n": "22kg为辅助重量",
+      "ss": "",
+      "unit": "kg assistance",
+      "mode": "assistance",
+      "sid": "B"
+    },
+    {
+      "en": "Hip abductor machine",
+      "w": "20",
+      "s": "3",
+      "r": "15 / 25 / 20",
+      "n": "逐组次数",
+      "ss": "",
+      "unit": "kg on machine",
+      "mode": "external",
+      "sid": "A"
+    }
+  ],
+  "2026-09-04": [
+    {
+      "en": "Incline treadmill walk",
+      "w": "10",
+      "s": "",
+      "r": "",
+      "n": "爬坡热身10分钟",
+      "ss": "",
+      "unit": "min",
+      "mode": "timed",
+      "sid": "D"
+    },
+    {
+      "en": "Assisted pull-up",
+      "w": "22",
+      "s": "4",
+      "r": "10",
+      "n": "22kg为辅助重量",
+      "ss": "",
+      "unit": "kg assistance",
+      "mode": "assistance",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa back routine",
+      "w": "4",
+      "s": "2",
+      "r": "",
+      "n": "每手4kg",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Y-raise",
+      "w": "2",
+      "s": "",
+      "r": "",
+      "n": "超级组；次数及组数未注明",
+      "ss": "Lateral raise",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lateral raise",
+      "w": "2",
+      "s": "",
+      "r": "",
+      "n": "超级组；次数及组数未注明",
+      "ss": "Y-raise",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lunge-stance DB row",
+      "w": "8",
+      "s": "3",
+      "r": "10",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Face pull",
+      "w": "12.5",
+      "s": "3",
+      "r": "12",
+      "n": "",
+      "ss": "",
+      "unit": "kg",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Elliptical steady state",
+      "w": "10",
+      "s": "",
+      "r": "",
+      "n": "阻力档位2；器械显示70 kcal，仅备注，不当作实测消耗",
+      "ss": "",
+      "unit": "min",
+      "mode": "timed",
+      "sid": "D"
+    }
+  ]
 };
 const SCOL = {A:"#1D9E75",B:"#378ADD",C:"#EF9F27",D:"#993C1D",E:"#7B5EA7"};
 
 // ============================================================
-// FOOD DATABASE — 192 plain-food entries, including raw/cooked variants
+// FOOD DATABASE — ${DB.length} plain-food entries, including raw/cooked variants
 // ============================================================
-const FCATS=[{"id": "all", "n": "All · 全部", "ic": "🍽"}, {"id": "myfood", "n": "My foods · 我的", "ic": "⭐"}, {"id": "root", "n": "Tubers · 薯类", "ic": "🥔"}, {"id": "grain", "n": "Grains · 谷物", "ic": "🌾"}, {"id": "legume", "n": "Beans & tofu · 豆类", "ic": "🫘"}, {"id": "veg", "n": "Vegetables · 蔬菜", "ic": "🥦"}, {"id": "fruit", "n": "Fruit · 水果", "ic": "🍎"}, {"id": "protein", "n": "Meat & fish · 肉鱼", "ic": "🐟"}, {"id": "egg", "n": "Eggs · 蛋类", "ic": "🥚"}, {"id": "dairy", "n": "Plain dairy · 原味乳品", "ic": "🥛"}, {"id": "nut", "n": "Nuts & seeds · 坚果籽", "ic": "🥜"}];
+const FCATS=[{"id": "all", "n": "All · 全部", "ic": "🍽"}, {"id": "myfood", "n": "My foods · 我的", "ic": "⭐"}, {"id": "root", "n": "Tubers · 薯类", "ic": "🥔"}, {"id": "grain", "n": "Grains · 谷物", "ic": "🌾"}, {"id": "legume", "n": "Beans & tofu · 豆类", "ic": "🫘"}, {"id": "veg", "n": "Vegetables · 蔬菜", "ic": "🥦"}, {"id": "fruit", "n": "Fruit · 水果", "ic": "🍎"}, {"id": "beef", "n": "Beef · 牛肉", "ic": "🥩"}, {"id": "protein", "n": "Meat & fish · 肉鱼", "ic": "🐟"}, {"id": "egg", "n": "Eggs · 蛋类", "ic": "🥚"}, {"id": "dairy", "n": "Plain dairy · 原味乳品", "ic": "🥛"}, {"id": "nut", "n": "Nuts & seeds · 坚果籽", "ic": "🥜"}];
 
 // USDA SR Legacy, values per 100g edible portion. Raw/cooked entries are distinct.
 const DB=[
@@ -2172,11 +3803,11 @@ const DB=[
     "f": 3.0
   },
   {
-    "cat": "protein",
+    "cat": "beef",
     "n": "牛肉（后腿，瘦肉，烤熟） Beef top round, lean, grilled",
     "fdcId": 168649,
     "sourceDescription": "Beef, round, top round steak, boneless, separable lean only, trimmed to 0\" fat, all grades, cooked, grilled",
-    "aliases": "",
+    "aliases": " 牛肉 beef 牛排 steak",
     "id": "usda_168649",
     "per": "per 100g edible portion",
     "baseGrams": 100,
@@ -3178,6 +4809,300 @@ const DB=[
     "p": 1.6,
     "c": 14.4,
     "f": 0.2
+  },
+  {
+    "id": "usda_171767",
+    "n": "牛里脊／菲力（瘦肉，生） Beef tenderloin / filet, lean, raw",
+    "cat": "beef",
+    "fdcId": 171767,
+    "sourceDescription": "Beef, loin, tenderloin steak, boneless, separable lean only, trimmed to 0\" fat, all grades, raw",
+    "aliases": "牛柳 牛排 fillet steak 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 139,
+    "p": 21.9,
+    "c": 0.0,
+    "f": 5.7
+  },
+  {
+    "id": "usda_170641",
+    "n": "牛里脊／菲力（瘦肉，烤熟） Beef tenderloin / filet, lean, grilled",
+    "cat": "beef",
+    "fdcId": 170641,
+    "sourceDescription": "Beef, loin, tenderloin steak, boneless, separable lean only, trimmed to 0\" fat, all grades, cooked, grilled",
+    "aliases": "牛柳 牛排 fillet steak 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 198,
+    "p": 30.7,
+    "c": 0.0,
+    "f": 8.3
+  },
+  {
+    "id": "usda_173988",
+    "n": "牛里脊／菲力（含可食脂肪，生） Beef tenderloin / filet, lean and fat, raw",
+    "cat": "beef",
+    "fdcId": 173988,
+    "sourceDescription": "Beef, loin, tenderloin steak, boneless, separable lean and fat, trimmed to 0\" fat, all grades, raw",
+    "aliases": "牛排 牛柳 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 147,
+    "p": 21.7,
+    "c": 0.0,
+    "f": 6.7
+  },
+  {
+    "id": "usda_170237",
+    "n": "牛里脊／菲力（含可食脂肪，烤熟） Beef tenderloin / filet, lean and fat, grilled",
+    "cat": "beef",
+    "fdcId": 170237,
+    "sourceDescription": "Beef, loin, tenderloin steak, boneless, separable lean and fat, trimmed to 0\" fat, all grades, cooked, grilled",
+    "aliases": "牛排 牛柳 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 211,
+    "p": 30.5,
+    "c": 0.0,
+    "f": 8.9
+  },
+  {
+    "id": "usda_174055",
+    "n": "西冷牛排（瘦肉，生） Beef top sirloin, lean, raw",
+    "cat": "beef",
+    "fdcId": 174055,
+    "sourceDescription": "Beef, top sirloin, steak, separable lean only, trimmed to 1/8\" fat, all grades, raw",
+    "aliases": "沙朗 沙朗牛排 牛肉 sirloin steak 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 131,
+    "p": 22.1,
+    "c": 0.0,
+    "f": 4.1
+  },
+  {
+    "id": "usda_174693",
+    "n": "西冷小菲力（瘦肉，烤熟） Beef top sirloin filet, lean, grilled",
+    "cat": "beef",
+    "fdcId": 174693,
+    "sourceDescription": "Beef, loin, top sirloin filet, boneless, separable lean only, trimmed to 0\" fat, all grades, cooked, grilled",
+    "aliases": "沙朗 沙朗牛排 牛肉 sirloin steak 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 171,
+    "p": 30.6,
+    "c": 0.0,
+    "f": 5.4
+  },
+  {
+    "id": "usda_172156",
+    "n": "眼肉／肋眼（含可食脂肪，生） Beef ribeye, lean and fat, raw",
+    "cat": "beef",
+    "fdcId": 172156,
+    "sourceDescription": "Beef, rib eye steak/roast, boneless, lip-on, separable lean and fat, trimmed to 1/8\" fat, all grades, raw",
+    "aliases": "肉眼 牛排 牛肉 rib eye steak 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 244,
+    "p": 18.9,
+    "c": 0.0,
+    "f": 18.7
+  },
+  {
+    "id": "usda_173392",
+    "n": "眼肉／肋眼（含可食脂肪，烤熟） Beef ribeye, lean and fat, grilled",
+    "cat": "beef",
+    "fdcId": 173392,
+    "sourceDescription": "Beef, rib eye steak, boneless, lip-on, separable lean and fat, trimmed to 1/8\" fat, all grades, cooked, grilled",
+    "aliases": "肉眼 牛排 牛肉 rib eye steak 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 291,
+    "p": 23.7,
+    "c": 0.0,
+    "f": 21.8
+  },
+  {
+    "id": "usda_170839",
+    "n": "眼肉／肋眼（只吃瘦肉，生） Beef ribeye, lean only, raw",
+    "cat": "beef",
+    "fdcId": 170839,
+    "sourceDescription": "Beef, rib eye steak/roast, boneless, lip-on, separable lean only, trimmed to 1/8\" fat, all grades, raw",
+    "aliases": "肉眼 牛排 牛肉 rib eye steak 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 156,
+    "p": 22.0,
+    "c": 0.0,
+    "f": 7.5
+  },
+  {
+    "id": "usda_171209",
+    "n": "眼肉／肋眼（只吃瘦肉，烤熟） Beef ribeye, lean only, grilled",
+    "cat": "beef",
+    "fdcId": 171209,
+    "sourceDescription": "Beef, rib eye steak, boneless, lip-on, separable lean only, trimmed to 1/8\" fat, all grades, cooked, grilled",
+    "aliases": "肉眼 牛排 牛肉 rib eye steak 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 207,
+    "p": 28.0,
+    "c": 0.0,
+    "f": 10.6
+  },
+  {
+    "id": "usda_168607",
+    "n": "牛胸肉（瘦肉，生） Beef brisket, lean, raw",
+    "cat": "beef",
+    "fdcId": 168607,
+    "sourceDescription": "Beef, brisket, whole, separable lean only, all grades, raw",
+    "aliases": "牛腩 牛肉 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 157,
+    "p": 20.7,
+    "c": 0.6,
+    "f": 7.4
+  },
+  {
+    "id": "usda_170612",
+    "n": "牛胸肉（瘦肉，炖熟） Beef brisket, lean, braised",
+    "cat": "beef",
+    "fdcId": 170612,
+    "sourceDescription": "Beef, brisket, whole, separable lean only, trimmed to 0\" fat, all grades, cooked, braised",
+    "aliases": "牛腩 牛肉 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 218,
+    "p": 29.8,
+    "c": 0.0,
+    "f": 10.1
+  },
+  {
+    "id": "usda_168664",
+    "n": "牛胸肉（含可食脂肪，生） Beef brisket, lean and fat, raw",
+    "cat": "beef",
+    "fdcId": 168664,
+    "sourceDescription": "Beef, brisket, whole, separable lean and fat, trimmed to 1/8\" fat, all grades, raw",
+    "aliases": "牛腩 牛肉 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 253,
+    "p": 18.4,
+    "c": 0.6,
+    "f": 19.1
+  },
+  {
+    "id": "usda_168665",
+    "n": "牛胸肉（含可食脂肪，炖熟） Beef brisket, lean and fat, braised",
+    "cat": "beef",
+    "fdcId": 168665,
+    "sourceDescription": "Beef, brisket, whole, separable lean and fat, trimmed to 1/8\" fat, all grades, cooked, braised",
+    "aliases": "牛腩 牛肉 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 331,
+    "p": 25.9,
+    "c": 0.0,
+    "f": 24.5
+  },
+  {
+    "id": "usda_171790",
+    "n": "牛肉末（95%瘦，生） Ground beef, 95% lean / 5% fat, raw",
+    "cat": "beef",
+    "fdcId": 171790,
+    "sourceDescription": "Beef, ground, 95% lean meat / 5% fat, raw",
+    "aliases": "牛肉碎 minced mince 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 137,
+    "p": 21.4,
+    "c": 0.0,
+    "f": 5.0
+  },
+  {
+    "id": "usda_171791",
+    "n": "牛肉末（95%瘦，烤熟肉饼） Ground beef, 95% lean, broiled patty",
+    "cat": "beef",
+    "fdcId": 171791,
+    "sourceDescription": "Beef, ground, 95% lean meat / 5% fat, patty, cooked, broiled",
+    "aliases": "牛肉碎 minced mince 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 174,
+    "p": 26.3,
+    "c": 0.0,
+    "f": 6.8
+  },
+  {
+    "id": "usda_174030",
+    "n": "牛肉末（90%瘦，生） Ground beef, 90% lean / 10% fat, raw",
+    "cat": "beef",
+    "fdcId": 174030,
+    "sourceDescription": "Beef, ground, 90% lean meat / 10% fat, raw",
+    "aliases": "牛肉碎 minced mince 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 176,
+    "p": 20.0,
+    "c": 0.0,
+    "f": 10.0
+  },
+  {
+    "id": "usda_174031",
+    "n": "牛肉末（90%瘦，烤熟肉饼） Ground beef, 90% lean, broiled patty",
+    "cat": "beef",
+    "fdcId": 174031,
+    "sourceDescription": "Beef, ground, 90% lean meat / 10% fat, patty, cooked, broiled",
+    "aliases": "牛肉碎 minced mince 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 217,
+    "p": 26.1,
+    "c": 0.0,
+    "f": 11.8
+  },
+  {
+    "id": "usda_168609",
+    "n": "牛腹肉（瘦肉，生） Beef flank steak, lean, raw",
+    "cat": "beef",
+    "fdcId": 168609,
+    "sourceDescription": "Beef, flank, steak, separable lean only, trimmed to 0\" fat, choice, raw",
+    "aliases": "牛肉 牛排 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 149,
+    "p": 21.7,
+    "c": 0.0,
+    "f": 6.3
+  },
+  {
+    "id": "usda_168611",
+    "n": "牛腹肉（瘦肉，烤熟） Beef flank steak, lean, broiled",
+    "cat": "beef",
+    "fdcId": 168611,
+    "sourceDescription": "Beef, flank, steak, separable lean only, trimmed to 0\" fat, choice, cooked, broiled",
+    "aliases": "牛肉 牛排 牛肉 beef 牛排 steak",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 194,
+    "p": 27.8,
+    "c": 0.0,
+    "f": 8.3
+  },
+  {
+    "id": "usda_171077",
+    "n": "鸡胸肉（去皮去骨，生） Chicken breast, skinless, boneless, raw",
+    "cat": "protein",
+    "fdcId": 171077,
+    "sourceDescription": "Chicken, broiler or fryers, breast, skinless, boneless, meat only, raw",
+    "aliases": "鸡肉",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "k": 120,
+    "p": 22.5,
+    "c": 0.0,
+    "f": 2.6
   }
 ];
 
@@ -3252,7 +5177,7 @@ function getBurnForDate(date){
   const w=day.weight||currentWeight||52;
   const dur=day.tr.dur||50;
   const sess=new Set(day.tr.sess||[]);
-  const gym=estimateBurn(sess,w,dur,day.tr.e||2);
+  const gym=day.tr.dur>0?estimateBurn(sess,w,day.tr.dur,day.tr.e||2):0;
   const sport=(day.tr.activities||[]).reduce((sum,a)=>{const mets=a.type==="cycling"?{easy:4,moderate:7.5,hard:10}[a.intensity]:{easy:4.5,moderate:7,hard:9}[a.intensity];return sum+Math.round(mets*w*((a.duration||0)/60));},0);
   return gym+sport;
 }
@@ -3262,7 +5187,7 @@ function updateHeader(){
   if(el)el.textContent=currentWeight.toFixed(1);
 }
 
-function today(){return new Date().toISOString().split('T')[0];}
+function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function getDay(d){if(!S.days[d])S.days[d]={};return S.days[d];}
 function ents(d){return S.days[d]?.nut?.entries||[];}
 function tots(d){return ents(d).reduce((a,e)=>({k:a.k+e.k,p:a.p+e.p,c:a.c+e.c,f:a.f+e.f}),{k:0,p:0,c:0,f:0});}
@@ -3270,202 +5195,129 @@ function tots(d){return ents(d).reduce((a,e)=>({k:a.k+e.k,p:a.p+e.p,c:a.c+e.c,f:
 // ============================================================
 // TRAINING LOG
 // ============================================================
-let selSess=new Set(["A"]), elev=0, cxRows=[], cxId=0;
-document.getElementById("td").value=today();
-
+let selSess=new Set(['A']),elev=0,cxRows=[],cxId=0;
+let trainingDrafts={},activeTrainingDate='',recentExercisesOnly=true,loadingTraining=false;
+document.getElementById('td').value=today();
+function safeHTML(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function exerciseMeta(en){return Object.values(EX).flatMap(g=>g.exs).find(x=>x.en===en);}
+function inputValue(id){return document.getElementById(id)?.value||'';}
+function captureCxValues(){cxRows.forEach(row=>{for(const [field,prefix] of Object.entries({en:'cxen',w:'cxw',s:'cxs',r:'cxr',n:'cxn',ss:'cxss'})){const el=document.getElementById(`${prefix}_${row.id}`);if(el)row[field]=el.value;}});}
+function captureMyInputs(){
+ const draft=trainingDrafts[activeTrainingDate];if(!draft)return;
+ customExDB.forEach((x,i)=>{const k=`mex_${i}`;if(document.getElementById(`w_${k}`))draft.my[x.en]={en:x.en,...Object.fromEntries(['w','s','r','ss','n'].map(f=>[f,inputValue(`${f}_${k}`)])),cx:true};});
+}
+function captureTrainingForm(){
+ const draft=trainingDrafts[activeTrainingDate];if(!draft||loadingTraining)return;
+ Object.values(EX).flatMap(g=>g.exs).forEach(x=>{const k=`${x.sid}_${EX[x.sid].exs.indexOf(x)}`;const box=document.getElementById(`done_${k}`);if(box)draft.ex[x.en]={en:x.en,done:box.checked,...Object.fromEntries(['w','s','r','ss','n'].map(f=>[f,inputValue(`${f}_${k}`)])),unit:x.unit,mode:x.mode,sid:x.sid};});
+ captureCxValues();captureMyInputs();
+ draft.cx=cxRows.map(x=>({...x}));draft.sess=[...selSess];draft.e=elev;
+ draft.notes=inputValue('snotes');draft.dur=inputValue('tdur');draft.weight=inputValue('tw');
+ draft.activity={};['activity-type','activity-duration','activity-distance','activity-intensity','activity-detail','activity-extra','activity-notes'].forEach(id=>draft.activity[id]=inputValue(id));
+}
+function makeTrainingDraft(date){
+ const day=S.days[date]||{},tr=day.tr||{},entries={},custom=[];
+ (tr.exs||[]).forEach(x=>{const meta=exerciseMeta(x.en);if(meta)entries[x.en]={...x,done:true,unit:x.unit||meta.unit,mode:x.mode||meta.mode,sid:meta.sid};else custom.push({...x,id:cxId++});});
+ const a=tr.activities?.[0];return {ex:entries,cx:custom,my:{},sess:tr.sess?.length?tr.sess:['A'],e:tr.e||0,notes:tr.notes||'',dur:tr.dur||'',weight:day.weight||'',dirty:false,activity:{'activity-type':a?.type||'','activity-duration':a?.duration||'','activity-distance':a?.distance||'','activity-intensity':a?.intensity||'moderate','activity-detail':a?.detail||'','activity-extra':a?.extra||'','activity-notes':a?.notes||''}};
+}
+function loadTrainingDate(force=false){
+ if(!force)captureTrainingForm();
+ const date=inputValue('td');if(!date)return;
+ if(force||!trainingDrafts[date])trainingDrafts[date]=makeTrainingDraft(date);
+ const d=trainingDrafts[date];activeTrainingDate=date;loadingTraining=true;
+ selSess=new Set(d.sess.filter(s=>EX[s]));if(!selSess.size)selSess.add('A');elev=d.e;
+ cxRows=d.cx.map(x=>({...x}));document.getElementById('snotes').value=d.notes;document.getElementById('tdur').value=d.dur;document.getElementById('tw').value=d.weight;
+ for(const [id,value] of Object.entries(d.activity)){const el=document.getElementById(id);if(el)el.value=value;}
+ renderActivityFields();for(const [id,value] of Object.entries(d.activity)){const el=document.getElementById(id);if(el)el.value=value;}
+ renderSessChips();drawExs();drawCxRows();drawMyExercises();setE(elev);loadingTraining=false;
+}
+function refreshTrainingFromCloud(){if(!trainingDrafts[activeTrainingDate]?.dirty)loadTrainingDate(true);}
 function renderSessChips(){
-  document.getElementById("sch-wrap").innerHTML=Object.entries(EX).map(([id,s])=>{
-    const on=selSess.has(id);
-    return `<div class="sch${on?" on":""}" id="chip-${id}" onclick="togSess('${id}')"
-      style="${on?`background:${s.col};border-color:${s.col};color:#fff;`:`border-color:${s.col}55;color:${s.col};`}">${s.ic} ${s.name}</div>`;
-  }).join("");
+ document.getElementById('sch-wrap').innerHTML=Object.entries(EX).map(([id,s])=>`<button type="button" class="sch${selSess.has(id)&&!recentExercisesOnly?' on':''}" aria-pressed="${selSess.has(id)&&!recentExercisesOnly}" onclick="togSess('${id}')" style="border-color:${s.col};color:${selSess.has(id)&&!recentExercisesOnly?'white':s.col};background:${selSess.has(id)&&!recentExercisesOnly?s.col:'white'}">${s.ic} ${s.name}</button>`).join('');
+ const b=document.getElementById('recent-exercises');if(b){b.setAttribute('aria-pressed',String(recentExercisesOnly));b.style.background=recentExercisesOnly?'#E1F5EE':'white';}
 }
-
-function togSess(id){
-  if(selSess.has(id)){if(selSess.size===1)return;selSess.delete(id);}
-  else selSess.add(id);
-  renderSessChips();drawExs();updBurn();
+function togSess(id){captureTrainingForm();recentExercisesOnly=false;if(selSess.has(id)){if(selSess.size>1)selSess.delete(id);}else selSess.add(id);document.getElementById('exercise-search').value='';renderSessChips();drawExs();updBurn();}
+function toggleRecentExercises(){captureTrainingForm();recentExercisesOnly=!recentExercisesOnly;document.getElementById('exercise-search').value='';renderSessChips();drawExs();}
+function exerciseSummary(e,meta=exerciseMeta(e.en)){
+ const unit=e.unit||meta?.unit||'weight';
+ if(meta?.mode==='timed')return `${e.w||'—'} ${unit}${e.s?' × '+e.s+' sets':''}${e.r?' · '+e.r:''}`;
+ return `${e.w||'—'} ${unit} · ${e.s||'—'} sets × ${e.r||'—'} reps`;
 }
-
 function drawExs(){
-  let h="";
-  selSess.forEach(sid=>{
-    const s=EX[sid]; let sec="";
-    h+=`<div class="sec-h"><div class="sec-dot" style="background:${s.col}"></div><div class="sec-nm" style="color:${s.col};">${s.ic} ${s.name}</div></div>`;
-    s.exs.forEach((x,i)=>{
-      const k=`${sid}_${i}`;
-      const hist=getExerciseStats(x.en,document.getElementById("td").value);
-      const last=hist.last;
-      const lastText=last?`${last.w||"—"} kg × ${last.r||"—"} reps × ${last.s||"—"} sets · ${fmtShortDate(last.date)}`:"No recorded session yet";
-      const bestText=hist.best?`Best: ${hist.best.w} kg × ${hist.best.r||"—"} · ${fmtShortDate(hist.best.date)}`:"";
-      if(x.sec!==sec){sec=x.sec;h+=`<div style="font-size:10px;color:#aaa;font-style:italic;margin:3px 0 2px 2px;">${x.sec}</div>`;}
-      h+=`<div class="ecard" id="card_${k}"><div class="ehead"><label class="performed"><input type="checkbox" id="done_${k}" onchange="toggleExercise('${k}')"> Performed</label><div class="een" style="margin-top:5px">${x.en}</div><div class="ecn">${x.cn}</div><div class="history-badges"><span class="hbadge">Last: ${lastText}</span>${bestText?`<span class="hbadge best">🏆 ${bestText}</span>`:""}</div></div>
-      <div class="einps">
-        <div class="ig"><label>${x.unit}</label><input type="text" id="w_${k}" value="${last?.w||x.def}"></div>
-        <div class="ig"><label>Sets</label><input type="number" id="s_${k}" value="${last?.s||""}" placeholder="4"></div>
-        <div class="ig"><label>Reps / Time</label><input type="text" id="r_${k}" value="${last?.r||""}" placeholder="12"></div>
-        <div class="ig"><label>Superset with</label><input type="text" id="ss_${k}" placeholder="e.g. lateral raise"></div>
-        <div class="ig"><label>Notes</label><input type="text" id="n_${k}" placeholder="felt strong..."></div>
-      </div></div>`;
-    });
+ if(!activeTrainingDate){loadTrainingDate();return;}
+ captureTrainingForm();const draft=trainingDrafts[activeTrainingDate],q=inputValue('exercise-search').toLowerCase().trim(),needles=q.split(/\s+/).filter(Boolean);
+ let count=0,h='';
+ Object.entries(EX).forEach(([sid,s])=>{
+  const filtered=s.exs.filter(x=>q?needles.every(n=>`${x.en} ${x.cn}`.toLowerCase().includes(n)):recentExercisesOnly?!!x.recent:selSess.has(sid));
+  if(!filtered.length)return;
+  h+=`<div class="sec-h"><div class="sec-dot" style="background:${s.col}"></div><div class="sec-nm" style="color:${s.col}">${s.ic} ${s.name}</div></div>`;
+  filtered.forEach(x=>{
+   count++;const k=`${sid}_${s.exs.indexOf(x)}`,state=draft.ex[x.en],hist=getExerciseStats(x.en,inputValue('td')),last=hist.last;
+   const provided=x.recent,defaults=provided&&provided.date<inputValue('td')&&(!last||provided.date>last.date)?provided:last||{};const value=f=>safeHTML(state?.[f]??defaults[f]??'');
+   const bestText=hist.best?`${x.mode==='assistance'?'最低辅助':'Best recorded'}: ${exerciseSummary(hist.best,x)} · ${fmtShortDate(hist.best.date)}`:'';
+   h+=`<div class="ecard${state?.done?' is-done':''}" id="card_${k}"><div class="ehead"><label class="performed"><input type="checkbox" id="done_${k}" ${state?.done?'checked':''} onchange="toggleExercise('${k}')"> Performed · 已完成</label><div class="een">${safeHTML(x.en)}</div><div class="ecn">${safeHTML(x.cn)}</div><div class="history-badges"><span class="hbadge">${last?'Last: '+safeHTML(exerciseSummary(last,x))+' · '+fmtShortDate(last.date):'尚无已保存历史'}</span>${bestText?`<span class="hbadge best">${safeHTML(bestText)}</span>`:''}</div>${provided?`<div class="muted" style="margin-top:5px">你的日志参考 ${provided.date}: ${safeHTML(exerciseSummary(provided,x))}${provided.n?' · '+safeHTML(provided.n):''}</div>`:''}${x.mode==='assistance'?'<div class="muted">这里记录辅助重量，同一器械辅助越少，独立承重越多。</div>':''}</div><div class="einps">
+    <div class="ig"><label for="w_${k}">${safeHTML(x.unit)}</label><input id="w_${k}" type="text" value="${value('w')}" placeholder="${x.mode==='timed'?'Duration':'Load / BW'}"></div>
+    <div class="ig"><label for="s_${k}">Sets</label><input id="s_${k}" type="number" min="1" step="1" value="${value('s')}" placeholder="${x.mode==='timed'?'optional':'3'}"></div>
+    <div class="ig"><label for="r_${k}">${x.mode==='timed'?'Intervals / notes':'Reps / set'}</label><input id="r_${k}" value="${value('r')}" placeholder="${x.mode==='timed'?'optional':'12 / 10 / 8'}"></div>
+    <div class="ig"><label for="ss_${k}">Superset with</label><input id="ss_${k}" value="${value('ss')}" placeholder="配对动作"></div>
+    <div class="ig"><label for="n_${k}">Notes</label><input id="n_${k}" value="${value('n')}" placeholder="是否含杆／每侧次数…"></div>
+   </div></div>`;
   });
-  document.getElementById("exlist").innerHTML=h;
+ });
+ document.getElementById('exlist').innerHTML=h||'<div class="muted">没有匹配动作，可在下方自定义。</div>';
+ const selected=Object.values(draft.ex).filter(x=>x.done).length;document.getElementById('exercise-count').textContent=`${count} 个匹配动作 · 已选 ${selected} 个（含其他分类）`;
 }
-
-function drawCxRows(){
-  document.getElementById("cxlist").innerHTML=cxRows.map(row=>
-    `<div class="cx-row">
-      <input class="cxi-n" id="cxen_${row.id}" type="text" placeholder="Exercise name (e.g. B-stance RDL, 面拉...)" value="${row.en}">
-      <input class="cxi-s" id="cxw_${row.id}" type="text" placeholder="Wt/Time" value="${row.w}">
-      <input class="cxi-s" id="cxs_${row.id}" type="number" placeholder="Sets" value="${row.s}">
-      <input class="cxi-s" id="cxr_${row.id}" type="text" placeholder="Reps" value="${row.r}">
-      <input class="cxi-l" id="cxn_${row.id}" type="text" placeholder="Notes" value="${row.n}">
-      <button class="cx-save" onclick="saveMyEx(${row.id})" title="Save to My exercises permanently">⭐</button>
-      <button class="cx-del" onclick="rmCx(${row.id})">✕</button>
-    </div>`
-  ).join("");
+function toggleExercise(k){document.getElementById(`card_${k}`)?.classList.toggle('is-done',document.getElementById(`done_${k}`)?.checked);captureTrainingForm();const d=trainingDrafts[activeTrainingDate];if(d)d.dirty=true;document.getElementById('exercise-count').textContent=`已选 ${Object.values(d?.ex||{}).filter(x=>x.done).length} 个动作（含其他分类）`;}
+function drawCxRows(){document.getElementById('cxlist').innerHTML=cxRows.map(row=>`<div class="cx-row"><input class="cxi-n" id="cxen_${row.id}" placeholder="Exercise name" aria-label="Custom exercise name" value="${safeHTML(row.en)}"><input class="cxi-s" id="cxw_${row.id}" placeholder="Wt/Time" value="${safeHTML(row.w)}"><input class="cxi-s" id="cxs_${row.id}" type="number" min="1" placeholder="Sets" value="${safeHTML(row.s)}"><input class="cxi-s" id="cxr_${row.id}" placeholder="Reps" value="${safeHTML(row.r)}"><input class="cxi-l" id="cxss_${row.id}" placeholder="Superset with" value="${safeHTML(row.ss)}"><input class="cxi-l" id="cxn_${row.id}" placeholder="Notes / units" value="${safeHTML(row.n)}"><button class="cx-save" onclick="saveMyEx(${row.id})" title="Save to My exercises">⭐</button><button class="cx-del" onclick="rmCx(${row.id})" aria-label="Remove custom row">✕</button></div>`).join('');}
+function addCx(){captureCxValues();const row={id:cxId++,en:'',w:'',s:'',r:'',ss:'',n:''};cxRows.push(row);drawCxRows();document.getElementById(`cxen_${row.id}`)?.focus();}
+function rmCx(id){captureCxValues();cxRows=cxRows.filter(r=>r.id!==id);drawCxRows();captureTrainingForm();}
+function saveMyEx(rowId){captureTrainingForm();const en=inputValue(`cxen_${rowId}`).trim();if(!en){fb('tfb','Type an exercise name first');return;}if(customExDB.some(x=>x.en.toLowerCase()===en.toLowerCase())){fb('tfb','Already in My exercises');return;}customExDB.push({id:'cex_'+Date.now(),en});persist();drawMyExercises();fb('tfb','Saved to My exercises');}
+function removeMyEx(id){captureMyInputs();customExDB=customExDB.filter(x=>x.id!==id);persist();drawMyExercises(true);}
+function drawMyExercises(skipCapture=false){
+ if(!skipCapture&&!loadingTraining)captureMyInputs();const sec=document.getElementById('my-ex-section');sec.style.display=customExDB.length?'block':'none';
+ const draft=trainingDrafts[activeTrainingDate];
+ document.getElementById('my-ex-list').innerHTML=customExDB.map((x,i)=>{const k=`mex_${i}`,row=draft?.my[x.en]||{};return `<div class="myex-card"><div class="myex-head"><div class="een">${safeHTML(x.en)}</div><button class="cx-del" onclick="removeMyEx('${safeHTML(x.id)}')" aria-label="Remove saved exercise">✕</button></div><div class="einps">${[['w','Weight / Time'],['s','Sets'],['r','Reps / Time'],['ss','Superset with'],['n','Notes']].map(([f,label])=>`<div class="ig"><label for="${f}_${k}">${label}</label><input id="${f}_${k}" value="${safeHTML(row[f])}"></div>`).join('')}</div></div>`;}).join('');
 }
-
-function addCx(){cxRows.push({id:cxId++,en:"",w:"",s:"",r:"",n:""});drawCxRows();document.getElementById(`cxen_${cxId-1}`)?.focus();}
-function rmCx(id){cxRows=cxRows.filter(r=>r.id!==id);drawCxRows();}
-
-// ── My exercises (permanent custom exercise library) ──
-function saveMyEx(rowId){
-  const en=(document.getElementById(`cxen_${rowId}`)?.value||"").trim();
-  if(!en){fb("tfb","Type an exercise name first");return;}
-  if(customExDB.find(x=>x.en.toLowerCase()===en.toLowerCase())){fb("tfb",`"${en}" already in My exercises`);return;}
-  customExDB.push({id:"cex_"+Date.now(),en});
-  persist();drawMyExercises();
-  fb("tfb",`⭐ "${en}" saved — it'll appear in My exercises forever`);
-}
-
-function removeMyEx(id){
-  customExDB=customExDB.filter(x=>x.id!==id);
-  persist();drawMyExercises();
-}
-
-function drawMyExercises(){
-  const sec=document.getElementById("my-ex-section");
-  if(!customExDB.length){sec.style.display="none";return;}
-  sec.style.display="block";
-  document.getElementById("my-ex-list").innerHTML=customExDB.map((x,i)=>{
-    const k=`mex_${i}`;
-    return `<div class="myex-card">
-      <div class="myex-head">
-        <div><div class="een">${x.en}</div><span class="myfd-saved">Saved exercise</span></div>
-        <button class="cx-del" onclick="removeMyEx('${x.id}')" title="Remove from My exercises">✕</button>
-      </div>
-      <div class="einps">
-        <div class="ig"><label>Weight / Time</label><input type="text" id="w_${k}" placeholder="e.g. 15 kg"></div>
-        <div class="ig"><label>Sets</label><input type="number" id="s_${k}" placeholder="4"></div>
-        <div class="ig"><label>Reps / Time</label><input type="text" id="r_${k}" placeholder="12"></div>
-        <div class="ig"><label>Superset with</label><input type="text" id="ss_${k}" placeholder="optional"></div>
-        <div class="ig"><label>Notes</label><input type="text" id="n_${k}" placeholder="..."></div>
-      </div>
-    </div>`;
-  }).join("");
-}
-
-function setE(n){
-  elev=n;
-  [1,2,3].forEach(i=>{const b=document.getElementById("e"+i);b.style.background=i===n?"#1D9E75":"none";b.style.color=i===n?"#fff":"#888";b.style.borderColor=i===n?"#1D9E75":"#e0e0dd";});
-  updBurn();
-}
-
-// ── Weight input: recalculate targets + header live ──
-function onWtInput(){
-  const v=parseFloat(document.getElementById("tw")?.value);
-  if(v&&v>30&&v<120){
-    currentWeight=v;TGT=calcTGT(v);
-    updateHeader();updBurn();drawMT();
-  }
-}
-
-// ── Burn display in training tab ──
-function updBurn(){
-  const dur=parseInt(document.getElementById("tdur")?.value)||50;
-  const burn=estimateBurn(selSess,currentWeight,dur,elev);
-  const el=document.getElementById("burn-display");
-  if(!el)return;
-  const eMod={0:"",1:" · low energy −15%",2:"",3:" · strong +10%"}[elev]||"";
-  el.innerHTML=burn>0?`<div class="burn-box">
-    <div style="font-size:24px;line-height:1;">🔥</div>
-    <div>
-      <div class="burn-num">~${burn} kcal burned</div>
-      <div class="burn-meta">${[...selSess].map(s=>EX[s].name).join(" + ")} · ${dur} min · ${currentWeight.toFixed(1)} kg${eMod}</div>
-      <div class="burn-meta" style="opacity:.65;">MET-based estimate — actual varies by rest periods &amp; intensity</div>
-    </div>
-  </div>`:"";
-}
-
+function setE(n){elev=n;[1,2,3].forEach(i=>{const b=document.getElementById('e'+i);b.style.background=i===n?'#1D9E75':'none';b.style.color=i===n?'#fff':'#888';});updBurn();}
+function onWtInput(){const v=Number(inputValue('tw'));if(v>30&&v<120){currentWeight=v;TGT=calcTGT(v);updateHeader();updBurn();drawMT();}}
+function updBurn(){const dur=Number(inputValue('tdur'));const el=document.getElementById('burn-display');if(!el)return;const burn=dur>0?estimateBurn(selSess,currentWeight,dur,elev):0;el.innerHTML=burn?`<div class="burn-box"><div><div class="burn-num">~${burn} kcal</div><div class="burn-meta">整次训练 ${dur} min · MET 粗略估算，不是实测消耗</div></div></div>`:'<div class="muted">填写整次训练时长后显示粗略消耗估算，不会把单个动作重量当成分钟。</div>';}
 function gatherExs(){
-  const ex=[];
-  selSess.forEach(sid=>EX[sid].exs.forEach((x,i)=>{
-    const k=`${sid}_${i}`;
-    const w=document.getElementById(`w_${k}`)?.value||"";
-    const s=document.getElementById(`s_${k}`)?.value||"";
-    const r=document.getElementById(`r_${k}`)?.value||"";
-    const ss=document.getElementById(`ss_${k}`)?.value||"";
-    const n=document.getElementById(`n_${k}`)?.value||"";
-    if(document.getElementById(`done_${k}`)?.checked)ex.push({en:x.en,w,s,r,ss,n});
-  }));
-  // My saved exercises
-  customExDB.forEach((x,i)=>{
-    const k=`mex_${i}`;
-    const w=document.getElementById(`w_${k}`)?.value||"";
-    const s=document.getElementById(`s_${k}`)?.value||"";
-    const r=document.getElementById(`r_${k}`)?.value||"";
-    const ss=document.getElementById(`ss_${k}`)?.value||"";
-    const n=document.getElementById(`n_${k}`)?.value||"";
-    if(w||s||r)ex.push({en:x.en,w,s,r,ss,n,cx:true});
-  });
-  // One-time custom rows
-  cxRows.forEach(row=>{
-    const en=document.getElementById(`cxen_${row.id}`)?.value||"";
-    const w=document.getElementById(`cxw_${row.id}`)?.value||"";
-    const s=document.getElementById(`cxs_${row.id}`)?.value||"";
-    const r=document.getElementById(`cxr_${row.id}`)?.value||"";
-    const n=document.getElementById(`cxn_${row.id}`)?.value||"";
-    if(en)ex.push({en,w,s,r,n,cx:true});
-  });
-  return ex;
+ captureTrainingForm();const draft=trainingDrafts[activeTrainingDate];if(!draft)return[];
+ const ex=Object.values(draft.ex).filter(x=>x.done).map(({done,...x})=>x);
+ for(const x of Object.values(draft.my)){if(x.w||x.s||x.r){if(!ex.some(e=>e.en===x.en))ex.push({...x,cx:true});}}
+ cxRows.forEach(({id,...row})=>{if(row.en?.trim())ex.push({...row,en:row.en.trim(),cx:true});});return ex;
 }
-
 function saveT(){
-  const d=document.getElementById("td").value;
-  const wt=parseFloat(document.getElementById("tw")?.value)||null;
-  const dur=parseInt(document.getElementById("tdur")?.value)||50;
-  const day=getDay(d);
-  const activity=gatherActivity(),exs=gatherExs();
-  if(!exs.length&&!activity){fb("tfb","Select at least one performed exercise or add a ride/tennis session");return;}
-  if(activity&&!activity.duration){fb("tfb","Add the activity duration so the session can be tracked");return;}
-  day.tr={sess:exs.length?[...selSess]:[],e:elev,notes:document.getElementById("snotes").value,exs,dur,activities:activity?[activity]:[]};
-  if(wt&&wt>30&&wt<120){
-    day.weight=wt;
-    currentWeight=wt;TGT=calcTGT(wt);
-    updateHeader();
-  }
-  persist();
-  drawExs();renderDashboard();fb("tfb",`✓ Saved for ${d}${wt?" · "+wt+" kg logged":""}${activity?" · "+activity.type+" saved":""}`);
+ const d=inputValue('td');if(!d)return;const exs=gatherExs(),activity=gatherActivity();
+ if(!exs.length&&!activity){fb('tfb','请选择已完成动作或添加运动。');return;}
+ if(activity&&!activity.duration){fb('tfb','请填写运动时长。');return;}
+ for(const e of exs){const meta=exerciseMeta(e.en);if(meta?.mode==='timed'&&!(Number(e.w)>0)){fb('tfb',`${e.en}: 请填写正数时长。`);return;}if(e.s&&(!Number.isInteger(Number(e.s))||Number(e.s)<=0)){fb('tfb',`${e.en}: 组数须为正整数。`);return;}}
+ const day=getDay(d),dur=Number(inputValue('tdur'))||0,wt=Number(inputValue('tw'));
+ if(dur<0){fb('tfb','训练时长不能为负数。');return;}
+ day.tr={...day.tr,sess:[...new Set(exs.map(x=>x.sid||exerciseMeta(x.en)?.sid).filter(Boolean))],e:elev,notes:inputValue('snotes'),exs,dur,activities:activity?[activity]:[]};
+ if(exs.length&&!day.tr.sess.length)day.tr.sess=[...selSess];
+ if(wt>30&&wt<120){day.weight=wt;currentWeight=wt;TGT=calcTGT(wt);updateHeader();}
+ persist();trainingDrafts[d].dirty=false;renderDashboard();fb('tfb',`✓ ${d} 已保存 ${exs.length} 个动作`);
 }
-
-function copyT(){
-  const d=document.getElementById("td").value;
-  const el={0:"—",1:"Low",2:"Good",3:"Strong"}[elev];
-  let t=`${d} — ${[...selSess].map(s=>EX[s].name).join(" + ")}\nEnergy: ${el}\n\n`;
-  gatherExs().forEach(x=>{t+=`${x.en}`;if(x.ss)t+=` ↕ SS: ${x.ss}`;t+=`\n  ${x.w} × ${x.s} sets × ${x.r}`;if(x.n)t+=` — ${x.n}`;t+="\n";});
-  const notes=document.getElementById("snotes").value;
-  if(notes)t+=`\nNotes: ${notes}`;
-  navigator.clipboard.writeText(t).then(()=>fb("tfb","✓ Copied")).catch(()=>alert(t));
+function copyT(){const exs=gatherExs();let t=`${inputValue('td')}\n`+exs.map(x=>`${x.en}\n${exerciseSummary(x)}${x.ss?' · Superset: '+x.ss:''}${x.n?' · '+x.n:''}`).join('\n\n');if(inputValue('snotes'))t+='\n\n'+inputValue('snotes');navigator.clipboard.writeText(t).then(()=>fb('tfb','✓ Copied')).catch(()=>fb('tfb','复制失败，请使用导出备份。'));}
+function importRecentTraining(){
+ if(cloudClient&&(!cloudUser||!cloudReady)){fb('tfb','请先登录并完成云同步，再导入历史训练。');return;}
+ const added=[],skipped=[];
+ for(const [date,exs] of Object.entries(RECENT_TRAINING)){
+  if(S.days[date]?.tr){skipped.push(date);continue;}
+  const day=getDay(date);day.tr={sess:[...new Set(exs.map(e=>e.sid))],e:0,notes:'导入用户训练日志；整次训练时长未注明。',exs:exs.map(x=>({...x})),dur:0,activities:[]};added.push(date);
+  if(trainingDrafts[date]&&!trainingDrafts[date].dirty)delete trainingDrafts[date];
+ }
+ if(added.length){persist();renderDashboard();}
+ document.getElementById('training-import-result').textContent=`新增 ${added.length} 次；跳过 ${skipped.length} 个已有训练的日期。`;
+ if(added.includes(activeTrainingDate))loadTrainingDate(true);
 }
-
-function fb(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;setTimeout(()=>el.textContent="",2500);}}
-renderSessChips();drawExs();
+function fb(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;setTimeout(()=>{if(el.textContent===msg)el.textContent='';},7000);}}
 
 // ============================================================
 // NUTRITION LOG
 // ============================================================
 let dtMode="training", selFood={}, openForm={}, selCat={};
+let nutritionDrafts={},renderedNutritionDate="",renderedFoodIds={};
 document.getElementById("nd").value=today();
 
 function setDT(t){
@@ -3540,7 +5392,7 @@ function filt(q,cat){
   if(cat==="myfood"){
     list=customFoodDB.slice();
   } else {
-    list=cat==="all"?DB:DB.filter(f=>f.cat===cat);
+    list=cat==="all"?[...DB,...customFoodDB]:DB.filter(f=>f.cat===cat);
   }
   if(q){
     const needles=q.toLowerCase().trim().split(/\s+/).filter(Boolean);
@@ -3549,15 +5401,27 @@ function filt(q,cat){
   return list;
 }
 
+function captureNutritionDraft(){
+ if(!renderedNutritionDate)return;
+ const previous=nutritionDrafts[renderedNutritionDate]||{inputs:{}};
+ document.querySelectorAll('#meals input').forEach(el=>previous.inputs[el.id]=el.value);
+ nutritionDrafts[renderedNutritionDate]={inputs:previous.inputs,food:{...selFood},open:{...openForm},cat:{...selCat},bases:{...renderedFoodIds}};
+}
 function drawMeals(){
+  captureNutritionDraft();
   const d=nd(),es=ents(d);
+  if(renderedNutritionDate!==d){
+    const draft=nutritionDrafts[d];selFood={...draft?.food};openForm={...draft?.open};selCat={...draft?.cat};
+    renderedNutritionDate=d;
+  }
+  const inputs=nutritionDrafts[d]?.inputs||{};
   const MEALS=dtMode==="training"?MEALS_T:MEALS_R;
   let h="";
   MEALS.forEach(m=>{
     const me=es.filter(e=>e.mid===m.id);
     const mk=me.reduce((s,e)=>s+e.k,0);
     const sf=selFood[m.id],of=openForm[m.id],cat=selCat[m.id]||"all";
-    const results=sf?[]:filt(document.getElementById(`fs-${m.id}`)?.value||"",cat);
+    const results=sf?[]:filt(inputs[`fs-${m.id}`]||"",cat);
     h+=`<div class="msec">
       <div class="mhead">
         <div class="mnam"><span style="font-size:15px;">${m.ic}</span><span class="mttl">${m.n}</span>${mk>0?`<span class="mkcl">${mk} kcal</span>`:""}</div>
@@ -3566,24 +5430,25 @@ function drawMeals(){
     if(me.length){
       h+=`<div class="fents">`;
       me.forEach(e=>{h+=`<div class="frow">
-        <div class="fnm"><div class="fen">${e.fn}</div><div class="fdt">${e.per} × ${e.qty}</div></div>
+        <div class="fnm"><div class="fen">${e.fn}</div><div class="fdt">${e.per==="per 100g edible portion"?`${Math.round(e.qty*1000)/10} g`:safeHTML(e.per)+" × "+e.qty}</div></div>
         <div class="fmacs"><span class="bm bp">${e.p}g P</span><span class="bm bc">${e.c}g C</span><span class="bm bf">${e.f}g F</span></div>
         <span class="fkc">${e.k} kcal</span>
-        <button class="delbtn" onclick="delEnt('${d}',${e.id})">✕</button>
+        <button class="delbtn" onclick="delEnt('${d}',${es.indexOf(e)})">✕</button>
       </div>`;});
       h+=`</div>`;
     }
     if(of){
       h+=`<div class="aform">
-        <div style="font-size:11px;color:#777;line-height:1.6;margin-bottom:8px;">192 plain-food entries · 原型食物为主，含原味乳品及豆腐。按可食部分称重，区分生／熟；熟食不含额外用油或酱料。 <a href="https://fdc.nal.usda.gov/download-datasets/" target="_blank" rel="noopener">USDA 数据</a></div>
+        <div style="font-size:11px;color:#777;line-height:1.6;margin-bottom:8px;">${DB.length} plain-food entries · 原型食物为主，含原味乳品及豆腐。按可食部分称重，区分生／熟；熟食不含额外用油或酱料。 <a href="https://fdc.nal.usda.gov/download-datasets/" target="_blank" rel="noopener">USDA 数据</a></div>
         <div class="cchips">${FCATS.map(c=>`<div class="cchip${cat===c.id?" on":""}" onclick="setCat('${m.id}','${c.id}')">${c.ic} ${c.n}</div>`).join("")}</div>
-        ${!sf?`<input class="fsrch" id="fs-${m.id}" type="text" placeholder="Search: 土豆 / potato · 燕麦 / oats · 鸡胸 / chicken" oninput="refilter('${m.id}')">
+        ${!sf?`<input class="fsrch" id="fs-${m.id}" type="text" placeholder="Search: 土豆 / potato · 燕麦 / oats · 鸡胸 / chicken" oninput="refilter('${m.id}')" value="${safeHTML(inputs[`fs-${m.id}`]||'')}">
         <div class="flist" id="fl-${m.id}">${foodResults(m.id,results)}</div>`:``}
         ${sf?`<div class="qrow">
           <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:500;">${sf.n}</div><div style="font-size:11px;color:#888;">${sf.per}</div></div>
           <input type="number" id="fq-${m.id}" min="0.1" step="${sf.baseGrams?1:0.1}" value="${sf.baseGrams||1}" aria-label="${sf.baseGrams?'Weight in grams':'Number of servings'}" oninput="updPrev('${m.id}')">
           <span class="qunit">${sf.baseGrams?"g · 克":"× serving"}</span>
           <span class="qprev" id="qp-${m.id}">${sf.k} kcal</span>
+          <button class="btn2" style="padding:7px;font-size:11px" onclick="changeFood('${m.id}')">换食物</button>
           <button class="qadd" onclick="confirmF('${m.id}','${d}')">Add</button>
         </div>`:``}
         <div style="font-size:10px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-top:8px;margin-bottom:5px;">Or enter custom</div>
@@ -3603,7 +5468,15 @@ function drawMeals(){
     h+=`</div>`;
   });
   document.getElementById("meals").innerHTML=h;
+  document.querySelectorAll('#meals input').forEach(el=>{
+    if(!(el.id in inputs))return;
+    if(el.id.startsWith('fq-')){const mid=el.id.slice(3);if(nutritionDrafts[d]?.bases?.[mid]!==selFood[mid]?.id)return;}
+    el.value=inputs[el.id];
+  });
+  renderedFoodIds=Object.fromEntries(Object.entries(selFood).filter(([,f])=>f).map(([mid,f])=>[mid,f.id]));
+  Object.keys(selFood).forEach(mid=>{if(selFood[mid]&&document.getElementById(`fq-${mid}`))updPrev(mid);});
 }
+function changeFood(mid){selFood[mid]=null;drawMeals();}
 
 function setCat(mid,cat){selCat[mid]=cat;drawMeals();setTimeout(()=>{const el=document.getElementById(`fs-${mid}`);if(el)el.focus();},30);}
 function foodResults(mid,foods){
@@ -3635,7 +5508,7 @@ function confirmF(mid,date){
   const q=foodQuantity(mid);
   if(!q){fb("nfb","Enter a positive weight or serving amount");return;}
   pushEnt(date,mid,sf.n,sf.per,q,Math.round(sf.k*q),Math.round(sf.p*q*10)/10,Math.round(sf.c*q*10)/10,Math.round(sf.f*q*10)/10);
-  selFood[mid]=null;openForm[mid]=false;persist();renderN();
+  selFood[mid]=null;openForm[mid]=false;persist();renderN();if(nutritionDrafts[date]){for(const key of Object.keys(nutritionDrafts[date].inputs)){if(key.endsWith("-"+mid))delete nutritionDrafts[date].inputs[key];}}
 }
 function addCust(mid,date){
   const fn=document.getElementById(`cfn-${mid}`)?.value?.trim();
@@ -3673,13 +5546,15 @@ function removeMyFood(id){
 function pushEnt(date,mid,fn,per,qty,k,p,c,f){
   const day=getDay(date);
   if(!day.nut)day.nut={type:dtMode,entries:[]};
-  day.nut.entries.push({id:eid++,mid,fn,per,qty,k,p,c,f});
+  eid=Math.max(Date.now(),eid+1);
+  day.nut.entries.push({id:eid,mid,fn,per,qty,k,p,c,f});
 }
-function delEnt(date,id){
-  if(!S.days[date]?.nut)return;
-  S.days[date].nut.entries=S.days[date].nut.entries.filter(e=>e.id!==id);
-  persist();renderN();
+function delEnt(date,index){
+ const entries=S.days[date]?.nut?.entries;
+ if(!entries||!Number.isInteger(index)||index<0||index>=entries.length)return;
+ entries.splice(index,1);persist();renderN();
 }
+
 function togForm(mid){
   openForm[mid]=!openForm[mid];
   if(!openForm[mid]){selFood[mid]=null;selCat[mid]="all";}
@@ -3768,22 +5643,23 @@ function drawCal(){
 }
 
 function getLH(en){
-  const pts=[];
-  Object.keys(S.days).sort().forEach(k=>{
-    const day=S.days[k];if(!day?.tr?.exs)return;
-    const ex=day.tr.exs.find(e=>e.en===en);
-    if(ex?.w){const w=parseFloat(ex.w.replace("+","").replace("BW","0"))||0;if(w>0)pts.push({date:k,w});}
-  });
-  return pts;
+ const pts=[];Object.keys(S.days).sort().forEach(date=>(S.days[date]?.tr?.exs||[]).filter(e=>e.en===en).forEach(e=>{const w=parseFloat(String(e.w).replace('+',''));if(Number.isFinite(w)&&w>=0)pts.push({date,w});}));return pts;
 }
 
 function parseLoad(v){return parseFloat(String(v||"").replace("+","").replace("BW","0"))||0;}
 function parseReps(v){return parseFloat(String(v||"").replace(/[^0-9.].*/,""))||0;}
-function exerciseScore(ex){const w=parseLoad(ex.w),r=parseReps(ex.r);return w>0?w*(1+r/30):r;}
-function fmtShortDate(d){if(!d)return"";const x=new Date(d+"T12:00:00");return`${x.getMonth()+1}/${x.getDate()}`;}
-function getExerciseStats(en,beforeDate="9999-12-31"){
-  const rows=[];Object.keys(S.days).sort().forEach(date=>{if(date>=beforeDate)return;(S.days[date]?.tr?.exs||[]).filter(e=>e.en===en).forEach(e=>rows.push({...e,date,score:exerciseScore(e)}));});
-  return{first:rows[0]||null,last:rows[rows.length-1]||null,best:rows.length?rows.reduce((a,b)=>b.score>a.score?b:a):null};
+function exerciseScore(ex){
+  const meta=exerciseMeta(ex.en),mode=ex.mode||meta?.mode;
+  if(mode==='assistance')return -parseLoad(ex.w);
+  if(mode==='bodyweight'&&/^BW$/i.test(String(ex.w).trim()))return parseReps(ex.r)/1000;
+  return parseLoad(ex.w);
+}
+function fmtShortDate(d){if(!d)return '';const x=new Date(d+'T12:00:00');return `${x.getMonth()+1}/${x.getDate()}`;}
+function getExerciseStats(en,beforeDate='9999-12-31'){
+ const rows=[];Object.keys(S.days).sort().forEach(date=>{if(date>=beforeDate)return;(S.days[date]?.tr?.exs||[]).filter(e=>e.en===en).forEach(e=>rows.push({...e,date,score:exerciseScore(e)}));});
+ const mode=exerciseMeta(en)?.mode;
+ const eligible=rows.filter(e=>mode!=='unknown'&&mode!=='timed'&&mode!=='reps'&&String(e.w).trim()!==''&&(Number.isFinite(parseFloat(String(e.w).replace('+','')))||/^BW$/i.test(String(e.w).trim())));
+ return {first:rows[0]||null,last:rows[rows.length-1]||null,best:eligible.length?eligible.reduce((a,b)=>b.score>a.score||(b.score===a.score&&parseReps(b.r)>parseReps(a.r))?b:a):null};
 }
 
 function renderActivityFields(){
@@ -3792,30 +5668,21 @@ function renderActivityFields(){
 }
 function gatherActivity(){const type=document.getElementById("activity-type").value;if(!type)return null;return{type,duration:+document.getElementById("activity-duration").value||0,distance:+document.getElementById("activity-distance").value||0,intensity:document.getElementById("activity-intensity").value,detail:document.getElementById("activity-detail")?.value||"",extra:+document.getElementById("activity-extra")?.value||0,notes:document.getElementById("activity-notes")?.value||""};}
 
-function drawCharts(){
-  Object.values(sCharts).forEach(c=>{try{c.destroy();}catch(e){}});
-  sCharts={};
-  const lifts=[{n:"Smith split squat",lbl:"分腿蹲",col:"#1D9E75"},{n:"Smith RDL",lbl:"硬拉",col:"#378ADD"},{n:"Seated DB shoulder press",lbl:"哑铃肩推",col:"#EF9F27"}];
-  let h="";
-  lifts.forEach((l,i)=>{
-    const pts=getLH(l.n),lat=pts.length?pts[pts.length-1].w:0,fst=pts.length?pts[0].w:0;
-    const d=pts.length>1?((lat-fst)/fst*100).toFixed(0):0;
-    h+=`<div class="cc"><div class="cct">${l.lbl}</div><div class="ccv">${lat?lat+"kg":"-"}${d>0?` <span style="font-size:10px;background:#E1F5EE;color:#0F6E56;padding:1px 5px;border-radius:99px;">+${d}%</span>`:""}</div><div class="ccw"><canvas id="sc${i}"></canvas></div></div>`;
-  });
-  document.getElementById("rcharts").innerHTML=h;
-  lifts.forEach((l,i)=>{
-    const pts=getLH(l.n);if(!pts.length)return;
-    const ctx=document.getElementById(`sc${i}`);if(!ctx)return;
-    sCharts[i]=new Chart(ctx,{type:"line",data:{labels:pts.map(p=>{const d=new Date(p.date);return`${d.getMonth()+1}/${d.getDate()}`;}),datasets:[{data:pts.map(p=>p.w),borderColor:l.col,backgroundColor:l.col+"20",borderWidth:2,pointRadius:3,pointBackgroundColor:l.col,fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.parsed.y}kg`}}},scales:{x:{display:false},y:{display:false,beginAtZero:false}}}});
-  });
+function drawCharts(selected){
+ Object.values(sCharts).forEach(c=>{try{c.destroy();}catch(e){}});sCharts={};
+ const lifts=Object.values(EX).flatMap(g=>g.exs).filter(x=>['external','assistance'].includes(x.mode)&&getLH(x.en).length);
+ const select=document.getElementById('progress-exercise'),previous=selected||select.value;
+ select.innerHTML=lifts.map(x=>`<option value="${safeHTML(x.en)}">${safeHTML(x.cn)} · ${safeHTML(x.en)}</option>`).join('');
+ if(!lifts.length){document.getElementById('rcharts').innerHTML='<div class="muted">保存训练后可选择动作查看趋势。</div>';return;}
+ const lift=lifts.find(x=>x.en===previous)||lifts.find(x=>x.en==='Barbell RDL')||lifts[0];select.value=lift.en;
+ const pts=getLH(lift.en),last=pts[pts.length-1];
+ document.getElementById('rcharts').innerHTML=`<div class="cc"><div class="cct">${safeHTML(lift.cn)}</div><div class="ccv">${last.w} ${safeHTML(lift.unit)}</div><div class="muted">${lift.mode==='assistance'?'辅助重量趋势：同一器械，辅助越少，独立承重越多。':'记录负重趋势；请在相同器械、部位及重量口径下比较。'}</div><div class="ccw"><canvas id="exercise-trend"></canvas></div></div>`;
+ sCharts.exercise=new Chart(document.getElementById('exercise-trend'),{type:'line',data:{labels:pts.map(p=>fmtShortDate(p.date)),datasets:[{label:lift.unit,data:pts.map(p=>p.w),borderColor:'#378ADD',backgroundColor:'#378ADD20',fill:true,tension:.2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
 }
 
 function drawPRs(){
-  const lifts=Object.values(EX).flatMap(s=>s.exs).filter(x=>![/sec|reps|min/i.test(x.unit)]).map(x=>({n:x.en,cn:x.cn}));
-  document.getElementById("rprs").innerHTML=lifts.map(l=>{
-    const h=getExerciseStats(l.n),first=h.first,best=h.best;if(!best)return"";const d=first?.score?Math.round((best.score-first.score)/first.score*100):0;
-    return `<div class="prrow"><div><div class="prex">${l.n}</div><div class="prcn">${l.cn}</div></div><div class="prv"><div class="prcur">${best.w} kg × ${best.r||"—"}</div><div class="prch">${d>0?"+"+d+"% estimated strength · ":""}${fmtShortDate(best.date)}</div></div></div>`;
-  }).join("")||`<div class="muted">Log a performed exercise to establish your first personal best.</div>`;
+ const lifts=Object.values(EX).flatMap(s=>s.exs).filter(x=>['external','assistance','bodyweight'].includes(x.mode));
+ document.getElementById('rprs').innerHTML=lifts.map(x=>{const best=getExerciseStats(x.en).best;if(!best)return '';return `<div class="prrow"><div><div class="prex">${safeHTML(x.en)}</div><div class="prcn">${safeHTML(x.cn)}</div></div><div class="prv"><div class="prcur">${safeHTML(exerciseSummary(best,x))}</div><div class="prch">${x.mode==='assistance'?'最低记录辅助重量 · ':'最高记录负重（同口径比较） · '}${fmtShortDate(best.date)}</div></div></div>`;}).join('')||'<div class="muted">保存已完成的负重动作后，会在这里显示历史记录。</div>';
 }
 
 function drawNutRev(){
@@ -3850,8 +5717,8 @@ function drawNutRev(){
         labels:bars.map(b=>String(b.d)),
         datasets:[
           {label:"Calories logged",data:bars.map(b=>b.k),backgroundColor:bcols,borderRadius:4,borderSkipped:false},
-          {type:"line",label:"Training target (1,850)",data:Array(bars.length).fill(1850),borderColor:"#1D9E75",borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false},
-          {type:"line",label:"Rest target (1,550)",data:Array(bars.length).fill(1550),borderColor:"#EF9F27",borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false}
+          {type:"line",label:`Training target (${TGT.training.k})`,data:Array(bars.length).fill(TGT.training.k),borderColor:"#1D9E75",borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false},
+          {type:"line",label:`Rest target (${TGT.rest.k})`,data:Array(bars.length).fill(TGT.rest.k),borderColor:"#EF9F27",borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false}
         ]
       },
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:10},boxWidth:12,padding:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:"#f0ede8"},ticks:{font:{size:10}},beginAtZero:false}}}
@@ -3861,9 +5728,9 @@ function drawNutRev(){
   }
 
   document.getElementById("nutmacros").innerHTML=`
-    <div class="cc"><div class="cct">Avg protein</div><div class="ccv" style="color:#1D9E75;">${avgP}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Target 100g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,Math.round(avgP/100*100))}%;background:#1D9E75;border-radius:99px;"></div></div></div>
-    <div class="cc"><div class="cct">Avg carbs</div><div class="ccv" style="color:#378ADD;">${avgC}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Train target 210g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,Math.round(avgC/210*100))}%;background:#378ADD;border-radius:99px;"></div></div></div>
-    <div class="cc"><div class="cct">Avg fat</div><div class="ccv" style="color:#EF9F27;">${avgF}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Target 66–68g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,Math.round(avgF/68*100))}%;background:#EF9F27;border-radius:99px;"></div></div></div>`;
+    <div class="cc"><div class="cct">Avg protein</div><div class="ccv" style="color:#1D9E75;">${avgP}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Target ${TGT.training.p}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,Math.round(avgP/TGT.training.p*100))}%;background:#1D9E75;border-radius:99px;"></div></div></div>
+    <div class="cc"><div class="cct">Avg carbs</div><div class="ccv" style="color:#378ADD;">${avgC}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Train target ${TGT.training.c}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,Math.round(avgC/TGT.training.c*100))}%;background:#378ADD;border-radius:99px;"></div></div></div>
+    <div class="cc"><div class="cct">Avg fat</div><div class="ccv" style="color:#EF9F27;">${avgF}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Train target ${TGT.training.f}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,Math.round(avgF/TGT.training.f*100))}%;background:#EF9F27;border-radius:99px;"></div></div></div>`;
 }
 
 // ============================================================
@@ -4003,7 +5870,7 @@ function cloudPayload(){return{version:5,days:S.days,customExercises:customExDB,
 function applyCloudPayload(data){
   if(!data?.days)return;cloudApplying=true;S.days={...data.days};customExDB=data.customExercises||[];customFoodDB=data.customFoods||[];PROFILE={...PROFILE,...(data.profile||{})};
   localStorage.setItem("gt_v3",JSON.stringify(S.days));localStorage.setItem("gt_cex",JSON.stringify(customExDB));localStorage.setItem("gt_cfd",JSON.stringify(customFoodDB));localStorage.setItem("gt_profile",JSON.stringify(PROFILE));
-  const keys=Object.keys(S.days).filter(d=>S.days[d].weight).sort();if(keys.length)currentWeight=S.days[keys[keys.length-1]].weight;TGT=calcTGT(currentWeight);updateHeader();drawExs();drawMyExercises();renderN();renderDashboard();cloudApplying=false;
+  const keys=Object.keys(S.days).filter(d=>S.days[d].weight).sort();if(keys.length)currentWeight=S.days[keys[keys.length-1]].weight;TGT=calcTGT(currentWeight);updateHeader();refreshTrainingFromCloud();renderN();renderDashboard();cloudApplying=false;
 }
 async function initCloud(){
   const cfg=cloudConfig();document.getElementById("cloud-url").value=cfg.url;document.getElementById("cloud-key").value=cfg.key;
@@ -4111,8 +5978,8 @@ function showTab(t){
   if(t==="D")renderDashboard();
 }
 
-function toggleExercise(k){document.getElementById(`card_${k}`)?.classList.toggle("is-done",document.getElementById(`done_${k}`)?.checked);}
-function openDay(d){document.getElementById("nd").value=d;showTab("N");}
+
+function openDay(d){if(S.days[d]?.tr){document.getElementById("td").value=d;loadTrainingDate();showTab("T");}else{document.getElementById("nd").value=d;showTab("N");}}
 function openTodayHistory(){openDay(today());}
 const PLATE=[{id:"protein",ic:"🍗",n:"Protein"},{id:"veg",ic:"🥦",n:"Vegetables"},{id:"carb",ic:"🍚",n:"Smart carbs"},{id:"fruit",ic:"🍓",n:"Fruit"}];
 function togglePlate(id){const day=getDay(today());day.plate=day.plate||{};day.plate[id]=!day.plate[id];persist();renderDashboard();}
@@ -4123,7 +5990,7 @@ function renderDashboard(){
   document.getElementById("today-grid").innerHTML=`<div class="today-card"><div class="today-v">${trained?"✓":"—"}</div><div class="today-l">Workout</div></div><div class="today-card"><div class="today-v">${Math.round(tot.p)}g</div><div class="today-l">Protein</div></div><div class="today-card"><div class="today-v">${water}ml</div><div class="today-l">Water</div></div><div class="today-card"><div class="today-v">${day.recovery?.sleep||"—"}</div><div class="today-l">Sleep hours</div></div>`;
   document.getElementById("plate-grid").innerHTML=PLATE.map(x=>`<button class="plate-btn${day.plate?.[x.id]?" on":""}" onclick="togglePlate('${x.id}')">${x.ic}<br>${x.n}${day.plate?.[x.id]?" ✓":""}</button>`).join("");
   const now=new Date(d+"T12:00:00"),dow=now.getDay(),start=new Date(now);start.setDate(now.getDate()-((dow+6)%7));let sessions=0,logged=0;
-  for(let i=0;i<7;i++){const x=new Date(start);x.setDate(start.getDate()+i);const k=x.toISOString().split("T")[0];if(S.days[k]?.tr)sessions++;if(S.days[k]?.nut?.entries?.length)logged++;}
+  for(let i=0;i<7;i++){const x=new Date(start);x.setDate(start.getDate()+i);const k=`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`;if(S.days[k]?.tr)sessions++;if(S.days[k]?.nut?.entries?.length)logged++;}
   document.getElementById("week-summary").innerHTML=`<strong>${sessions}</strong> workouts · <strong>${logged}</strong> nutrition days logged. Aim for consistency, not a perfect streak.`;
   if(day.recovery){document.getElementById("rec-sleep").value=day.recovery.sleep||"";document.getElementById("rec-sore").value=day.recovery.soreness||"";}
 }
@@ -4171,11 +6038,12 @@ if(_wtKeys.length){
   TGT=calcTGT(currentWeight);
 }
 updateHeader();
-drawExs();         // refresh last-session values from hydrated history
+loadTrainingDate(true); // load actual saved session for the selected date
 drawMyExercises(); // show saved custom exercises immediately
 renderN();         // re-render nutrition with saved data
 updateSyncBar();   // show backup status on load
 renderDashboard(); // dashboard is the calm default view
+document.getElementById('tab-T').addEventListener('input',event=>{if(event.target.id!=='td'&&event.target.id!=='exercise-search'){const draft=trainingDrafts[activeTrainingDate];if(draft)draft.dirty=true;}});
 initCloud();        // cloud sync is optional; local mode still works
 </script>
 </body>

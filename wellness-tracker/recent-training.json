@@ -1,0 +1,496 @@
+{
+  "2026-11-11": [
+    {
+      "en": "Straight arm pulldown",
+      "w": "10",
+      "s": "3",
+      "r": "8",
+      "n": "",
+      "ss": "",
+      "unit": "kg",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa back routine",
+      "w": "4",
+      "s": "2",
+      "r": "",
+      "n": "每手4kg；原记录2组SPS，组合细节未注明",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Lunge-stance DB row",
+      "w": "8",
+      "s": "3",
+      "r": "12",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Face pull",
+      "w": "12.5",
+      "s": "3",
+      "r": "12",
+      "n": "",
+      "ss": "",
+      "unit": "kg",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Assisted pull-up",
+      "w": "22",
+      "s": "4",
+      "r": "6",
+      "n": "22kg 为辅助重量",
+      "ss": "",
+      "unit": "kg assistance",
+      "mode": "assistance",
+      "sid": "B"
+    },
+    {
+      "en": "Lateral raise",
+      "w": "2",
+      "s": "3",
+      "r": "15",
+      "n": "每手2kg",
+      "ss": "Y-raise",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Y-raise",
+      "w": "2",
+      "s": "3",
+      "r": "10",
+      "n": "每手2kg",
+      "ss": "Lateral raise",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Barbell RDL",
+      "w": "+15",
+      "s": "3",
+      "r": "10",
+      "n": "原记录+15kg，是否含杆未注明",
+      "ss": "",
+      "unit": "kg (注明含杆或加片)",
+      "mode": "external",
+      "sid": "A"
+    },
+    {
+      "en": "Smith bench press",
+      "w": "+5",
+      "s": "3",
+      "r": "10",
+      "n": "加片重量，不含杆",
+      "ss": "",
+      "unit": "kg added",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Smith split squat",
+      "w": "+15",
+      "s": "3",
+      "r": "12",
+      "n": "原称Smith单腿蹲；是否每侧12次未注明",
+      "ss": "",
+      "unit": "kg added",
+      "mode": "external",
+      "sid": "A"
+    }
+  ],
+  "2026-11-06": [
+    {
+      "en": "Hip abductor machine",
+      "w": "20",
+      "s": "3",
+      "r": "15 / 25 / 20",
+      "n": "逐组次数",
+      "ss": "",
+      "unit": "kg on machine",
+      "mode": "external",
+      "sid": "A"
+    },
+    {
+      "en": "Lisa shoulder DB routine",
+      "w": "2",
+      "s": "2",
+      "r": "",
+      "n": "每手2kg；原记录2组SPS",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa shoulder plate routine",
+      "w": "5",
+      "s": "2",
+      "r": "",
+      "n": "5kg杠铃片；原记录2组SPS",
+      "ss": "",
+      "unit": "kg plate",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa back routine",
+      "w": "4",
+      "s": "2",
+      "r": "",
+      "n": "每手4kg；原记录2组SPS",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Seated DB shoulder press",
+      "w": "6",
+      "s": "3",
+      "r": "12",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Barbell RDL",
+      "w": "+15",
+      "s": "3",
+      "r": "10",
+      "n": "原记录+15kg，是否含杆未注明",
+      "ss": "",
+      "unit": "kg (注明含杆或加片)",
+      "mode": "external",
+      "sid": "A"
+    },
+    {
+      "en": "Smith bench press",
+      "w": "+5",
+      "s": "3",
+      "r": "10",
+      "n": "加片重量，不含杆",
+      "ss": "",
+      "unit": "kg added",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Smith split squat",
+      "w": "+15",
+      "s": "3",
+      "r": "12",
+      "n": "原称Smith单腿蹲；是否每侧12次未注明",
+      "ss": "",
+      "unit": "kg added",
+      "mode": "external",
+      "sid": "A"
+    }
+  ],
+  "2026-09-17": [
+    {
+      "en": "Single-arm DB row",
+      "w": "",
+      "s": "",
+      "r": "",
+      "n": "原记录未填重量、组数、次数",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Cable pulldown (unspecified)",
+      "w": "",
+      "s": "",
+      "r": "",
+      "n": "原记录未填握法、重量、组数、次数",
+      "ss": "",
+      "unit": "kg on machine",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Stairmaster",
+      "w": "30",
+      "s": "",
+      "r": "",
+      "n": "30分钟",
+      "ss": "",
+      "unit": "min",
+      "mode": "timed",
+      "sid": "D"
+    },
+    {
+      "en": "Straight arm pulldown",
+      "w": "10",
+      "s": "3",
+      "r": "8",
+      "n": "",
+      "ss": "",
+      "unit": "kg",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Face pull",
+      "w": "12.5",
+      "s": "3",
+      "r": "12",
+      "n": "",
+      "ss": "",
+      "unit": "kg",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lat pulldown",
+      "w": "25",
+      "s": "2",
+      "r": "8",
+      "n": "",
+      "ss": "",
+      "unit": "kg",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lateral raise",
+      "w": "2",
+      "s": "3",
+      "r": "15",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa back routine",
+      "w": "4",
+      "s": "2",
+      "r": "",
+      "n": "每手4kg；2组SPS",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Y-raise",
+      "w": "2",
+      "s": "3",
+      "r": "15",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lunge-stance DB row",
+      "w": "8",
+      "s": "3",
+      "r": "10",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    }
+  ],
+  "2026-09-15": [
+    {
+      "en": "Smith split squat",
+      "w": "+15",
+      "s": "3",
+      "r": "12",
+      "n": "原称Smith单腿蹲；是否每侧12次未注明",
+      "ss": "",
+      "unit": "kg added",
+      "mode": "external",
+      "sid": "A"
+    },
+    {
+      "en": "Barbell RDL",
+      "w": "+15",
+      "s": "3",
+      "r": "10",
+      "n": "原记录+15kg，是否含杆未注明",
+      "ss": "",
+      "unit": "kg (注明含杆或加片)",
+      "mode": "external",
+      "sid": "A"
+    },
+    {
+      "en": "Smith bench press",
+      "w": "+5",
+      "s": "3",
+      "r": "10",
+      "n": "加片重量，不含杆",
+      "ss": "",
+      "unit": "kg added",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Seated DB shoulder press",
+      "w": "6",
+      "s": "3",
+      "r": "12",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa shoulder DB routine",
+      "w": "2",
+      "s": "2",
+      "r": "",
+      "n": "每手2kg；2组SPS",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa shoulder plate routine",
+      "w": "5",
+      "s": "2",
+      "r": "",
+      "n": "5kg杠铃片；2组SPS",
+      "ss": "",
+      "unit": "kg plate",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Assisted pull-up",
+      "w": "22",
+      "s": "3",
+      "r": "10",
+      "n": "22kg为辅助重量",
+      "ss": "",
+      "unit": "kg assistance",
+      "mode": "assistance",
+      "sid": "B"
+    },
+    {
+      "en": "Hip abductor machine",
+      "w": "20",
+      "s": "3",
+      "r": "15 / 25 / 20",
+      "n": "逐组次数",
+      "ss": "",
+      "unit": "kg on machine",
+      "mode": "external",
+      "sid": "A"
+    }
+  ],
+  "2026-09-04": [
+    {
+      "en": "Incline treadmill walk",
+      "w": "10",
+      "s": "",
+      "r": "",
+      "n": "爬坡热身10分钟",
+      "ss": "",
+      "unit": "min",
+      "mode": "timed",
+      "sid": "D"
+    },
+    {
+      "en": "Assisted pull-up",
+      "w": "22",
+      "s": "4",
+      "r": "10",
+      "n": "22kg为辅助重量",
+      "ss": "",
+      "unit": "kg assistance",
+      "mode": "assistance",
+      "sid": "B"
+    },
+    {
+      "en": "Lisa back routine",
+      "w": "4",
+      "s": "2",
+      "r": "",
+      "n": "每手4kg",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "unknown",
+      "sid": "B"
+    },
+    {
+      "en": "Y-raise",
+      "w": "2",
+      "s": "",
+      "r": "",
+      "n": "超级组；次数及组数未注明",
+      "ss": "Lateral raise",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lateral raise",
+      "w": "2",
+      "s": "",
+      "r": "",
+      "n": "超级组；次数及组数未注明",
+      "ss": "Y-raise",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Lunge-stance DB row",
+      "w": "8",
+      "s": "3",
+      "r": "10",
+      "n": "",
+      "ss": "",
+      "unit": "kg/hand",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Face pull",
+      "w": "12.5",
+      "s": "3",
+      "r": "12",
+      "n": "",
+      "ss": "",
+      "unit": "kg",
+      "mode": "external",
+      "sid": "B"
+    },
+    {
+      "en": "Elliptical steady state",
+      "w": "10",
+      "s": "",
+      "r": "",
+      "n": "阻力档位2；器械显示70 kcal，仅备注，不当作实测消耗",
+      "ss": "",
+      "unit": "min",
+      "mode": "timed",
+      "sid": "D"
+    }
+  ]
+}

@@ -1,0 +1,1177 @@
+{
+  "A": {
+    "name": "Glute & leg",
+    "ic": "🦵",
+    "col": "#1D9E75",
+    "exs": [
+      {
+        "en": "Smith split squat",
+        "cn": "史密斯机分腿蹲",
+        "unit": "kg added",
+        "def": "+15",
+        "prev": "",
+        "sec": "Main",
+        "mode": "external",
+        "sid": "A",
+        "recent": {
+          "en": "Smith split squat",
+          "w": "+15",
+          "s": "3",
+          "r": "12",
+          "n": "原称Smith单腿蹲；是否每侧12次未注明",
+          "ss": "",
+          "unit": "kg added",
+          "mode": "external",
+          "sid": "A",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Smith RDL",
+        "cn": "史密斯机罗马尼亚硬拉",
+        "unit": "kg added",
+        "def": "",
+        "prev": "",
+        "sec": "Main",
+        "mode": "external",
+        "sid": "A"
+      },
+      {
+        "en": "Smith hip thrust",
+        "cn": "史密斯机臀推",
+        "unit": "kg added",
+        "def": "",
+        "prev": "",
+        "sec": "Main",
+        "mode": "external",
+        "sid": "A"
+      },
+      {
+        "en": "Hyperextension",
+        "cn": "自重背伸",
+        "unit": "BW / kg added",
+        "def": "",
+        "prev": "",
+        "sec": "Accessory",
+        "mode": "bodyweight",
+        "sid": "A"
+      },
+      {
+        "en": "Barbell back squat",
+        "cn": "杠铃背蹲",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Barbell front squat",
+        "cn": "杠铃前蹲",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Smith squat",
+        "cn": "史密斯深蹲",
+        "unit": "kg added",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Leg press",
+        "cn": "腿举机",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Hack squat",
+        "cn": "哈克深蹲",
+        "unit": "kg added",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Barbell RDL",
+        "cn": "杠铃罗马尼亚硬拉 RMN",
+        "unit": "kg (注明含杆或加片)",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "+15",
+        "sid": "A",
+        "recent": {
+          "en": "Barbell RDL",
+          "w": "+15",
+          "s": "3",
+          "r": "10",
+          "n": "原记录+15kg，是否含杆未注明",
+          "ss": "",
+          "unit": "kg (注明含杆或加片)",
+          "mode": "external",
+          "sid": "A",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Conventional deadlift",
+        "cn": "传统硬拉",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Sumo deadlift",
+        "cn": "相扑硬拉",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Bulgarian split squat",
+        "cn": "保加利亚分腿蹲",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Reverse lunge",
+        "cn": "反向弓步蹲",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Walking lunge",
+        "cn": "行走弓步",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Barbell hip thrust",
+        "cn": "杠铃臀推",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Glute bridge",
+        "cn": "臀桥",
+        "unit": "kg added",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Leg extension",
+        "cn": "腿屈伸",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Seated leg curl",
+        "cn": "坐姿腿弯举",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Lying leg curl",
+        "cn": "俯卧腿弯举",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Hip abductor machine",
+        "cn": "髋外展机 abductor",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "20",
+        "sid": "A",
+        "recent": {
+          "en": "Hip abductor machine",
+          "w": "20",
+          "s": "3",
+          "r": "15 / 25 / 20",
+          "n": "逐组次数",
+          "ss": "",
+          "unit": "kg on machine",
+          "mode": "external",
+          "sid": "A",
+          "date": "2026-11-06"
+        }
+      },
+      {
+        "en": "Hip adductor machine",
+        "cn": "髋内收机",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Cable glute kickback",
+        "cn": "绳索臀后踢",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Standing calf raise",
+        "cn": "站姿提踵",
+        "unit": "kg added",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      },
+      {
+        "en": "Seated calf raise",
+        "cn": "坐姿提踵",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "A"
+      }
+    ]
+  },
+  "B": {
+    "name": "Upper body",
+    "ic": "💪",
+    "col": "#378ADD",
+    "exs": [
+      {
+        "en": "Incline DB press 30°",
+        "cn": "上斜哑铃卧推",
+        "unit": "kg/hand",
+        "def": "",
+        "prev": "",
+        "sec": "Push",
+        "mode": "external",
+        "sid": "B"
+      },
+      {
+        "en": "Seated DB shoulder press",
+        "cn": "坐姿哑铃肩推",
+        "unit": "kg/hand",
+        "def": "6",
+        "prev": "",
+        "sec": "Push",
+        "mode": "external",
+        "sid": "B",
+        "recent": {
+          "en": "Seated DB shoulder press",
+          "w": "6",
+          "s": "3",
+          "r": "12",
+          "n": "",
+          "ss": "",
+          "unit": "kg/hand",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-06"
+        }
+      },
+      {
+        "en": "Low cable crossover",
+        "cn": "低位绳索夹胸",
+        "unit": "kg/side",
+        "def": "",
+        "prev": "",
+        "sec": "Push",
+        "mode": "external",
+        "sid": "B"
+      },
+      {
+        "en": "Lat pulldown",
+        "cn": "高位下拉",
+        "unit": "kg",
+        "def": "25",
+        "prev": "",
+        "sec": "Pull",
+        "mode": "external",
+        "sid": "B",
+        "recent": {
+          "en": "Lat pulldown",
+          "w": "25",
+          "s": "2",
+          "r": "8",
+          "n": "",
+          "ss": "",
+          "unit": "kg",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-09-17"
+        }
+      },
+      {
+        "en": "Straight arm pulldown",
+        "cn": "直臂下拉",
+        "unit": "kg",
+        "def": "10",
+        "prev": "",
+        "sec": "Pull",
+        "mode": "external",
+        "sid": "B",
+        "recent": {
+          "en": "Straight arm pulldown",
+          "w": "10",
+          "s": "3",
+          "r": "8",
+          "n": "",
+          "ss": "",
+          "unit": "kg",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Roman chair row",
+        "cn": "推罗马椅划船",
+        "unit": "kg",
+        "def": "",
+        "prev": "",
+        "sec": "Pull",
+        "mode": "external",
+        "sid": "B"
+      },
+      {
+        "en": "Face pull",
+        "cn": "面拉",
+        "unit": "kg",
+        "def": "12.5",
+        "prev": "",
+        "sec": "Pull",
+        "mode": "external",
+        "sid": "B",
+        "recent": {
+          "en": "Face pull",
+          "w": "12.5",
+          "s": "3",
+          "r": "12",
+          "n": "",
+          "ss": "",
+          "unit": "kg",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Lateral raise",
+        "cn": "侧平举",
+        "unit": "kg/hand",
+        "def": "2",
+        "prev": "",
+        "sec": "Shoulder health",
+        "mode": "external",
+        "sid": "B",
+        "recent": {
+          "en": "Lateral raise",
+          "w": "2",
+          "s": "3",
+          "r": "15",
+          "n": "每手2kg",
+          "ss": "Y-raise",
+          "unit": "kg/hand",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Y-raise",
+        "cn": "Y字训练",
+        "unit": "kg/hand",
+        "def": "2",
+        "prev": "",
+        "sec": "Shoulder health",
+        "mode": "external",
+        "sid": "B",
+        "recent": {
+          "en": "Y-raise",
+          "w": "2",
+          "s": "3",
+          "r": "10",
+          "n": "每手2kg",
+          "ss": "Lateral raise",
+          "unit": "kg/hand",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Smith bench press",
+        "cn": "史密斯卧推",
+        "unit": "kg added",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "+5",
+        "sid": "B",
+        "recent": {
+          "en": "Smith bench press",
+          "w": "+5",
+          "s": "3",
+          "r": "10",
+          "n": "加片重量，不含杆",
+          "ss": "",
+          "unit": "kg added",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Barbell bench press",
+        "cn": "杠铃平板卧推",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Flat DB bench press",
+        "cn": "平板哑铃卧推",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Incline barbell bench press",
+        "cn": "上斜杠铃卧推",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Machine chest press",
+        "cn": "器械推胸",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Pec deck fly",
+        "cn": "蝴蝶机夹胸",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Cable chest fly",
+        "cn": "绳索夹胸",
+        "unit": "kg/side",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Barbell overhead press",
+        "cn": "杠铃推肩",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Single-arm DB row",
+        "cn": "单臂哑铃划船",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B",
+        "recent": {
+          "en": "Single-arm DB row",
+          "w": "",
+          "s": "",
+          "r": "",
+          "n": "原记录未填重量、组数、次数",
+          "ss": "",
+          "unit": "kg/hand",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-09-17"
+        }
+      },
+      {
+        "en": "Lunge-stance DB row",
+        "cn": "弓步哑铃划船",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "8",
+        "sid": "B",
+        "recent": {
+          "en": "Lunge-stance DB row",
+          "w": "8",
+          "s": "3",
+          "r": "12",
+          "n": "",
+          "ss": "",
+          "unit": "kg/hand",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Barbell bent-over row",
+        "cn": "杠铃俯身划船",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Chest-supported DB row",
+        "cn": "胸托哑铃划船",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Seated row machine",
+        "cn": "坐姿划船机",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Single-arm cable row",
+        "cn": "单臂绳索划船",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Cable pulldown (unspecified)",
+        "cn": "绳索下拉（原记录，握法未注明）",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B",
+        "recent": {
+          "en": "Cable pulldown (unspecified)",
+          "w": "",
+          "s": "",
+          "r": "",
+          "n": "原记录未填握法、重量、组数、次数",
+          "ss": "",
+          "unit": "kg on machine",
+          "mode": "external",
+          "sid": "B",
+          "date": "2026-09-17"
+        }
+      },
+      {
+        "en": "Reverse pec deck",
+        "cn": "反向蝴蝶机／后束飞鸟",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "DB rear delt fly",
+        "cn": "哑铃俯身反向飞鸟",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Cable lateral raise",
+        "cn": "绳索侧平举",
+        "unit": "kg/side",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "DB biceps curl",
+        "cn": "哑铃弯举",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Hammer curl",
+        "cn": "锤式弯举",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Cable triceps pushdown",
+        "cn": "绳索三头下压",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Overhead triceps extension",
+        "cn": "过顶三头臂屈伸",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Assisted pull-up",
+        "cn": "辅助引体向上",
+        "unit": "kg assistance",
+        "mode": "assistance",
+        "prev": "",
+        "sec": "Pull",
+        "def": "22",
+        "sid": "B",
+        "recent": {
+          "en": "Assisted pull-up",
+          "w": "22",
+          "s": "4",
+          "r": "6",
+          "n": "22kg 为辅助重量",
+          "ss": "",
+          "unit": "kg assistance",
+          "mode": "assistance",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Pull-up",
+        "cn": "自重引体向上",
+        "unit": "BW / kg added",
+        "mode": "bodyweight",
+        "prev": "",
+        "sec": "Pull",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Dip",
+        "cn": "双杠臂屈伸",
+        "unit": "BW / kg added",
+        "mode": "bodyweight",
+        "prev": "",
+        "sec": "Push",
+        "def": "",
+        "sid": "B"
+      },
+      {
+        "en": "Lisa back routine",
+        "cn": "Lisa 背（个人组合）",
+        "unit": "kg/hand",
+        "mode": "unknown",
+        "prev": "",
+        "sec": "Your routines",
+        "def": "4",
+        "sid": "B",
+        "recent": {
+          "en": "Lisa back routine",
+          "w": "4",
+          "s": "2",
+          "r": "",
+          "n": "每手4kg；原记录2组SPS，组合细节未注明",
+          "ss": "",
+          "unit": "kg/hand",
+          "mode": "unknown",
+          "sid": "B",
+          "date": "2026-11-11"
+        }
+      },
+      {
+        "en": "Lisa shoulder DB routine",
+        "cn": "Lisa 肩部哑铃组合",
+        "unit": "kg/hand",
+        "mode": "unknown",
+        "prev": "",
+        "sec": "Your routines",
+        "def": "2",
+        "sid": "B",
+        "recent": {
+          "en": "Lisa shoulder DB routine",
+          "w": "2",
+          "s": "2",
+          "r": "",
+          "n": "每手2kg；原记录2组SPS",
+          "ss": "",
+          "unit": "kg/hand",
+          "mode": "unknown",
+          "sid": "B",
+          "date": "2026-11-06"
+        }
+      },
+      {
+        "en": "Lisa shoulder plate routine",
+        "cn": "Lisa 肩部杠铃片组合",
+        "unit": "kg plate",
+        "mode": "unknown",
+        "prev": "",
+        "sec": "Your routines",
+        "def": "5",
+        "sid": "B",
+        "recent": {
+          "en": "Lisa shoulder plate routine",
+          "w": "5",
+          "s": "2",
+          "r": "",
+          "n": "5kg杠铃片；原记录2组SPS",
+          "ss": "",
+          "unit": "kg plate",
+          "mode": "unknown",
+          "sid": "B",
+          "date": "2026-11-06"
+        }
+      }
+    ]
+  },
+  "C": {
+    "name": "Core",
+    "ic": "🔥",
+    "col": "#EF9F27",
+    "exs": [
+      {
+        "en": "Plank hold",
+        "cn": "平板支撑",
+        "unit": "sec",
+        "def": "",
+        "prev": "",
+        "sec": "Anti-extension",
+        "mode": "timed",
+        "sid": "C"
+      },
+      {
+        "en": "Dead bug",
+        "cn": "死虫动作",
+        "unit": "reps/side",
+        "def": "",
+        "prev": "",
+        "sec": "Anti-extension",
+        "mode": "reps",
+        "sid": "C"
+      },
+      {
+        "en": "Bicycle crunch",
+        "cn": "自行车卷腹",
+        "unit": "reps",
+        "def": "",
+        "prev": "",
+        "sec": "Flexion",
+        "mode": "reps",
+        "sid": "C"
+      },
+      {
+        "en": "Cable woodchop",
+        "cn": "绳索砍树",
+        "unit": "kg/side",
+        "def": "",
+        "prev": "",
+        "sec": "Rotation",
+        "mode": "external",
+        "sid": "C"
+      },
+      {
+        "en": "Hanging knee raise",
+        "cn": "悬挂举腿",
+        "unit": "reps",
+        "def": "",
+        "prev": "",
+        "sec": "Lower abs",
+        "mode": "reps",
+        "sid": "C"
+      },
+      {
+        "en": "Ab wheel rollout",
+        "cn": "腹轮",
+        "unit": "reps",
+        "def": "",
+        "prev": "",
+        "sec": "Anti-extension",
+        "mode": "reps",
+        "sid": "C"
+      },
+      {
+        "en": "Russian twist",
+        "cn": "俄罗斯转体",
+        "unit": "reps",
+        "def": "",
+        "prev": "",
+        "sec": "Rotation",
+        "mode": "reps",
+        "sid": "C"
+      },
+      {
+        "en": "Pallof press",
+        "cn": "帕洛夫抗旋转推",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "C"
+      },
+      {
+        "en": "Cable crunch",
+        "cn": "绳索卷腹",
+        "unit": "kg on machine",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "C"
+      },
+      {
+        "en": "Side plank",
+        "cn": "侧平板支撑",
+        "unit": "sec",
+        "mode": "timed",
+        "prev": "",
+        "sec": "Core",
+        "def": "",
+        "sid": "C"
+      },
+      {
+        "en": "Bird dog",
+        "cn": "鸟狗",
+        "unit": "reps/side",
+        "mode": "reps",
+        "prev": "",
+        "sec": "Core",
+        "def": "",
+        "sid": "C"
+      }
+    ]
+  },
+  "D": {
+    "name": "Cardio / HIIT",
+    "ic": "🏃",
+    "col": "#993C1D",
+    "exs": [
+      {
+        "en": "Treadmill HIIT",
+        "cn": "跑步机间歇",
+        "unit": "min",
+        "def": "",
+        "prev": "",
+        "sec": "HIIT",
+        "mode": "timed",
+        "sid": "D"
+      },
+      {
+        "en": "Bike HIIT",
+        "cn": "单车间歇",
+        "unit": "min",
+        "def": "",
+        "prev": "",
+        "sec": "HIIT",
+        "mode": "timed",
+        "sid": "D"
+      },
+      {
+        "en": "Jump rope",
+        "cn": "跳绳",
+        "unit": "min",
+        "def": "",
+        "prev": "",
+        "sec": "HIIT",
+        "mode": "timed",
+        "sid": "D"
+      },
+      {
+        "en": "Elliptical steady state",
+        "cn": "椭圆机",
+        "unit": "min",
+        "def": "10",
+        "prev": "",
+        "sec": "Steady state",
+        "mode": "timed",
+        "sid": "D",
+        "recent": {
+          "en": "Elliptical steady state",
+          "w": "10",
+          "s": "",
+          "r": "",
+          "n": "阻力档位2；器械显示70 kcal，仅备注，不当作实测消耗",
+          "ss": "",
+          "unit": "min",
+          "mode": "timed",
+          "sid": "D",
+          "date": "2026-09-04"
+        }
+      },
+      {
+        "en": "Rowing machine",
+        "cn": "划船机",
+        "unit": "min",
+        "def": "",
+        "prev": "",
+        "sec": "Steady state",
+        "mode": "timed",
+        "sid": "D"
+      },
+      {
+        "en": "Stairmaster",
+        "cn": "爬楼机",
+        "unit": "min",
+        "def": "30",
+        "prev": "",
+        "sec": "Steady state",
+        "mode": "timed",
+        "sid": "D",
+        "recent": {
+          "en": "Stairmaster",
+          "w": "30",
+          "s": "",
+          "r": "",
+          "n": "30分钟",
+          "ss": "",
+          "unit": "min",
+          "mode": "timed",
+          "sid": "D",
+          "date": "2026-09-17"
+        }
+      },
+      {
+        "en": "Incline treadmill walk",
+        "cn": "跑步机爬坡走／热身",
+        "unit": "min",
+        "mode": "timed",
+        "prev": "",
+        "sec": "Steady state",
+        "def": "10",
+        "sid": "D",
+        "recent": {
+          "en": "Incline treadmill walk",
+          "w": "10",
+          "s": "",
+          "r": "",
+          "n": "爬坡热身10分钟",
+          "ss": "",
+          "unit": "min",
+          "mode": "timed",
+          "sid": "D",
+          "date": "2026-09-04"
+        }
+      },
+      {
+        "en": "Stationary bike",
+        "cn": "固定单车",
+        "unit": "min",
+        "mode": "timed",
+        "prev": "",
+        "sec": "Steady state",
+        "def": "",
+        "sid": "D"
+      }
+    ]
+  },
+  "E": {
+    "name": "Full body",
+    "ic": "⚡",
+    "col": "#7B5EA7",
+    "exs": [
+      {
+        "en": "Goblet squat",
+        "cn": "高脚杯深蹲",
+        "unit": "kg",
+        "def": "",
+        "prev": "",
+        "sec": "Lower",
+        "mode": "external",
+        "sid": "E"
+      },
+      {
+        "en": "Push-up",
+        "cn": "俯卧撑",
+        "unit": "reps",
+        "def": "",
+        "prev": "",
+        "sec": "Upper",
+        "mode": "reps",
+        "sid": "E"
+      },
+      {
+        "en": "Dumbbell RDL",
+        "cn": "哑铃罗马尼亚硬拉",
+        "unit": "kg/hand",
+        "def": "",
+        "prev": "",
+        "sec": "Lower",
+        "mode": "external",
+        "sid": "E"
+      },
+      {
+        "en": "Cable row",
+        "cn": "绳索划船",
+        "unit": "kg",
+        "def": "",
+        "prev": "",
+        "sec": "Upper",
+        "mode": "external",
+        "sid": "E"
+      },
+      {
+        "en": "Box step-up",
+        "cn": "踏箱",
+        "unit": "kg/hand",
+        "def": "",
+        "prev": "",
+        "sec": "Lower",
+        "mode": "external",
+        "sid": "E"
+      },
+      {
+        "en": "Battle rope",
+        "cn": "战绳",
+        "unit": "sec",
+        "def": "",
+        "prev": "",
+        "sec": "Conditioning",
+        "mode": "timed",
+        "sid": "E"
+      },
+      {
+        "en": "Kettlebell swing",
+        "cn": "壶铃摆动",
+        "unit": "kg total",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "E"
+      },
+      {
+        "en": "Farmer carry",
+        "cn": "农夫走",
+        "unit": "kg/hand",
+        "mode": "external",
+        "prev": "",
+        "sec": "Gym staples",
+        "def": "",
+        "sid": "E"
+      },
+      {
+        "en": "Burpee",
+        "cn": "波比跳",
+        "unit": "reps",
+        "mode": "reps",
+        "prev": "",
+        "sec": "Conditioning",
+        "def": "",
+        "sid": "E"
+      }
+    ]
+  }
+}
