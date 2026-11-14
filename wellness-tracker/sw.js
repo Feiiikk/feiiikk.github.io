@@ -1,4 +1,4 @@
-const CACHE = 'wellness-pwa-f77e4c9da6dc8b3a';
+const CACHE = 'wellness-pwa-9bce0ee865845146';
 const ROOT = new URL('./', self.location.href);
 const FILES = ['./', './index.html', './config.js', './pwa.js', './manifest.webmanifest', './vendor/chart.umd.js', './vendor/supabase.js', './icons/apple-touch-icon.png', './icons/icon-192.png', './icons/icon-512.png'];
 const URLS = new Set(FILES.map(path => new URL(path, ROOT).href));
