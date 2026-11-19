@@ -15,7 +15,8 @@
       "k": 77,
       "p": 2.0,
       "c": 17.5,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "hidden"
     },
     {
       "cat": "root",
@@ -29,7 +30,8 @@
       "k": 87,
       "p": 1.9,
       "c": 20.1,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "root",
@@ -43,7 +45,8 @@
       "k": 86,
       "p": 1.6,
       "c": 20.1,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "hidden"
     },
     {
       "cat": "root",
@@ -57,7 +60,8 @@
       "k": 76,
       "p": 1.4,
       "c": 17.7,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "root",
@@ -71,7 +75,8 @@
       "k": 90,
       "p": 2.0,
       "c": 20.7,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "root",
@@ -85,7 +90,8 @@
       "k": 112,
       "p": 1.5,
       "c": 26.5,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "root",
@@ -99,7 +105,8 @@
       "k": 142,
       "p": 0.5,
       "c": 34.6,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "root",
@@ -113,7 +120,8 @@
       "k": 67,
       "p": 1.3,
       "c": 16.3,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "hidden"
     },
     {
       "cat": "root",
@@ -127,7 +135,8 @@
       "k": 82,
       "p": 1.7,
       "c": 20.0,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "root",
@@ -141,7 +150,8 @@
       "k": 118,
       "p": 1.5,
       "c": 27.9,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "root",
@@ -155,7 +165,8 @@
       "k": 116,
       "p": 1.5,
       "c": 27.5,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "grain",
@@ -169,7 +180,8 @@
       "k": 367,
       "p": 7.5,
       "c": 76.2,
-      "f": 3.2
+      "f": 3.2,
+      "visibility": "dry"
     },
     {
       "cat": "grain",
@@ -183,7 +195,8 @@
       "k": 123,
       "p": 2.7,
       "c": 25.6,
-      "f": 1.0
+      "f": 1.0,
+      "visibility": "default"
     },
     {
       "cat": "grain",
@@ -197,7 +210,8 @@
       "k": 368,
       "p": 14.1,
       "c": 64.2,
-      "f": 6.1
+      "f": 6.1,
+      "visibility": "dry"
     },
     {
       "cat": "grain",
@@ -211,7 +225,8 @@
       "k": 120,
       "p": 4.4,
       "c": 21.3,
-      "f": 1.9
+      "f": 1.9,
+      "visibility": "default"
     },
     {
       "cat": "grain",
@@ -225,7 +240,8 @@
       "k": 389,
       "p": 16.9,
       "c": 66.3,
-      "f": 6.9
+      "f": 6.9,
+      "visibility": "dry"
     },
     {
       "cat": "grain",
@@ -239,7 +255,8 @@
       "k": 346,
       "p": 11.7,
       "c": 75.0,
-      "f": 2.7
+      "f": 2.7,
+      "visibility": "dry"
     },
     {
       "cat": "grain",
@@ -253,7 +270,8 @@
       "k": 92,
       "p": 3.4,
       "c": 19.9,
-      "f": 0.6
+      "f": 0.6,
+      "visibility": "default"
     },
     {
       "cat": "grain",
@@ -267,7 +285,8 @@
       "k": 378,
       "p": 11.0,
       "c": 72.8,
-      "f": 4.2
+      "f": 4.2,
+      "visibility": "dry"
     },
     {
       "cat": "grain",
@@ -281,7 +300,8 @@
       "k": 119,
       "p": 3.5,
       "c": 23.7,
-      "f": 1.0
+      "f": 1.0,
+      "visibility": "default"
     },
     {
       "cat": "grain",
@@ -295,7 +315,8 @@
       "k": 354,
       "p": 12.5,
       "c": 73.5,
-      "f": 2.3
+      "f": 2.3,
+      "visibility": "dry"
     },
     {
       "cat": "grain",
@@ -309,7 +330,8 @@
       "k": 123,
       "p": 2.3,
       "c": 28.2,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -323,7 +345,8 @@
       "k": 34,
       "p": 2.8,
       "c": 6.6,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -337,11 +360,12 @@
       "k": 23,
       "p": 2.9,
       "c": 3.6,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
-      "n": "黄瓜（带皮）（生） Cucumber with peel, raw",
+      "n": "黄瓜（带皮） Cucumber with peel",
       "fdcId": 168409,
       "sourceDescription": "Cucumber, with peel, raw",
       "aliases": "",
@@ -351,11 +375,12 @@
       "k": 15,
       "p": 0.7,
       "c": 3.6,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "veg",
-      "n": "番茄（生） Tomato, raw",
+      "n": "番茄 Tomato",
       "fdcId": 170457,
       "sourceDescription": "Tomatoes, red, ripe, raw, year round average",
       "aliases": "西红柿",
@@ -365,11 +390,12 @@
       "k": 18,
       "p": 0.9,
       "c": 3.9,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
-      "n": "胡萝卜（生） Carrot, raw",
+      "n": "胡萝卜 Carrot",
       "fdcId": 170393,
       "sourceDescription": "Carrots, raw",
       "aliases": "",
@@ -379,7 +405,8 @@
       "k": 41,
       "p": 0.9,
       "c": 9.6,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -393,7 +420,8 @@
       "k": 25,
       "p": 1.9,
       "c": 5.0,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -407,7 +435,8 @@
       "k": 17,
       "p": 1.2,
       "c": 3.1,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -421,11 +450,12 @@
       "k": 25,
       "p": 1.0,
       "c": 5.9,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
-      "n": "洋葱（生） Onion, raw",
+      "n": "洋葱 Onion",
       "fdcId": 170000,
       "sourceDescription": "Onions, raw",
       "aliases": "",
@@ -435,11 +465,12 @@
       "k": 40,
       "p": 1.1,
       "c": 9.3,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "veg",
-      "n": "红甜椒（生） Red bell pepper, raw",
+      "n": "红甜椒 Red bell pepper",
       "fdcId": 170108,
       "sourceDescription": "Peppers, sweet, red, raw",
       "aliases": "",
@@ -449,11 +480,12 @@
       "k": 26,
       "p": 1.0,
       "c": 6.0,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "veg",
-      "n": "绿甜椒（生） Green bell pepper, raw",
+      "n": "绿甜椒 Green bell pepper",
       "fdcId": 170427,
       "sourceDescription": "Peppers, sweet, green, raw",
       "aliases": "",
@@ -463,11 +495,12 @@
       "k": 20,
       "p": 0.9,
       "c": 4.6,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
-      "n": "黄甜椒（生） Yellow bell pepper, raw",
+      "n": "黄甜椒 Yellow bell pepper",
       "fdcId": 169383,
       "sourceDescription": "Peppers, sweet, yellow, raw",
       "aliases": "",
@@ -477,7 +510,8 @@
       "k": 27,
       "p": 1.0,
       "c": 6.3,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -491,11 +525,12 @@
       "k": 20,
       "p": 2.2,
       "c": 3.9,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
-      "n": "芹菜（生） Celery, raw",
+      "n": "芹菜 Celery",
       "fdcId": 169988,
       "sourceDescription": "Celery, raw",
       "aliases": "",
@@ -505,7 +540,8 @@
       "k": 14,
       "p": 0.7,
       "c": 3.0,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -519,11 +555,12 @@
       "k": 35,
       "p": 2.9,
       "c": 4.4,
-      "f": 1.5
+      "f": 1.5,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
-      "n": "卷心菜（生） Cabbage, raw",
+      "n": "卷心菜 Cabbage",
       "fdcId": 169975,
       "sourceDescription": "Cabbage, raw",
       "aliases": "包菜 圆白菜",
@@ -533,11 +570,12 @@
       "k": 25,
       "p": 1.3,
       "c": 5.8,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "veg",
-      "n": "紫甘蓝（生） Red cabbage, raw",
+      "n": "紫甘蓝 Red cabbage",
       "fdcId": 169977,
       "sourceDescription": "Cabbage, red, raw",
       "aliases": "",
@@ -547,7 +585,8 @@
       "k": 31,
       "p": 1.4,
       "c": 7.4,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -561,7 +600,8 @@
       "k": 16,
       "p": 1.2,
       "c": 3.2,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -575,11 +615,12 @@
       "k": 13,
       "p": 1.5,
       "c": 2.2,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
-      "n": "罗马生菜（生） Romaine lettuce, raw",
+      "n": "罗马生菜 Romaine lettuce",
       "fdcId": 169247,
       "sourceDescription": "Lettuce, cos or romaine, raw",
       "aliases": "",
@@ -589,11 +630,12 @@
       "k": 17,
       "p": 1.2,
       "c": 3.3,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "veg",
-      "n": "冰山生菜（生） Iceberg lettuce, raw",
+      "n": "冰山生菜 Iceberg lettuce",
       "fdcId": 169248,
       "sourceDescription": "Lettuce, iceberg (includes crisphead types), raw",
       "aliases": "",
@@ -603,11 +645,12 @@
       "k": 14,
       "p": 0.9,
       "c": 3.0,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "veg",
-      "n": "芝麻菜（生） Arugula, raw",
+      "n": "芝麻菜 Arugula",
       "fdcId": 169387,
       "sourceDescription": "Arugula, raw",
       "aliases": "",
@@ -617,7 +660,8 @@
       "k": 25,
       "p": 2.6,
       "c": 3.6,
-      "f": 0.7
+      "f": 0.7,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -631,7 +675,8 @@
       "k": 43,
       "p": 3.4,
       "c": 8.9,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -645,7 +690,8 @@
       "k": 31,
       "p": 1.8,
       "c": 7.0,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -659,7 +705,8 @@
       "k": 81,
       "p": 5.4,
       "c": 14.4,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -673,7 +720,8 @@
       "k": 42,
       "p": 2.8,
       "c": 7.5,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -687,7 +735,8 @@
       "k": 33,
       "p": 1.9,
       "c": 7.5,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -701,11 +750,12 @@
       "k": 43,
       "p": 1.6,
       "c": 9.6,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
-      "n": "小萝卜（生） Radish, raw",
+      "n": "小萝卜 Radish",
       "fdcId": 169276,
       "sourceDescription": "Radishes, raw",
       "aliases": "",
@@ -715,7 +765,8 @@
       "k": 16,
       "p": 0.7,
       "c": 3.4,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -729,7 +780,8 @@
       "k": 18,
       "p": 0.6,
       "c": 4.1,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -743,7 +795,8 @@
       "k": 26,
       "p": 1.0,
       "c": 6.5,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -757,7 +810,8 @@
       "k": 45,
       "p": 1.0,
       "c": 11.7,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -771,7 +825,8 @@
       "k": 40,
       "p": 0.8,
       "c": 10.4,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -785,7 +840,8 @@
       "k": 74,
       "p": 2.6,
       "c": 17.2,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -799,7 +855,8 @@
       "k": 27,
       "p": 2.6,
       "c": 5.2,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -813,7 +870,8 @@
       "k": 17,
       "p": 1.0,
       "c": 3.7,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -827,7 +885,8 @@
       "k": 13,
       "p": 0.4,
       "c": 3.0,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -841,7 +900,8 @@
       "k": 30,
       "p": 3.0,
       "c": 5.9,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -855,7 +915,8 @@
       "k": 22,
       "p": 3.1,
       "c": 3.3,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -869,7 +930,8 @@
       "k": 34,
       "p": 2.2,
       "c": 6.8,
-      "f": 0.5
+      "f": 0.5,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -883,7 +945,8 @@
       "k": 33,
       "p": 3.3,
       "c": 6.1,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
@@ -897,11 +960,12 @@
       "k": 37,
       "p": 2.7,
       "c": 7.8,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
-      "n": "大蒜（生） Garlic, raw",
+      "n": "大蒜 Garlic",
       "fdcId": 169230,
       "sourceDescription": "Garlic, raw",
       "aliases": "",
@@ -911,11 +975,12 @@
       "k": 149,
       "p": 6.4,
       "c": 33.1,
-      "f": 0.5
+      "f": 0.5,
+      "visibility": "default"
     },
     {
       "cat": "veg",
-      "n": "生姜（生） Ginger, raw",
+      "n": "生姜 Ginger",
       "fdcId": 169231,
       "sourceDescription": "Ginger root, raw",
       "aliases": "",
@@ -925,11 +990,12 @@
       "k": 80,
       "p": 1.8,
       "c": 17.8,
-      "f": 0.8
+      "f": 0.8,
+      "visibility": "default"
     },
     {
       "cat": "veg",
-      "n": "青葱（生） Scallion, raw",
+      "n": "青葱 Scallion",
       "fdcId": 170005,
       "sourceDescription": "Onions, spring or scallions (includes tops and bulb), raw",
       "aliases": "",
@@ -939,7 +1005,8 @@
       "k": 32,
       "p": 1.8,
       "c": 7.3,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -953,11 +1020,12 @@
       "k": 61,
       "p": 1.5,
       "c": 14.2,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "hidden"
     },
     {
       "cat": "veg",
-      "n": "茴香球（生） Fennel bulb, raw",
+      "n": "茴香球 Fennel bulb",
       "fdcId": 169385,
       "sourceDescription": "Fennel, bulb, raw",
       "aliases": "",
@@ -967,11 +1035,12 @@
       "k": 31,
       "p": 1.2,
       "c": 7.3,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
-      "n": "西洋菜（生） Watercress, raw",
+      "n": "西洋菜 Watercress",
       "fdcId": 170068,
       "sourceDescription": "Watercress, raw",
       "aliases": "",
@@ -981,11 +1050,12 @@
       "k": 11,
       "p": 2.3,
       "c": 1.3,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "苹果（带皮） Apple with skin, raw",
+      "n": "苹果（带皮） Apple with skin",
       "fdcId": 171688,
       "sourceDescription": "Apples, raw, with skin (Includes foods for USDA's Food Distribution Program)",
       "aliases": "",
@@ -995,11 +1065,12 @@
       "k": 52,
       "p": 0.3,
       "c": 13.8,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "香蕉 Banana, raw",
+      "n": "香蕉 Banana",
       "fdcId": 173944,
       "sourceDescription": "Bananas, raw",
       "aliases": "",
@@ -1009,11 +1080,12 @@
       "k": 89,
       "p": 1.1,
       "c": 22.8,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "橙子 Orange, raw",
+      "n": "橙子 Orange",
       "fdcId": 169097,
       "sourceDescription": "Oranges, raw, all commercial varieties",
       "aliases": "",
@@ -1023,11 +1095,12 @@
       "k": 47,
       "p": 0.9,
       "c": 11.8,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "草莓 Strawberry, raw",
+      "n": "草莓 Strawberry",
       "fdcId": 167762,
       "sourceDescription": "Strawberries, raw",
       "aliases": "",
@@ -1037,11 +1110,12 @@
       "k": 32,
       "p": 0.7,
       "c": 7.7,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "蓝莓 Blueberry, raw",
+      "n": "蓝莓 Blueberry",
       "fdcId": 171711,
       "sourceDescription": "Blueberries, raw",
       "aliases": "",
@@ -1051,11 +1125,12 @@
       "k": 57,
       "p": 0.7,
       "c": 14.5,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "覆盆子 Raspberry, raw",
+      "n": "覆盆子 Raspberry",
       "fdcId": 167755,
       "sourceDescription": "Raspberries, raw",
       "aliases": "",
@@ -1065,11 +1140,12 @@
       "k": 52,
       "p": 1.2,
       "c": 11.9,
-      "f": 0.7
+      "f": 0.7,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "黑莓 Blackberry, raw",
+      "n": "黑莓 Blackberry",
       "fdcId": 173946,
       "sourceDescription": "Blackberries, raw",
       "aliases": "",
@@ -1079,11 +1155,12 @@
       "k": 43,
       "p": 1.4,
       "c": 9.6,
-      "f": 0.5
+      "f": 0.5,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "西瓜 Watermelon, raw",
+      "n": "西瓜 Watermelon",
       "fdcId": 167765,
       "sourceDescription": "Watermelon, raw",
       "aliases": "",
@@ -1093,11 +1170,12 @@
       "k": 30,
       "p": 0.6,
       "c": 7.5,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "哈密瓜／蜜瓜 Cantaloupe, raw",
+      "n": "哈密瓜／蜜瓜 Cantaloupe",
       "fdcId": 169092,
       "sourceDescription": "Melons, cantaloupe, raw",
       "aliases": "",
@@ -1107,11 +1185,12 @@
       "k": 34,
       "p": 0.8,
       "c": 8.2,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "蜜露瓜 Honeydew melon, raw",
+      "n": "蜜露瓜 Honeydew melon",
       "fdcId": 169911,
       "sourceDescription": "Melons, honeydew, raw",
       "aliases": "",
@@ -1121,11 +1200,12 @@
       "k": 36,
       "p": 0.5,
       "c": 9.1,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "芒果 Mango, raw",
+      "n": "芒果 Mango",
       "fdcId": 169910,
       "sourceDescription": "Mangos, raw",
       "aliases": "",
@@ -1135,11 +1215,12 @@
       "k": 60,
       "p": 0.8,
       "c": 15.0,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "葡萄 Grapes, raw",
+      "n": "葡萄 Grapes",
       "fdcId": 174683,
       "sourceDescription": "Grapes, red or green (European type, such as Thompson seedless), raw",
       "aliases": "",
@@ -1149,11 +1230,12 @@
       "k": 69,
       "p": 0.7,
       "c": 18.1,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "猕猴桃（绿） Green kiwi, raw",
+      "n": "猕猴桃（绿） Green kiwi",
       "fdcId": 168153,
       "sourceDescription": "Kiwifruit, green, raw",
       "aliases": "奇异果 kiwi",
@@ -1163,11 +1245,12 @@
       "k": 61,
       "p": 1.1,
       "c": 14.7,
-      "f": 0.5
+      "f": 0.5,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "梨 Pear, raw",
+      "n": "梨 Pear",
       "fdcId": 169118,
       "sourceDescription": "Pears, raw",
       "aliases": "",
@@ -1177,11 +1260,12 @@
       "k": 57,
       "p": 0.4,
       "c": 15.2,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "亚洲梨 Asian pear, raw",
+      "n": "亚洲梨 Asian pear",
       "fdcId": 168177,
       "sourceDescription": "Pears, asian, raw",
       "aliases": "",
@@ -1191,11 +1275,12 @@
       "k": 42,
       "p": 0.5,
       "c": 10.7,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "桃 Peach, raw",
+      "n": "桃 Peach",
       "fdcId": 169928,
       "sourceDescription": "Peaches, yellow, raw",
       "aliases": "",
@@ -1205,11 +1290,12 @@
       "k": 39,
       "p": 0.9,
       "c": 9.5,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "油桃 Nectarine, raw",
+      "n": "油桃 Nectarine",
       "fdcId": 169914,
       "sourceDescription": "Nectarines, raw",
       "aliases": "",
@@ -1219,11 +1305,12 @@
       "k": 44,
       "p": 1.1,
       "c": 10.6,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "樱桃 Sweet cherry, raw",
+      "n": "樱桃 Sweet cherry",
       "fdcId": 171719,
       "sourceDescription": "Cherries, sweet, raw",
       "aliases": "",
@@ -1233,11 +1320,12 @@
       "k": 63,
       "p": 1.1,
       "c": 16.0,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "李子 Plum, raw",
+      "n": "李子 Plum",
       "fdcId": 169949,
       "sourceDescription": "Plums, raw",
       "aliases": "",
@@ -1247,11 +1335,12 @@
       "k": 46,
       "p": 0.7,
       "c": 11.4,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "杏 Apricot, raw",
+      "n": "杏 Apricot",
       "fdcId": 171697,
       "sourceDescription": "Apricots, raw",
       "aliases": "",
@@ -1261,11 +1350,12 @@
       "k": 48,
       "p": 1.4,
       "c": 11.1,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "菠萝 Pineapple, raw",
+      "n": "菠萝 Pineapple",
       "fdcId": 169124,
       "sourceDescription": "Pineapple, raw, all varieties",
       "aliases": "凤梨",
@@ -1275,11 +1365,12 @@
       "k": 50,
       "p": 0.5,
       "c": 13.1,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "木瓜 Papaya, raw",
+      "n": "木瓜 Papaya",
       "fdcId": 169926,
       "sourceDescription": "Papayas, raw",
       "aliases": "",
@@ -1289,11 +1380,12 @@
       "k": 43,
       "p": 0.5,
       "c": 10.8,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "牛油果 Avocado, raw",
+      "n": "牛油果 Avocado",
       "fdcId": 171705,
       "sourceDescription": "Avocados, raw, all commercial varieties",
       "aliases": "鳄梨 酪梨",
@@ -1303,11 +1395,12 @@
       "k": 160,
       "p": 2.0,
       "c": 8.5,
-      "f": 14.7
+      "f": 14.7,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "荔枝 Lychee, raw",
+      "n": "荔枝 Lychee",
       "fdcId": 169086,
       "sourceDescription": "Litchis, raw",
       "aliases": "",
@@ -1317,11 +1410,12 @@
       "k": 66,
       "p": 0.8,
       "c": 16.5,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "龙眼 Longan, raw",
+      "n": "龙眼 Longan",
       "fdcId": 169089,
       "sourceDescription": "Longans, raw",
       "aliases": "",
@@ -1331,11 +1425,12 @@
       "k": 60,
       "p": 1.3,
       "c": 15.1,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "番石榴 Guava, raw",
+      "n": "番石榴 Guava",
       "fdcId": 173044,
       "sourceDescription": "Guavas, common, raw",
       "aliases": "芭乐",
@@ -1345,11 +1440,12 @@
       "k": 68,
       "p": 2.5,
       "c": 14.3,
-      "f": 0.9
+      "f": 0.9,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "石榴 Pomegranate, raw",
+      "n": "石榴 Pomegranate",
       "fdcId": 169134,
       "sourceDescription": "Pomegranates, raw",
       "aliases": "",
@@ -1359,11 +1455,12 @@
       "k": 83,
       "p": 1.7,
       "c": 18.7,
-      "f": 1.2
+      "f": 1.2,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "百香果 Passion fruit, raw",
+      "n": "百香果 Passion fruit",
       "fdcId": 169108,
       "sourceDescription": "Passion-fruit, (granadilla), purple, raw",
       "aliases": "",
@@ -1373,11 +1470,12 @@
       "k": 97,
       "p": 2.2,
       "c": 23.4,
-      "f": 0.7
+      "f": 0.7,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "柚子 Pomelo, raw",
+      "n": "柚子 Pomelo",
       "fdcId": 167754,
       "sourceDescription": "Pummelo, raw",
       "aliases": "",
@@ -1387,11 +1485,12 @@
       "k": 38,
       "p": 0.8,
       "c": 9.6,
-      "f": 0.0
+      "f": 0.0,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "葡萄柚 Grapefruit, raw",
+      "n": "葡萄柚 Grapefruit",
       "fdcId": 174673,
       "sourceDescription": "Grapefruit, raw, pink and red, all areas",
       "aliases": "",
@@ -1401,11 +1500,12 @@
       "k": 42,
       "p": 0.8,
       "c": 10.7,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "橘子 Mandarin, raw",
+      "n": "橘子 Mandarin",
       "fdcId": 169105,
       "sourceDescription": "Tangerines, (mandarin oranges), raw",
       "aliases": "桔子 柑橘",
@@ -1415,11 +1515,12 @@
       "k": 53,
       "p": 0.8,
       "c": 13.3,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "柠檬（去皮） Lemon without peel, raw",
+      "n": "柠檬（去皮） Lemon without peel",
       "fdcId": 167746,
       "sourceDescription": "Lemons, raw, without peel",
       "aliases": "",
@@ -1429,11 +1530,12 @@
       "k": 29,
       "p": 1.1,
       "c": 9.3,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "青柠 Lime, raw",
+      "n": "青柠 Lime",
       "fdcId": 168155,
       "sourceDescription": "Limes, raw",
       "aliases": "",
@@ -1443,11 +1545,12 @@
       "k": 30,
       "p": 0.7,
       "c": 10.5,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "无花果（鲜） Fresh fig, raw",
+      "n": "无花果（鲜） Fresh fig",
       "fdcId": 173021,
       "sourceDescription": "Figs, raw",
       "aliases": "",
@@ -1457,11 +1560,12 @@
       "k": 74,
       "p": 0.8,
       "c": 19.2,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "fruit",
-      "n": "柿子（日本品种） Japanese persimmon, raw",
+      "n": "柿子（日本品种） Japanese persimmon",
       "fdcId": 169941,
       "sourceDescription": "Persimmons, japanese, raw",
       "aliases": "",
@@ -1471,7 +1575,8 @@
       "k": 70,
       "p": 0.6,
       "c": 18.6,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -1485,7 +1590,8 @@
       "k": 116,
       "p": 9.0,
       "c": 20.1,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -1499,7 +1605,8 @@
       "k": 164,
       "p": 8.9,
       "c": 27.4,
-      "f": 2.6
+      "f": 2.6,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -1513,7 +1620,8 @@
       "k": 132,
       "p": 8.9,
       "c": 23.7,
-      "f": 0.5
+      "f": 0.5,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -1527,7 +1635,8 @@
       "k": 127,
       "p": 8.7,
       "c": 22.8,
-      "f": 0.5
+      "f": 0.5,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -1541,7 +1650,8 @@
       "k": 105,
       "p": 7.0,
       "c": 19.1,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -1555,7 +1665,8 @@
       "k": 172,
       "p": 18.2,
       "c": 8.4,
-      "f": 9.0
+      "f": 9.0,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -1569,7 +1680,8 @@
       "k": 141,
       "p": 12.3,
       "c": 11.1,
-      "f": 6.4
+      "f": 6.4,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -1583,7 +1695,8 @@
       "k": 144,
       "p": 17.3,
       "c": 2.8,
-      "f": 8.7
+      "f": 8.7,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -1597,7 +1710,8 @@
       "k": 76,
       "p": 8.1,
       "c": 1.9,
-      "f": 4.8
+      "f": 4.8,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -1611,7 +1725,8 @@
       "k": 61,
       "p": 7.2,
       "c": 1.2,
-      "f": 3.7
+      "f": 3.7,
+      "visibility": "default"
     },
     {
       "cat": "egg",
@@ -1625,7 +1740,8 @@
       "k": 143,
       "p": 12.6,
       "c": 0.7,
-      "f": 9.5
+      "f": 9.5,
+      "visibility": "hidden"
     },
     {
       "cat": "egg",
@@ -1639,7 +1755,8 @@
       "k": 155,
       "p": 12.6,
       "c": 1.1,
-      "f": 10.6
+      "f": 10.6,
+      "visibility": "default"
     },
     {
       "cat": "egg",
@@ -1653,7 +1770,8 @@
       "k": 143,
       "p": 12.5,
       "c": 0.7,
-      "f": 9.5
+      "f": 9.5,
+      "visibility": "default"
     },
     {
       "cat": "protein",
@@ -1667,7 +1785,8 @@
       "k": 165,
       "p": 31.0,
       "c": 0.0,
-      "f": 3.6
+      "f": 3.6,
+      "visibility": "default"
     },
     {
       "cat": "protein",
@@ -1681,7 +1800,8 @@
       "k": 151,
       "p": 29.0,
       "c": 0.0,
-      "f": 3.0
+      "f": 3.0,
+      "visibility": "default"
     },
     {
       "cat": "beef",
@@ -1695,7 +1815,8 @@
       "k": 162,
       "p": 30.1,
       "c": 0.0,
-      "f": 3.8
+      "f": 3.8,
+      "visibility": "default"
     },
     {
       "cat": "protein",
@@ -1709,7 +1830,8 @@
       "k": 109,
       "p": 20.9,
       "c": 0.0,
-      "f": 2.2
+      "f": 2.2,
+      "visibility": "hidden"
     },
     {
       "cat": "protein",
@@ -1723,7 +1845,8 @@
       "k": 143,
       "p": 26.2,
       "c": 0.0,
-      "f": 3.5
+      "f": 3.5,
+      "visibility": "default"
     },
     {
       "cat": "protein",
@@ -1737,7 +1860,8 @@
       "k": 82,
       "p": 17.8,
       "c": 0.0,
-      "f": 0.7
+      "f": 0.7,
+      "visibility": "hidden"
     },
     {
       "cat": "protein",
@@ -1751,7 +1875,8 @@
       "k": 105,
       "p": 22.8,
       "c": 0.0,
-      "f": 0.9
+      "f": 0.9,
+      "visibility": "default"
     },
     {
       "cat": "protein",
@@ -1765,7 +1890,8 @@
       "k": 109,
       "p": 24.4,
       "c": 0.0,
-      "f": 0.5
+      "f": 0.5,
+      "visibility": "hidden"
     },
     {
       "cat": "protein",
@@ -1779,7 +1905,8 @@
       "k": 130,
       "p": 29.1,
       "c": 0.0,
-      "f": 0.6
+      "f": 0.6,
+      "visibility": "default"
     },
     {
       "cat": "protein",
@@ -1793,7 +1920,8 @@
       "k": 85,
       "p": 20.1,
       "c": 0.0,
-      "f": 0.5
+      "f": 0.5,
+      "visibility": "hidden"
     },
     {
       "cat": "protein",
@@ -1807,7 +1935,8 @@
       "k": 99,
       "p": 24.0,
       "c": 0.2,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1821,7 +1950,8 @@
       "k": 579,
       "p": 21.1,
       "c": 21.6,
-      "f": 49.9
+      "f": 49.9,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1835,7 +1965,8 @@
       "k": 654,
       "p": 15.2,
       "c": 13.7,
-      "f": 65.2
+      "f": 65.2,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1849,7 +1980,8 @@
       "k": 553,
       "p": 18.2,
       "c": 30.2,
-      "f": 43.9
+      "f": 43.9,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1863,7 +1995,8 @@
       "k": 560,
       "p": 20.2,
       "c": 27.2,
-      "f": 45.3
+      "f": 45.3,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1877,7 +2010,8 @@
       "k": 628,
       "p": 14.9,
       "c": 16.7,
-      "f": 60.8
+      "f": 60.8,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1891,7 +2025,8 @@
       "k": 718,
       "p": 7.9,
       "c": 13.8,
-      "f": 75.8
+      "f": 75.8,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1905,7 +2040,8 @@
       "k": 691,
       "p": 9.2,
       "c": 13.9,
-      "f": 72.0
+      "f": 72.0,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1919,7 +2055,8 @@
       "k": 659,
       "p": 14.3,
       "c": 11.7,
-      "f": 67.1
+      "f": 67.1,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1933,7 +2070,8 @@
       "k": 673,
       "p": 13.7,
       "c": 13.1,
-      "f": 68.4
+      "f": 68.4,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1947,7 +2085,8 @@
       "k": 486,
       "p": 16.5,
       "c": 42.1,
-      "f": 30.7
+      "f": 30.7,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1961,7 +2100,8 @@
       "k": 534,
       "p": 18.3,
       "c": 28.9,
-      "f": 42.2
+      "f": 42.2,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1975,7 +2115,8 @@
       "k": 559,
       "p": 30.2,
       "c": 10.7,
-      "f": 49.0
+      "f": 49.0,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -1989,7 +2130,8 @@
       "k": 584,
       "p": 20.8,
       "c": 20.0,
-      "f": 51.5
+      "f": 51.5,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -2003,7 +2145,8 @@
       "k": 573,
       "p": 17.7,
       "c": 23.4,
-      "f": 49.7
+      "f": 49.7,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -2017,7 +2160,8 @@
       "k": 567,
       "p": 25.8,
       "c": 16.1,
-      "f": 49.2
+      "f": 49.2,
+      "visibility": "default"
     },
     {
       "cat": "grain",
@@ -2031,7 +2175,8 @@
       "k": 365,
       "p": 7.1,
       "c": 80.0,
-      "f": 0.7
+      "f": 0.7,
+      "visibility": "dry"
     },
     {
       "cat": "grain",
@@ -2045,7 +2190,8 @@
       "k": 130,
       "p": 2.7,
       "c": 28.2,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "grain",
@@ -2059,7 +2205,8 @@
       "k": 71,
       "p": 2.5,
       "c": 12.0,
-      "f": 1.5
+      "f": 1.5,
+      "visibility": "default"
     },
     {
       "cat": "protein",
@@ -2073,7 +2220,8 @@
       "k": 208,
       "p": 20.4,
       "c": 0.0,
-      "f": 13.4
+      "f": 13.4,
+      "visibility": "hidden"
     },
     {
       "cat": "protein",
@@ -2087,7 +2235,8 @@
       "k": 206,
       "p": 22.1,
       "c": 0.0,
-      "f": 12.3
+      "f": 12.3,
+      "visibility": "default"
     },
     {
       "cat": "protein",
@@ -2101,7 +2250,8 @@
       "k": 142,
       "p": 19.8,
       "c": 0.0,
-      "f": 6.3
+      "f": 6.3,
+      "visibility": "hidden"
     },
     {
       "cat": "protein",
@@ -2115,7 +2265,8 @@
       "k": 182,
       "p": 25.4,
       "c": 0.0,
-      "f": 8.1
+      "f": 8.1,
+      "visibility": "default"
     },
     {
       "cat": "protein",
@@ -2129,7 +2280,8 @@
       "k": 114,
       "p": 23.7,
       "c": 0.1,
-      "f": 1.5
+      "f": 1.5,
+      "visibility": "hidden"
     },
     {
       "cat": "protein",
@@ -2143,7 +2295,8 @@
       "k": 147,
       "p": 30.1,
       "c": 0.0,
-      "f": 2.1
+      "f": 2.1,
+      "visibility": "default"
     },
     {
       "cat": "protein",
@@ -2157,7 +2310,8 @@
       "k": 179,
       "p": 24.8,
       "c": 0.0,
-      "f": 8.2
+      "f": 8.2,
+      "visibility": "default"
     },
     {
       "cat": "protein",
@@ -2171,7 +2325,8 @@
       "k": 96,
       "p": 20.1,
       "c": 0.0,
-      "f": 1.7
+      "f": 1.7,
+      "visibility": "hidden"
     },
     {
       "cat": "protein",
@@ -2185,7 +2340,8 @@
       "k": 128,
       "p": 26.1,
       "c": 0.0,
-      "f": 2.6
+      "f": 2.6,
+      "visibility": "default"
     },
     {
       "cat": "protein",
@@ -2199,7 +2355,8 @@
       "k": 92,
       "p": 15.6,
       "c": 3.1,
-      "f": 1.4
+      "f": 1.4,
+      "visibility": "hidden"
     },
     {
       "cat": "egg",
@@ -2213,7 +2370,8 @@
       "k": 52,
       "p": 10.9,
       "c": 0.7,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "hidden"
     },
     {
       "cat": "dairy",
@@ -2227,7 +2385,8 @@
       "k": 59,
       "p": 10.2,
       "c": 3.6,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "default"
     },
     {
       "cat": "dairy",
@@ -2241,7 +2400,8 @@
       "k": 73,
       "p": 9.9,
       "c": 3.9,
-      "f": 1.9
+      "f": 1.9,
+      "visibility": "default"
     },
     {
       "cat": "dairy",
@@ -2255,7 +2415,8 @@
       "k": 97,
       "p": 9.0,
       "c": 4.0,
-      "f": 5.0
+      "f": 5.0,
+      "visibility": "default"
     },
     {
       "cat": "dairy",
@@ -2269,7 +2430,8 @@
       "k": 61,
       "p": 3.5,
       "c": 4.7,
-      "f": 3.2
+      "f": 3.2,
+      "visibility": "default"
     },
     {
       "cat": "dairy",
@@ -2283,7 +2445,8 @@
       "k": 63,
       "p": 5.2,
       "c": 7.0,
-      "f": 1.6
+      "f": 1.6,
+      "visibility": "default"
     },
     {
       "cat": "dairy",
@@ -2297,7 +2460,8 @@
       "k": 61,
       "p": 3.1,
       "c": 4.8,
-      "f": 3.3
+      "f": 3.3,
+      "visibility": "default"
     },
     {
       "cat": "dairy",
@@ -2311,7 +2475,8 @@
       "k": 35,
       "p": 3.4,
       "c": 4.9,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -2325,7 +2490,8 @@
       "k": 128,
       "p": 7.5,
       "c": 24.8,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -2339,7 +2505,8 @@
       "k": 139,
       "p": 9.7,
       "c": 25.1,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "legume",
@@ -2353,7 +2520,8 @@
       "k": 118,
       "p": 8.3,
       "c": 21.1,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -2367,7 +2535,8 @@
       "k": 553,
       "p": 31.6,
       "c": 8.7,
-      "f": 48.8
+      "f": 48.8,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -2381,7 +2550,8 @@
       "k": 131,
       "p": 2.0,
       "c": 27.8,
-      "f": 1.4
+      "f": 1.4,
+      "visibility": "default"
     },
     {
       "cat": "nut",
@@ -2395,7 +2565,8 @@
       "k": 245,
       "p": 3.2,
       "c": 53.0,
-      "f": 2.2
+      "f": 2.2,
+      "visibility": "default"
     },
     {
       "cat": "root",
@@ -2409,7 +2580,8 @@
       "k": 93,
       "p": 2.5,
       "c": 21.1,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "grain",
@@ -2423,7 +2595,8 @@
       "k": 86,
       "p": 3.3,
       "c": 18.7,
-      "f": 1.4
+      "f": 1.4,
+      "visibility": "dry"
     },
     {
       "cat": "grain",
@@ -2437,7 +2610,8 @@
       "k": 96,
       "p": 3.4,
       "c": 21.0,
-      "f": 1.5
+      "f": 1.5,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2451,7 +2625,8 @@
       "k": 35,
       "p": 2.4,
       "c": 7.2,
-      "f": 0.4
+      "f": 0.4,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2465,7 +2640,8 @@
       "k": 23,
       "p": 3.0,
       "c": 3.8,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2479,7 +2655,8 @@
       "k": 35,
       "p": 0.8,
       "c": 8.2,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2493,7 +2670,8 @@
       "k": 23,
       "p": 1.8,
       "c": 4.1,
-      "f": 0.5
+      "f": 0.5,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2507,7 +2685,8 @@
       "k": 35,
       "p": 0.8,
       "c": 8.7,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2521,7 +2700,8 @@
       "k": 22,
       "p": 2.4,
       "c": 4.1,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2535,7 +2715,8 @@
       "k": 36,
       "p": 2.9,
       "c": 5.3,
-      "f": 1.2
+      "f": 1.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2549,7 +2730,8 @@
       "k": 23,
       "p": 1.3,
       "c": 5.5,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2563,7 +2745,8 @@
       "k": 36,
       "p": 2.5,
       "c": 7.1,
-      "f": 0.5
+      "f": 0.5,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2577,7 +2760,8 @@
       "k": 35,
       "p": 1.9,
       "c": 7.9,
-      "f": 0.3
+      "f": 0.3,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2591,7 +2775,8 @@
       "k": 84,
       "p": 5.4,
       "c": 15.6,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2605,7 +2790,8 @@
       "k": 42,
       "p": 3.3,
       "c": 7.0,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2619,7 +2805,8 @@
       "k": 22,
       "p": 1.9,
       "c": 4.5,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2633,7 +2820,8 @@
       "k": 44,
       "p": 1.7,
       "c": 10.0,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2647,7 +2835,8 @@
       "k": 20,
       "p": 0.7,
       "c": 4.9,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2661,7 +2850,8 @@
       "k": 66,
       "p": 1.6,
       "c": 16.0,
-      "f": 0.1
+      "f": 0.1,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2675,7 +2865,8 @@
       "k": 12,
       "p": 1.5,
       "c": 1.9,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "cat": "veg",
@@ -2689,7 +2880,8 @@
       "k": 56,
       "p": 1.6,
       "c": 14.4,
-      "f": 0.2
+      "f": 0.2,
+      "visibility": "default"
     },
     {
       "id": "usda_171767",
@@ -2703,7 +2895,8 @@
       "k": 139,
       "p": 21.9,
       "c": 0.0,
-      "f": 5.7
+      "f": 5.7,
+      "visibility": "hidden"
     },
     {
       "id": "usda_170641",
@@ -2717,7 +2910,8 @@
       "k": 198,
       "p": 30.7,
       "c": 0.0,
-      "f": 8.3
+      "f": 8.3,
+      "visibility": "default"
     },
     {
       "id": "usda_173988",
@@ -2731,7 +2925,8 @@
       "k": 147,
       "p": 21.7,
       "c": 0.0,
-      "f": 6.7
+      "f": 6.7,
+      "visibility": "hidden"
     },
     {
       "id": "usda_170237",
@@ -2745,7 +2940,8 @@
       "k": 211,
       "p": 30.5,
       "c": 0.0,
-      "f": 8.9
+      "f": 8.9,
+      "visibility": "default"
     },
     {
       "id": "usda_174055",
@@ -2759,7 +2955,8 @@
       "k": 131,
       "p": 22.1,
       "c": 0.0,
-      "f": 4.1
+      "f": 4.1,
+      "visibility": "hidden"
     },
     {
       "id": "usda_174693",
@@ -2773,7 +2970,8 @@
       "k": 171,
       "p": 30.6,
       "c": 0.0,
-      "f": 5.4
+      "f": 5.4,
+      "visibility": "default"
     },
     {
       "id": "usda_172156",
@@ -2787,7 +2985,8 @@
       "k": 244,
       "p": 18.9,
       "c": 0.0,
-      "f": 18.7
+      "f": 18.7,
+      "visibility": "hidden"
     },
     {
       "id": "usda_173392",
@@ -2801,7 +3000,8 @@
       "k": 291,
       "p": 23.7,
       "c": 0.0,
-      "f": 21.8
+      "f": 21.8,
+      "visibility": "default"
     },
     {
       "id": "usda_170839",
@@ -2815,7 +3015,8 @@
       "k": 156,
       "p": 22.0,
       "c": 0.0,
-      "f": 7.5
+      "f": 7.5,
+      "visibility": "hidden"
     },
     {
       "id": "usda_171209",
@@ -2829,7 +3030,8 @@
       "k": 207,
       "p": 28.0,
       "c": 0.0,
-      "f": 10.6
+      "f": 10.6,
+      "visibility": "default"
     },
     {
       "id": "usda_168607",
@@ -2843,7 +3045,8 @@
       "k": 157,
       "p": 20.7,
       "c": 0.6,
-      "f": 7.4
+      "f": 7.4,
+      "visibility": "hidden"
     },
     {
       "id": "usda_170612",
@@ -2857,7 +3060,8 @@
       "k": 218,
       "p": 29.8,
       "c": 0.0,
-      "f": 10.1
+      "f": 10.1,
+      "visibility": "default"
     },
     {
       "id": "usda_168664",
@@ -2871,7 +3075,8 @@
       "k": 253,
       "p": 18.4,
       "c": 0.6,
-      "f": 19.1
+      "f": 19.1,
+      "visibility": "hidden"
     },
     {
       "id": "usda_168665",
@@ -2885,7 +3090,8 @@
       "k": 331,
       "p": 25.9,
       "c": 0.0,
-      "f": 24.5
+      "f": 24.5,
+      "visibility": "default"
     },
     {
       "id": "usda_171790",
@@ -2899,7 +3105,8 @@
       "k": 137,
       "p": 21.4,
       "c": 0.0,
-      "f": 5.0
+      "f": 5.0,
+      "visibility": "hidden"
     },
     {
       "id": "usda_171791",
@@ -2913,7 +3120,8 @@
       "k": 174,
       "p": 26.3,
       "c": 0.0,
-      "f": 6.8
+      "f": 6.8,
+      "visibility": "default"
     },
     {
       "id": "usda_174030",
@@ -2927,7 +3135,8 @@
       "k": 176,
       "p": 20.0,
       "c": 0.0,
-      "f": 10.0
+      "f": 10.0,
+      "visibility": "hidden"
     },
     {
       "id": "usda_174031",
@@ -2941,7 +3150,8 @@
       "k": 217,
       "p": 26.1,
       "c": 0.0,
-      "f": 11.8
+      "f": 11.8,
+      "visibility": "default"
     },
     {
       "id": "usda_168609",
@@ -2955,7 +3165,8 @@
       "k": 149,
       "p": 21.7,
       "c": 0.0,
-      "f": 6.3
+      "f": 6.3,
+      "visibility": "hidden"
     },
     {
       "id": "usda_168611",
@@ -2969,7 +3180,8 @@
       "k": 194,
       "p": 27.8,
       "c": 0.0,
-      "f": 8.3
+      "f": 8.3,
+      "visibility": "default"
     },
     {
       "id": "usda_171077",
@@ -2983,7 +3195,532 @@
       "k": 120,
       "p": 22.5,
       "c": 0.0,
+      "f": 2.6,
+      "visibility": "hidden"
+    },
+    {
+      "id": "usda_169292",
+      "n": "西葫芦（熟） Zucchini, cooked",
+      "cat": "veg",
+      "fdcId": 169292,
+      "sourceDescription": "Squash, summer, zucchini, includes skin, cooked, boiled, drained, without salt",
+      "aliases": "",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "k": 15,
+      "p": 1.1,
+      "c": 2.7,
+      "f": 0.4,
+      "visibility": "default"
+    },
+    {
+      "id": "usda_169980",
+      "n": "大白菜（熟） Napa cabbage, cooked",
+      "cat": "veg",
+      "fdcId": 169980,
+      "sourceDescription": "Cabbage, chinese (pe-tsai), cooked, boiled, drained, without salt",
+      "aliases": "",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "k": 14,
+      "p": 1.5,
+      "c": 2.4,
+      "f": 0.2,
+      "visibility": "default"
+    },
+    {
+      "id": "usda_170391",
+      "n": "小白菜／上海青（熟） Bok choy, cooked",
+      "cat": "veg",
+      "fdcId": 170391,
+      "sourceDescription": "Cabbage, chinese (pak-choi), cooked, boiled, drained, without salt",
+      "aliases": "",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "k": 12,
+      "p": 1.6,
+      "c": 1.8,
+      "f": 0.2,
+      "visibility": "default"
+    },
+    {
+      "id": "usda_169978",
+      "n": "紫甘蓝（熟） Red cabbage, cooked",
+      "cat": "veg",
+      "fdcId": 169978,
+      "sourceDescription": "Cabbage, red, cooked, boiled, drained, without salt",
+      "aliases": "",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "k": 29,
+      "p": 1.5,
+      "c": 6.9,
+      "f": 0.1,
+      "visibility": "default"
+    },
+    {
+      "id": "usda_168452",
+      "n": "白萝卜（熟） Daikon, cooked",
+      "cat": "veg",
+      "fdcId": 168452,
+      "sourceDescription": "Radishes, oriental, cooked, boiled, drained, without salt",
+      "aliases": "",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "k": 17,
+      "p": 0.7,
+      "c": 3.4,
+      "f": 0.2,
+      "visibility": "default"
+    },
+    {
+      "id": "usda_169296",
+      "n": "奶油南瓜（熟） Butternut squash, cooked",
+      "cat": "veg",
+      "fdcId": 169296,
+      "sourceDescription": "Squash, winter, butternut, cooked, baked, without salt",
+      "aliases": "",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "k": 40,
+      "p": 0.9,
+      "c": 10.5,
+      "f": 0.1,
+      "visibility": "default"
+    },
+    {
+      "id": "usda_169137",
+      "n": "绿豆芽（熟） Mung bean sprouts, cooked",
+      "cat": "veg",
+      "fdcId": 169137,
+      "sourceDescription": "Mung beans, mature seeds, sprouted, cooked, boiled, drained, without salt",
+      "aliases": "",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "k": 21,
+      "p": 2.0,
+      "c": 4.2,
+      "f": 0.1,
+      "visibility": "default"
+    },
+    {
+      "id": "usda_169252",
+      "n": "白蘑菇（熟） White mushroom, cooked",
+      "cat": "veg",
+      "fdcId": 169252,
+      "sourceDescription": "Mushrooms, white, cooked, boiled, drained, without salt",
+      "aliases": "",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "k": 28,
+      "p": 2.2,
+      "c": 5.3,
+      "f": 0.5,
+      "visibility": "default"
+    },
+    {
+      "id": "usda_168394",
+      "n": "苦瓜（熟） Bitter melon, cooked",
+      "cat": "veg",
+      "fdcId": 168394,
+      "sourceDescription": "Balsam-pear (bitter gourd), pods, cooked, boiled, drained, without salt",
+      "aliases": "",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "k": 19,
+      "p": 0.8,
+      "c": 4.3,
+      "f": 0.2,
+      "visibility": "default"
+    },
+    {
+      "id": "usda_170475",
+      "n": "冬瓜（熟） Winter melon, cooked",
+      "cat": "veg",
+      "fdcId": 170475,
+      "sourceDescription": "Waxgourd, (chinese preserving melon), cooked, boiled, drained, without salt",
+      "aliases": "",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "k": 14,
+      "p": 0.4,
+      "c": 3.0,
+      "f": 0.2,
+      "visibility": "default"
+    },
+    {
+      "id": "usda_171890",
+      "fdcId": 171890,
+      "n": "黑咖啡／美式（无糖） Black coffee / Americano",
+      "cat": "coffee",
+      "aliases": "咖啡 coffee americano 冰美式 热美式",
+      "sourceDescription": "Beverages, coffee, brewed, prepared with tap water",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 240,
+      "servingLabel": "杯（240g）",
+      "visibility": "default",
+      "k": 1,
+      "p": 0.1,
+      "c": 0.0,
+      "f": 0.0
+    },
+    {
+      "id": "usda_171891",
+      "fdcId": 171891,
+      "n": "浓缩咖啡 Espresso",
+      "cat": "coffee",
+      "aliases": "咖啡 espresso 意式",
+      "sourceDescription": "Beverages, coffee, brewed, espresso, restaurant-prepared",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 30,
+      "servingLabel": "份（30g）",
+      "visibility": "default",
+      "k": 9,
+      "p": 0.1,
+      "c": 1.7,
+      "f": 0.2
+    },
+    {
+      "id": "usda_171889",
+      "fdcId": 171889,
+      "n": "低因黑咖啡 Decaf black coffee",
+      "cat": "coffee",
+      "aliases": "咖啡 coffee decaf",
+      "sourceDescription": "Beverages, coffee, brewed, prepared with tap water, decaffeinated",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 240,
+      "servingLabel": "杯（240g）",
+      "visibility": "default",
+      "k": 0,
+      "p": 0.1,
+      "c": 0.0,
+      "f": 0.0
+    },
+    {
+      "id": "usda_171917",
+      "fdcId": 171917,
+      "n": "绿茶（无糖） Green tea",
+      "cat": "drink",
+      "aliases": "茶 tea",
+      "sourceDescription": "Beverages, tea, green, brewed, regular",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 240,
+      "servingLabel": "杯（240g）",
+      "visibility": "default",
+      "k": 1,
+      "p": 0.2,
+      "c": 0.0,
+      "f": 0.0
+    },
+    {
+      "id": "usda_169098",
+      "fdcId": 169098,
+      "n": "橙汁 Orange juice",
+      "cat": "drink",
+      "aliases": "果汁 juice",
+      "sourceDescription": "Orange juice, raw (Includes foods for USDA's Food Distribution Program)",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 200,
+      "servingLabel": "杯（200g）",
+      "visibility": "default",
+      "k": 45,
+      "p": 0.7,
+      "c": 10.4,
+      "f": 0.2
+    },
+    {
+      "id": "usda_174852",
+      "fdcId": 174852,
+      "n": "可乐 Cola",
+      "cat": "drink",
+      "aliases": "可乐 cola coke 汽水",
+      "sourceDescription": "Beverages, carbonated, cola, regular",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 330,
+      "servingLabel": "份（330g）",
+      "visibility": "default",
+      "k": 42,
+      "p": 0.0,
+      "c": 10.4,
+      "f": 0.2
+    },
+    {
+      "id": "usda_172688",
+      "fdcId": 172688,
+      "n": "全麦面包 Whole-wheat bread",
+      "cat": "bread",
+      "aliases": "面包 bread toast 吐司",
+      "sourceDescription": "Bread, whole-wheat, commercially prepared",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 30,
+      "servingLabel": "片（30g）",
+      "visibility": "default",
+      "k": 252,
+      "p": 12.4,
+      "c": 42.7,
+      "f": 3.5
+    },
+    {
+      "id": "usda_174924",
+      "fdcId": 174924,
+      "n": "白吐司 White bread",
+      "cat": "bread",
+      "aliases": "面包 bread toast 吐司",
+      "sourceDescription": "Bread, white, commercially prepared (includes soft bread crumbs)",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 30,
+      "servingLabel": "片（30g）",
+      "visibility": "default",
+      "k": 266,
+      "p": 8.8,
+      "c": 49.4,
+      "f": 3.3
+    },
+    {
+      "id": "usda_172675",
+      "fdcId": 172675,
+      "n": "法棍／酸面包 French / sourdough bread",
+      "cat": "bread",
+      "aliases": "面包 baguette sourdough",
+      "sourceDescription": "Bread, french or vienna (includes sourdough)",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 50,
+      "servingLabel": "份（50g）",
+      "visibility": "default",
+      "k": 272,
+      "p": 10.8,
+      "c": 51.9,
+      "f": 2.4
+    },
+    {
+      "id": "usda_174987",
+      "fdcId": 174987,
+      "n": "黄油可颂 Butter croissant",
+      "cat": "bread",
+      "aliases": "面包 牛角包 croissant",
+      "sourceDescription": "Croissants, butter",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 60,
+      "servingLabel": "个（60g）",
+      "visibility": "default",
+      "k": 406,
+      "p": 8.2,
+      "c": 45.8,
+      "f": 21.0
+    },
+    {
+      "id": "usda_172716",
+      "fdcId": 172716,
+      "n": "巧克力曲奇 Chocolate-chip cookie",
+      "cat": "snack",
+      "aliases": "饼干 曲奇 cookie biscuit",
+      "sourceDescription": "Cookies, chocolate chip, commercially prepared, regular, higher fat, enriched",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 30,
+      "servingLabel": "块（30g）",
+      "visibility": "default",
+      "k": 492,
+      "p": 5.1,
+      "c": 65.4,
+      "f": 24.7
+    },
+    {
+      "id": "usda_174967",
+      "fdcId": 174967,
+      "n": "黄油酥饼 Shortbread",
+      "cat": "snack",
+      "aliases": "饼干 曲奇 biscuit cookie",
+      "sourceDescription": "Cookies, shortbread, commercially prepared, plain",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 20,
+      "servingLabel": "块（20g）",
+      "visibility": "default",
+      "k": 514,
+      "p": 5.4,
+      "c": 63.8,
+      "f": 26.2
+    },
+    {
+      "id": "usda_172746",
+      "fdcId": 172746,
+      "n": "苏打饼干 Soda crackers",
+      "cat": "snack",
+      "aliases": "饼干 cracker biscuit",
+      "sourceDescription": "Crackers, saltines (includes oyster, soda, soup)",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 30,
+      "servingLabel": "份（30g）",
+      "visibility": "default",
+      "k": 418,
+      "p": 9.5,
+      "c": 74.0,
+      "f": 8.6
+    },
+    {
+      "id": "usda_169677",
+      "fdcId": 169677,
+      "n": "薯片 Potato chips",
+      "cat": "snack",
+      "aliases": "零食 chips crisps",
+      "sourceDescription": "Snacks, potato chips, plain, salted",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 30,
+      "servingLabel": "份（30g）",
+      "visibility": "default",
+      "k": 532,
+      "p": 6.4,
+      "c": 53.8,
+      "f": 34.0
+    },
+    {
+      "id": "usda_170273",
+      "fdcId": 170273,
+      "n": "黑巧克力（70–85%） Dark chocolate",
+      "cat": "snack",
+      "aliases": "巧克力 chocolate",
+      "sourceDescription": "Chocolate, dark, 70-85% cacao solids",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 20,
+      "servingLabel": "份（20g）",
+      "visibility": "default",
+      "k": 598,
+      "p": 7.8,
+      "c": 45.9,
+      "f": 42.6
+    },
+    {
+      "id": "usda_167575",
+      "fdcId": 167575,
+      "n": "香草冰淇淋 Vanilla ice cream",
+      "cat": "snack",
+      "aliases": "冰淇淋 icecream dessert",
+      "sourceDescription": "Ice creams, vanilla",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 70,
+      "servingLabel": "球（70g）",
+      "visibility": "default",
+      "k": 207,
+      "p": 3.5,
+      "c": 23.6,
+      "f": 11.0
+    },
+    {
+      "id": "usda_170694",
+      "fdcId": 170694,
+      "n": "经典汉堡（含调味料） Hamburger",
+      "cat": "fast",
+      "aliases": "汉堡 burger hamburger",
+      "sourceDescription": "Fast foods, hamburger; single, regular patty; with condiments",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 150,
+      "servingLabel": "个（150g）",
+      "visibility": "default",
+      "k": 263,
+      "p": 13.3,
+      "c": 29.6,
+      "f": 10.2
+    },
+    {
+      "id": "usda_170691",
+      "fdcId": 170691,
+      "n": "芝士汉堡 Cheeseburger",
+      "cat": "fast",
+      "aliases": "汉堡 芝士 burger cheeseburger",
+      "sourceDescription": "Fast foods, cheeseburger; single, regular patty, with condiments",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 150,
+      "servingLabel": "个（150g）",
+      "visibility": "default",
+      "k": 270,
+      "p": 13.5,
+      "c": 25.5,
+      "f": 12.9
+    },
+    {
+      "id": "recipe_latte_whole",
+      "n": "全脂拿铁（无糖配方） Whole-milk latte",
+      "cat": "coffee",
+      "aliases": "咖啡 拿铁 latte cappuccino 卡布奇诺",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 230,
+      "servingLabel": "杯（230g配方）",
+      "visibility": "default",
+      "sourceDescription": "Recipe estimate: 200g milk (FDC 172217) + 30g espresso (FDC 171891) + 0g sugar",
+      "note": "配方估算：200g奶＋30g浓缩＋0g糖；门店杯量不同，以标签为准。",
+      "k": 54.2,
+      "p": 2.7,
+      "c": 4.4,
+      "f": 2.9
+    },
+    {
+      "id": "recipe_latte_skim",
+      "n": "脱脂拿铁（无糖配方） Skim-milk latte",
+      "cat": "coffee",
+      "aliases": "咖啡 拿铁 latte cappuccino 卡布奇诺",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 230,
+      "servingLabel": "杯（230g配方）",
+      "visibility": "default",
+      "sourceDescription": "Recipe estimate: 200g milk (FDC 173432) + 30g espresso (FDC 171891) + 0g sugar",
+      "note": "配方估算：200g奶＋30g浓缩＋0g糖；门店杯量不同，以标签为准。",
+      "k": 31.6,
+      "p": 3.0,
+      "c": 4.5,
+      "f": 0.2
+    },
+    {
+      "id": "recipe_cappuccino",
+      "n": "卡布奇诺（无糖配方） Cappuccino",
+      "cat": "coffee",
+      "aliases": "咖啡 拿铁 latte cappuccino 卡布奇诺",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 130,
+      "servingLabel": "杯（130g配方）",
+      "visibility": "default",
+      "sourceDescription": "Recipe estimate: 100g milk (FDC 172217) + 30g espresso (FDC 171891) + 0g sugar",
+      "note": "配方估算：100g奶＋30g浓缩＋0g糖；门店杯量不同，以标签为准。",
+      "k": 49.0,
+      "p": 2.4,
+      "c": 4.1,
       "f": 2.6
+    },
+    {
+      "id": "recipe_latte_sweet",
+      "n": "全脂拿铁（加10g糖配方） Sweetened latte",
+      "cat": "coffee",
+      "aliases": "咖啡 拿铁 latte cappuccino 卡布奇诺",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 240,
+      "servingLabel": "杯（240g配方）",
+      "visibility": "default",
+      "sourceDescription": "Recipe estimate: 200g milk (FDC 172217) + 30g espresso (FDC 171891) + 10g sugar",
+      "note": "配方估算：200g奶＋30g浓缩＋10g糖；门店杯量不同，以标签为准。",
+      "k": 68.6,
+      "p": 2.6,
+      "c": 8.4,
+      "f": 2.8
     }
   ]
 }

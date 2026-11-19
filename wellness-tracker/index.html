@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Wellness">
 <script src="./pwa.js" defer></script>
 <style>@media(max-width:480px){.frow{flex-wrap:wrap}.frow .fnm{flex-basis:100%}.qrow{flex-wrap:wrap;row-gap:10px}.qrow>div:first-child{flex:1 0 100%!important;min-width:0!important}}body{padding-top:max(16px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom));padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));}</style>
-<title>Gillian Wellness Tracker v3</title>
+<title>Wellness Tracker</title>
 <script src="./vendor/chart.umd.js"></script>
 <script src="config.js"></script>
 <script src="./vendor/supabase.js"></script>
@@ -229,12 +229,45 @@ textarea:focus{outline:none;border-color:#1D9E75;}
 }
 @media(prefers-reduced-motion:reduce){.dash-hero:before,.dash-hero:after,.hero-kicker:before{animation:none}.quick{transition:none}}
 </style>
+<style>
+#food-editor{border:0;border-radius:18px;padding:22px;width:min(520px,94vw);max-height:90vh;overflow:auto;margin:auto;color:#24211d;background:#fff;box-shadow:0 20px 80px #0003}
+#food-editor::backdrop{background:#17131d80}
+#food-editor h2{font-size:21px;margin-bottom:12px}
+#food-editor label{display:block;font-size:14px;margin:12px 0 4px}
+#food-editor input{width:100%;padding:12px;border:1px solid #d8d4cf;border-radius:9px;font:inherit;min-height:46px;background:#faf9f6}
+.editor-grid,.energy-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.energy-grid{font-size:14px;line-height:1.6}.energy-grid strong{font-size:21px}
+.food-edit-button{border:1px solid #d4ddd7;background:#f2faf6;color:#147c59;border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
+@media(max-width:600px){
+ html{-webkit-text-size-adjust:100%}body{font-size:16px;line-height:1.5;padding:12px 12px max(24px,env(safe-area-inset-bottom));}
+ input,select,textarea{font-size:16px!important;min-height:46px;line-height:1.4}input[type=checkbox]{min-height:24px;width:24px;height:24px;flex-shrink:0}
+ button{min-height:44px;font-size:16px;touch-action:manipulation}.nav{top:max(4px,env(safe-area-inset-top));gap:2px}.nb{font-size:14px;padding:10px 3px;min-height:48px;line-height:1.3}
+ .muted,.fide,.ecn,.eprev,.history-badges,.hbadge,.burn-meta,.ig label,.row label,.fdt,.mts,.mtl,.hydl,.hydp,.prcn,.prch{font-size:14px!important;line-height:1.5}
+ .een,.finn,.fen,.section-title,.mttl,.mnam,.prex{font-size:16px!important;line-height:1.5}.mtv{font-size:24px}.mtg{grid-template-columns:1fr 1fr;gap:10px}.mtc{padding:13px}
+ [style*="font-size:10px"],[style*="font-size:11px"],[style*="font-size:12px"]{font-size:14px!important;line-height:1.5}
+ .btn1,.btn2,.addbtn,.qadd,.custbtn,.sch,.cchip,.ebtn{min-height:44px;font-size:15px;padding:10px 12px}.btnrow{flex-wrap:wrap}.btnrow button{flex:1;min-width:100px}
+ .cchips{gap:8px;padding-bottom:6px}.cchip{flex-shrink:0;white-space:nowrap}.flist{max-height:340px}.fitem{padding:13px 12px;min-height:64px}.aform{padding:12px}.mhead{padding:13px}
+ .qrow{flex-wrap:wrap;gap:10px}.qrow>div:first-child{flex:1 0 100%!important}.qrow input{width:100px}.qprev{font-size:16px}.qunit{font-size:15px}
+ .frow{flex-wrap:wrap;padding:13px;gap:9px}.frow .fnm{flex-basis:100%}.fmacs{flex:1}.bm{font-size:13px}.fkc{font-size:15px}.food-edit-button,.delbtn{min-height:44px;min-width:48px}.delbtn{font-size:14px;color:#a14b46}
+ .einps{grid-template-columns:1fr 1fr;gap:12px;padding:12px}.einps .ig:last-child{grid-column:1/-1}.ig input{padding:11px 9px}.ehead{padding:12px}.performed{font-size:15px;gap:9px}
+ .hydbtn{width:44px;height:44px}.hydrow{gap:7px;flex-wrap:wrap;padding:10px}.hydv{font-size:16px}.row{gap:9px}.sminput{width:90px}.quick{font-size:14px}.quick-actions{gap:8px}
+ #food-editor{padding:20px 16px;max-height:90svh}.editor-grid{gap:12px}.energy-grid{gap:14px}.section-card{padding:15px}
+}
+
+</style>
+<script src="./session-import.js" defer></script>
+<style>
+.category-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.category-heading button{flex-shrink:0;min-height:44px}
+.cchips{display:flex!important;flex-wrap:nowrap!important;gap:8px;overflow-x:auto!important;overflow-y:hidden;max-width:100%;min-width:0;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;cursor:grab;scrollbar-width:thin;padding:4px 0 10px}.cchip{flex:0 0 auto;white-space:nowrap;min-height:44px;font:inherit;font-size:14px;user-select:none}.cchips:active{cursor:grabbing}.cchips.is-expanded{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));overflow:visible!important;cursor:default}.cchips.is-expanded .cchip{white-space:normal;text-align:left}.category-heading .muted{font-size:13px!important}
+#session-import-panel input,#session-import-panel textarea{max-width:100%;width:100%;font:inherit;font-size:16px;padding:10px;border:1px solid #ddd;border-radius:8px}#session-import-panel input[type=checkbox]{width:24px;max-width:24px}#session-preview{margin-top:12px}#session-preview label{display:block;margin:8px 0;font-size:14px}#session-import-panel summary{min-height:44px}button[hidden]{display:none!important}
+@media(max-width:480px){.cchips.is-expanded{grid-template-columns:1fr 1fr}.category-heading{align-items:flex-start}}
+</style>
 </head>
 <body>
 
 <div style="margin-bottom:13px;">
-  <div style="font-size:18px;font-weight:700;">Gillian · Wellness Tracker</div>
-  <div style="font-size:12px;color:#888;margin-top:1px;" id="profile-sub">5'4" · <span id="hdr-wt">52.0</span> kg · 19% BF · Recomposition · Noon sessions</div>
+  <div style="font-size:18px;font-weight:700;">Wellness Tracker</div>
+  <div class="muted" id="profile-sub">欢迎使用 Wellness · 填写个人资料后启用可选目标估算</div>
 </div>
 
 <div class="nav" role="tablist">
@@ -249,9 +282,10 @@ textarea:focus{outline:none;border-color:#1D9E75;}
 <div class="cloud-card">
   <div class="cloud-top"><div><div class="section-title" style="margin:0">☁ Private cloud sync</div><div class="cloud-state" style="margin-top:4px"><span class="cloud-dot" id="cloud-dot"></span><span id="cloud-status">Checking configuration…</span></div></div><button class="btn2" id="cloud-signout" style="display:none" onclick="cloudSignOut()">Sign out</button></div>
   <div id="cloud-auth">
-    <div class="muted" style="margin-top:9px">使用原账号邮箱和密码，在当前应用内登录。</div>
-    <div class="auth-row"><input id="cloud-email" type="email" autocomplete="username" aria-label="Account email" placeholder="原账号邮箱"></div>
+    <div class="muted" style="margin-top:9px">使用账号邮箱和密码，在当前应用内登录。</div>
+    <div class="auth-row"><input id="cloud-email" type="email" autocomplete="username" aria-label="Account email" placeholder="账号邮箱"></div>
     <div class="auth-row"><input id="cloud-password" type="password" autocomplete="current-password" aria-label="Account password" placeholder="账号密码" onkeydown="if(event.key==='Enter')signInPassword()"><button class="btn1" id="cloud-password-login" onclick="signInPassword()">密码登录</button></div>
+    <button class="btn2" id="cloud-signup" onclick="registerAccount()">用以上邮箱与密码注册</button><div class="muted">新账号从空白记录开始，本机访客记录不会自动上传到账号。</div>
     <details style="margin-top:10px"><summary style="cursor:pointer;font-size:12px">还没有密码／忘记密码？</summary><div class="muted" style="margin-top:8px">填写上方邮箱，发送登录邮件。点击邮件链接后在 Safari 中打开 Settings，为原账号设置密码，再回到主屏幕应用用密码登录。</div><button class="btn2" id="cloud-send-link" style="margin-top:8px" onclick="sendSetupLink()">发送登录邮件</button></details>
     <div class="fb" id="cloud-fb" role="status" aria-live="polite"></div>
   </div>
@@ -268,14 +302,16 @@ textarea:focus{outline:none;border-color:#1D9E75;}
   <div class="section-title">Profile &amp; target assumptions</div>
   <div class="muted" style="margin-bottom:10px;">These settings explain the estimates. They are planning aids, not medical advice.</div>
   <div class="settings-grid">
-    <label>Height (cm)<input id="set-height" type="number" value="162.5"></label>
-    <label>Age<input id="set-age" type="number" value="26"></label>
-    <label>Goal<select id="set-goal"><option>Recomposition</option><option>Maintain</option><option>Performance</option><option>General health</option></select></label>
-    <label>Weekly training target<input id="set-weekly" type="number" value="4" min="1" max="14"></label>
+    <label>体重 (kg)<input id="set-weight" type="number" step="0.1" min="20" max="400" placeholder="填写体重"></label><label>代谢估算参数（成人，可不填）<select id="set-sex"><option value="">暂不估算</option><option value="female">女性公式</option><option value="male">男性公式</option></select></label>
+    <label>Height (cm)<input id="set-height" type="number" placeholder="填写身高"></label>
+    <label>Age<input id="set-age" type="number" min="18" placeholder="填写年龄"></label>
+    <label>Goal<select id="set-goal"><option value="">选择目标（可选）</option><option>Recomposition</option><option>Maintain</option><option>Performance</option><option>General health</option></select></label>
+    <label>Weekly training target<input id="set-weekly" type="number" placeholder="可选" min="1" max="14"></label>
   </div>
   <button class="btn1" style="margin-top:10px" onclick="saveSettings()">Save settings</button>
   <div class="fb" id="sfb-settings"></div>
 </div>
+<details class="section-card"><summary>升级用户：恢复此设备旧版记录</summary><p class="muted">旧版记录留在此设备，不自动合并进任何新账号。请先确认当前账号是你自己的。</p><button class="btn2" onclick="previewLegacyData()">检查旧版本机记录</button><p id="legacy-info" role="status"></p><button hidden id="legacy-import" class="btn2" onclick="importLegacyData()">确认属于我，补入空日期</button></details>
 <div class="sync-bar">
   <div class="sync-top">
     <div>
@@ -334,12 +370,13 @@ textarea:focus{outline:none;border-color:#1D9E75;}
 
 <!-- ====== TRAINING ====== -->
 <div id="tab-T" style="display:none;">
+<details class="section-card" id="session-import-panel"><summary style="font-size:17px;font-weight:700;cursor:pointer">识别训练日志：文字／截图</summary><p class="muted">在设备内解析。截图不上传；识别后先核对预览，再填入草稿，最后自行保存训练。</p><label for="session-import-date">训练日期</label><input id="session-import-date" type="date"><label for="session-raw" style="display:block;margin-top:12px">粘贴今天的训练文字（每行一个动作）</label><textarea id="session-raw" rows="6" placeholder="动作名称 重量kg 组数×次数"></textarea><div class="btnrow"><button class="btn1" onclick="previewTrainingImport()">解析文字</button><label class="btn2" style="display:inline-flex;align-items:center;cursor:pointer">选择截图<input id="session-image" type="file" accept="image/png,image/jpeg,image/webp" onchange="recognizeSessionImage(event)" style="display:none"></label><button class="btn2" id="session-ocr-cancel" hidden onclick="cancelSessionOCR()">取消识别</button></div><div id="session-parse-status" class="muted" style="margin:10px 0" role="status"></div><label for="session-import-duration">整次训练时长（分钟，可留空）</label><input id="session-import-duration" type="number" min="1"><div id="session-preview"></div><button class="btn1" id="session-apply" disabled onclick="applyTrainingImport()">确认，追加到训练草稿</button><datalist id="exercise-name-options"></datalist></details>
   <div style="font-size:12px;color:#888;margin-bottom:8px;">选择动作分类或搜索整个动作库。勾选已完成的动作后填写；切换分类、搜索和日期会保留当前页面的草稿，点击 Save session 才保存记录。</div>
   <div class="sch-wrap" id="sch-wrap"></div>
   <div class="row">
     <label for="td">Date</label><input type="date" id="td" onchange="loadTrainingDate()">
     <label for="tw" style="margin-left:4px;">Weight</label>
-    <input type="number" class="sminput" id="tw" step="0.1" min="30" max="120" placeholder="52.0" oninput="onWtInput()" title="Log today's body weight (kg)">
+    <input type="number" class="sminput" id="tw" step="0.1" min="20" max="400" placeholder="可选体重" oninput="onWtInput()" title="Log today's body weight (kg)">
     <span style="font-size:11px;color:#888;">kg</span>
     <label for="tdur" style="margin-left:4px;">Duration</label>
     <input type="number" class="sminput" id="tdur" min="10" max="180" placeholder="50" oninput="updBurn()" title="Total session length in minutes">
@@ -362,7 +399,7 @@ textarea:focus{outline:none;border-color:#1D9E75;}
     </div>
     <div class="activity-fields" id="activity-fields"></div>
   </div>
-  <div class="section-card"><div class="row" style="margin-bottom:8px"><button class="btn2" id="recent-exercises" aria-pressed="true" onclick="toggleRecentExercises()">你的近期动作</button><span class="muted" id="exercise-count"></span></div><input class="fsrch" id="exercise-search" aria-label="Search gym exercises" placeholder="搜索全部动作：卧推 / bench · abductor · 划船 / row" oninput="drawExs()"><div class="muted">重量口径：哑铃按每只；Smith 加片重量与杠铃总重分开记录。组次不同可填 15 / 25 / 20，超级组填配对动作。</div><details style="margin-top:10px"><summary style="font-size:12px;cursor:pointer">导入你提供的 5 次训练（2026 年）</summary><div class="muted" style="margin:8px 0">9/4、9/15、9/17、11/6、11/11。先登录并完成同步；仅补入没有训练记录的日期，已有日期跳过。原始记录未写明的次数、总时长保持空白。</div><button class="btn2" onclick="importRecentTraining()">导入这 5 次训练</button><div class="muted" id="training-import-result" role="status"></div></details></div>
+  <div class="section-card"><div class="row" style="margin-bottom:8px"><button class="btn2" id="recent-exercises" aria-pressed="false" onclick="toggleRecentExercises()">我的历史动作</button><span class="muted" id="exercise-count"></span><button class="btn1" onclick="saveT()">保存训练</button></div><input class="fsrch" id="exercise-search" aria-label="Search gym exercises" placeholder="搜索全部动作：卧推 / bench · abductor · 划船 / row" oninput="drawExs()"><div class="muted">重量口径：哑铃按每只；Smith 加片重量与杠铃总重分开记录。组次不同可填 15 / 25 / 20，超级组填配对动作。</div></div>
   <div id="exlist"></div>
   <div class="slbl" style="margin-top:2px;">Custom / unlisted exercises</div>
   <div id="cxlist"></div>
@@ -371,12 +408,13 @@ textarea:focus{outline:none;border-color:#1D9E75;}
     <div class="myex-hdr">⭐ My saved exercises <span style="font-size:10px;color:#aaa;font-weight:400;">— tap ✕ to remove</span></div>
     <div id="my-ex-list"></div>
   </div>
+  <label class="muted" for="training-intensity">训练强度（用于消耗估算）</label><select id="training-intensity" style="margin:5px 0 12px;padding:8px" onchange="updBurn()"><option value="moderate">常规力量训练／含组间休息</option><option value="vigorous">持续高强度力量训练</option></select>
   <div id="burn-display"></div>
   <div class="slbl">Session notes</div>
   <textarea id="snotes" rows="2" placeholder="How did it feel? New weight? Anything to flag next time..."></textarea>
   <div class="btnrow">
     <button class="btn1" onclick="saveT()">Save session</button>
-    <button class="btn2" onclick="copyT()">Copy log</button>
+    <button class="btn2" onclick="copyT()">Copy log</button><button class="btn2" onclick="viewSessionNutrition()">查看当天饮食</button>
   </div>
   <div class="fb" id="tfb"></div>
 </div>
@@ -387,8 +425,8 @@ textarea:focus{outline:none;border-color:#1D9E75;}
     <label for="nd">Date</label>
     <input type="date" id="nd" onchange="renderN()">
     <div class="dtrow" style="margin-bottom:0;flex:1;margin-left:4px;">
-      <button class="dtb on" onclick="setDT('training')" id="dtT" style="font-size:12px;">Training day <span class="tag tg">+carbs</span></button>
-      <button class="dtb" onclick="setDT('rest')" id="dtR" style="font-size:12px;">Rest day <span class="tag ta">-carbs</span></button>
+      <button class="dtb" disabled aria-disabled="true" id="dtT" style="font-size:12px;">Training day <span class="tag tg">自动</span></button>
+      <button class="dtb" disabled aria-disabled="true" id="dtR" style="font-size:12px;">Rest day <span class="tag ta">自动</span></button>
     </div>
   </div>
   <div id="hydrow"></div>
@@ -434,11 +472,16 @@ textarea:focus{outline:none;border-color:#1D9E75;}
   </div>
 </div>
 
+<dialog id="food-editor" aria-labelledby="food-editor-title" oncancel="foodEditState=null">
+<h2 id="food-editor-title">编辑食物记录</h2><div class="muted">修改份量会按原记录比例换算；也可根据包装修改本次总营养值。</div>
+<label for="edit-food-name">食物名称</label><input id="edit-food-name" type="text">
+<label for="edit-food-amount">份量 · <span id="edit-food-unit"></span></label><input id="edit-food-amount" type="number" min="0.1" step="any" inputmode="decimal" oninput="scaleFoodEdit()">
+<div class="editor-grid"><div><label for="edit-food-kcal">本次总热量 kcal</label><input id="edit-food-kcal" type="number" min="0" step="any" inputmode="decimal"></div><div><label for="edit-food-protein">本次蛋白质 g</label><input id="edit-food-protein" type="number" min="0" step="any" inputmode="decimal"></div><div><label for="edit-food-carbs">本次碳水 g</label><input id="edit-food-carbs" type="number" min="0" step="any" inputmode="decimal"></div><div><label for="edit-food-fat">本次脂肪 g</label><input id="edit-food-fat" type="number" min="0" step="any" inputmode="decimal"></div></div><div id="edit-food-error" role="alert" style="color:#a34239;margin-top:10px"></div><div class="btnrow"><button type="button" class="btn2" onclick="closeFoodEditor()">取消</button><button type="button" class="btn1" onclick="saveFoodEdit()">保存修改</button></div></dialog>
 <script>
 // Safe for public GitHub Pages: use only a Supabase publishable key here, never a secret key.
 window.TRACKER_SUPABASE=window.TRACKER_SUPABASE||{url:"",key:""};
 // ============================================================
-// EXERCISE DATABASE — 90 movements, 5 existing category IDs
+// EXERCISE DATABASE — generic movements, without personal history
 // ============================================================
 const EX = {
   "A": {
@@ -450,23 +493,11 @@ const EX = {
         "en": "Smith split squat",
         "cn": "史密斯机分腿蹲",
         "unit": "kg added",
-        "def": "+15",
+        "def": "",
         "prev": "",
         "sec": "Main",
         "mode": "external",
-        "sid": "A",
-        "recent": {
-          "en": "Smith split squat",
-          "w": "+15",
-          "s": "3",
-          "r": "12",
-          "n": "原称Smith单腿蹲；是否每侧12次未注明",
-          "ss": "",
-          "unit": "kg added",
-          "mode": "external",
-          "sid": "A",
-          "date": "2026-11-11"
-        }
+        "sid": "A"
       },
       {
         "en": "Smith RDL",
@@ -550,25 +581,13 @@ const EX = {
       },
       {
         "en": "Barbell RDL",
-        "cn": "杠铃罗马尼亚硬拉 RMN",
-        "unit": "kg (注明含杆或加片)",
+        "cn": "杠铃罗马尼亚硬拉",
+        "unit": "kg total",
         "mode": "external",
         "prev": "",
         "sec": "Gym staples",
-        "def": "+15",
-        "sid": "A",
-        "recent": {
-          "en": "Barbell RDL",
-          "w": "+15",
-          "s": "3",
-          "r": "10",
-          "n": "原记录+15kg，是否含杆未注明",
-          "ss": "",
-          "unit": "kg (注明含杆或加片)",
-          "mode": "external",
-          "sid": "A",
-          "date": "2026-11-11"
-        }
+        "def": "",
+        "sid": "A"
       },
       {
         "en": "Conventional deadlift",
@@ -677,20 +696,8 @@ const EX = {
         "mode": "external",
         "prev": "",
         "sec": "Gym staples",
-        "def": "20",
-        "sid": "A",
-        "recent": {
-          "en": "Hip abductor machine",
-          "w": "20",
-          "s": "3",
-          "r": "15 / 25 / 20",
-          "n": "逐组次数",
-          "ss": "",
-          "unit": "kg on machine",
-          "mode": "external",
-          "sid": "A",
-          "date": "2026-11-06"
-        }
+        "def": "",
+        "sid": "A"
       },
       {
         "en": "Hip adductor machine",
@@ -753,23 +760,11 @@ const EX = {
         "en": "Seated DB shoulder press",
         "cn": "坐姿哑铃肩推",
         "unit": "kg/hand",
-        "def": "6",
+        "def": "",
         "prev": "",
         "sec": "Push",
         "mode": "external",
-        "sid": "B",
-        "recent": {
-          "en": "Seated DB shoulder press",
-          "w": "6",
-          "s": "3",
-          "r": "12",
-          "n": "",
-          "ss": "",
-          "unit": "kg/hand",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-06"
-        }
+        "sid": "B"
       },
       {
         "en": "Low cable crossover",
@@ -785,45 +780,21 @@ const EX = {
         "en": "Lat pulldown",
         "cn": "高位下拉",
         "unit": "kg",
-        "def": "25",
+        "def": "",
         "prev": "",
         "sec": "Pull",
         "mode": "external",
-        "sid": "B",
-        "recent": {
-          "en": "Lat pulldown",
-          "w": "25",
-          "s": "2",
-          "r": "8",
-          "n": "",
-          "ss": "",
-          "unit": "kg",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-09-17"
-        }
+        "sid": "B"
       },
       {
         "en": "Straight arm pulldown",
         "cn": "直臂下拉",
         "unit": "kg",
-        "def": "10",
+        "def": "",
         "prev": "",
         "sec": "Pull",
         "mode": "external",
-        "sid": "B",
-        "recent": {
-          "en": "Straight arm pulldown",
-          "w": "10",
-          "s": "3",
-          "r": "8",
-          "n": "",
-          "ss": "",
-          "unit": "kg",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "sid": "B"
       },
       {
         "en": "Roman chair row",
@@ -839,67 +810,31 @@ const EX = {
         "en": "Face pull",
         "cn": "面拉",
         "unit": "kg",
-        "def": "12.5",
+        "def": "",
         "prev": "",
         "sec": "Pull",
         "mode": "external",
-        "sid": "B",
-        "recent": {
-          "en": "Face pull",
-          "w": "12.5",
-          "s": "3",
-          "r": "12",
-          "n": "",
-          "ss": "",
-          "unit": "kg",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "sid": "B"
       },
       {
         "en": "Lateral raise",
         "cn": "侧平举",
         "unit": "kg/hand",
-        "def": "2",
+        "def": "",
         "prev": "",
         "sec": "Shoulder health",
         "mode": "external",
-        "sid": "B",
-        "recent": {
-          "en": "Lateral raise",
-          "w": "2",
-          "s": "3",
-          "r": "15",
-          "n": "每手2kg",
-          "ss": "Y-raise",
-          "unit": "kg/hand",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "sid": "B"
       },
       {
         "en": "Y-raise",
         "cn": "Y字训练",
         "unit": "kg/hand",
-        "def": "2",
+        "def": "",
         "prev": "",
         "sec": "Shoulder health",
         "mode": "external",
-        "sid": "B",
-        "recent": {
-          "en": "Y-raise",
-          "w": "2",
-          "s": "3",
-          "r": "10",
-          "n": "每手2kg",
-          "ss": "Lateral raise",
-          "unit": "kg/hand",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "sid": "B"
       },
       {
         "en": "Smith bench press",
@@ -908,20 +843,8 @@ const EX = {
         "mode": "external",
         "prev": "",
         "sec": "Gym staples",
-        "def": "+5",
-        "sid": "B",
-        "recent": {
-          "en": "Smith bench press",
-          "w": "+5",
-          "s": "3",
-          "r": "10",
-          "n": "加片重量，不含杆",
-          "ss": "",
-          "unit": "kg added",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "def": "",
+        "sid": "B"
       },
       {
         "en": "Barbell bench press",
@@ -1001,19 +924,7 @@ const EX = {
         "prev": "",
         "sec": "Gym staples",
         "def": "",
-        "sid": "B",
-        "recent": {
-          "en": "Single-arm DB row",
-          "w": "",
-          "s": "",
-          "r": "",
-          "n": "原记录未填重量、组数、次数",
-          "ss": "",
-          "unit": "kg/hand",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-09-17"
-        }
+        "sid": "B"
       },
       {
         "en": "Lunge-stance DB row",
@@ -1022,20 +933,8 @@ const EX = {
         "mode": "external",
         "prev": "",
         "sec": "Gym staples",
-        "def": "8",
-        "sid": "B",
-        "recent": {
-          "en": "Lunge-stance DB row",
-          "w": "8",
-          "s": "3",
-          "r": "12",
-          "n": "",
-          "ss": "",
-          "unit": "kg/hand",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "def": "",
+        "sid": "B"
       },
       {
         "en": "Barbell bent-over row",
@@ -1076,28 +975,6 @@ const EX = {
         "sec": "Gym staples",
         "def": "",
         "sid": "B"
-      },
-      {
-        "en": "Cable pulldown (unspecified)",
-        "cn": "绳索下拉（原记录，握法未注明）",
-        "unit": "kg on machine",
-        "mode": "external",
-        "prev": "",
-        "sec": "Gym staples",
-        "def": "",
-        "sid": "B",
-        "recent": {
-          "en": "Cable pulldown (unspecified)",
-          "w": "",
-          "s": "",
-          "r": "",
-          "n": "原记录未填握法、重量、组数、次数",
-          "ss": "",
-          "unit": "kg on machine",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-09-17"
-        }
       },
       {
         "en": "Reverse pec deck",
@@ -1176,20 +1053,8 @@ const EX = {
         "mode": "assistance",
         "prev": "",
         "sec": "Pull",
-        "def": "22",
-        "sid": "B",
-        "recent": {
-          "en": "Assisted pull-up",
-          "w": "22",
-          "s": "4",
-          "r": "6",
-          "n": "22kg 为辅助重量",
-          "ss": "",
-          "unit": "kg assistance",
-          "mode": "assistance",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "def": "",
+        "sid": "B"
       },
       {
         "en": "Pull-up",
@@ -1210,72 +1075,6 @@ const EX = {
         "sec": "Push",
         "def": "",
         "sid": "B"
-      },
-      {
-        "en": "Lisa back routine",
-        "cn": "Lisa 背（个人组合）",
-        "unit": "kg/hand",
-        "mode": "unknown",
-        "prev": "",
-        "sec": "Your routines",
-        "def": "4",
-        "sid": "B",
-        "recent": {
-          "en": "Lisa back routine",
-          "w": "4",
-          "s": "2",
-          "r": "",
-          "n": "每手4kg；原记录2组SPS，组合细节未注明",
-          "ss": "",
-          "unit": "kg/hand",
-          "mode": "unknown",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
-      },
-      {
-        "en": "Lisa shoulder DB routine",
-        "cn": "Lisa 肩部哑铃组合",
-        "unit": "kg/hand",
-        "mode": "unknown",
-        "prev": "",
-        "sec": "Your routines",
-        "def": "2",
-        "sid": "B",
-        "recent": {
-          "en": "Lisa shoulder DB routine",
-          "w": "2",
-          "s": "2",
-          "r": "",
-          "n": "每手2kg；原记录2组SPS",
-          "ss": "",
-          "unit": "kg/hand",
-          "mode": "unknown",
-          "sid": "B",
-          "date": "2026-11-06"
-        }
-      },
-      {
-        "en": "Lisa shoulder plate routine",
-        "cn": "Lisa 肩部杠铃片组合",
-        "unit": "kg plate",
-        "mode": "unknown",
-        "prev": "",
-        "sec": "Your routines",
-        "def": "5",
-        "sid": "B",
-        "recent": {
-          "en": "Lisa shoulder plate routine",
-          "w": "5",
-          "s": "2",
-          "r": "",
-          "n": "5kg杠铃片；原记录2组SPS",
-          "ss": "",
-          "unit": "kg plate",
-          "mode": "unknown",
-          "sid": "B",
-          "date": "2026-11-06"
-        }
       }
     ]
   },
@@ -1435,23 +1234,11 @@ const EX = {
         "en": "Elliptical steady state",
         "cn": "椭圆机",
         "unit": "min",
-        "def": "10",
+        "def": "",
         "prev": "",
         "sec": "Steady state",
         "mode": "timed",
-        "sid": "D",
-        "recent": {
-          "en": "Elliptical steady state",
-          "w": "10",
-          "s": "",
-          "r": "",
-          "n": "阻力档位2；器械显示70 kcal，仅备注，不当作实测消耗",
-          "ss": "",
-          "unit": "min",
-          "mode": "timed",
-          "sid": "D",
-          "date": "2026-09-04"
-        }
+        "sid": "D"
       },
       {
         "en": "Rowing machine",
@@ -1467,23 +1254,11 @@ const EX = {
         "en": "Stairmaster",
         "cn": "爬楼机",
         "unit": "min",
-        "def": "30",
+        "def": "",
         "prev": "",
         "sec": "Steady state",
         "mode": "timed",
-        "sid": "D",
-        "recent": {
-          "en": "Stairmaster",
-          "w": "30",
-          "s": "",
-          "r": "",
-          "n": "30分钟",
-          "ss": "",
-          "unit": "min",
-          "mode": "timed",
-          "sid": "D",
-          "date": "2026-09-17"
-        }
+        "sid": "D"
       },
       {
         "en": "Incline treadmill walk",
@@ -1492,20 +1267,8 @@ const EX = {
         "mode": "timed",
         "prev": "",
         "sec": "Steady state",
-        "def": "10",
-        "sid": "D",
-        "recent": {
-          "en": "Incline treadmill walk",
-          "w": "10",
-          "s": "",
-          "r": "",
-          "n": "爬坡热身10分钟",
-          "ss": "",
-          "unit": "min",
-          "mode": "timed",
-          "sid": "D",
-          "date": "2026-09-04"
-        }
+        "def": "",
+        "sid": "D"
       },
       {
         "en": "Stationary bike",
@@ -1617,508 +1380,12 @@ const EX = {
     ]
   }
 };
-const RECENT_TRAINING={
-  "2026-11-11": [
-    {
-      "en": "Straight arm pulldown",
-      "w": "10",
-      "s": "3",
-      "r": "8",
-      "n": "",
-      "ss": "",
-      "unit": "kg",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Lisa back routine",
-      "w": "4",
-      "s": "2",
-      "r": "",
-      "n": "每手4kg；原记录2组SPS，组合细节未注明",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "unknown",
-      "sid": "B"
-    },
-    {
-      "en": "Lunge-stance DB row",
-      "w": "8",
-      "s": "3",
-      "r": "12",
-      "n": "",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Face pull",
-      "w": "12.5",
-      "s": "3",
-      "r": "12",
-      "n": "",
-      "ss": "",
-      "unit": "kg",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Assisted pull-up",
-      "w": "22",
-      "s": "4",
-      "r": "6",
-      "n": "22kg 为辅助重量",
-      "ss": "",
-      "unit": "kg assistance",
-      "mode": "assistance",
-      "sid": "B"
-    },
-    {
-      "en": "Lateral raise",
-      "w": "2",
-      "s": "3",
-      "r": "15",
-      "n": "每手2kg",
-      "ss": "Y-raise",
-      "unit": "kg/hand",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Y-raise",
-      "w": "2",
-      "s": "3",
-      "r": "10",
-      "n": "每手2kg",
-      "ss": "Lateral raise",
-      "unit": "kg/hand",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Barbell RDL",
-      "w": "+15",
-      "s": "3",
-      "r": "10",
-      "n": "原记录+15kg，是否含杆未注明",
-      "ss": "",
-      "unit": "kg (注明含杆或加片)",
-      "mode": "external",
-      "sid": "A"
-    },
-    {
-      "en": "Smith bench press",
-      "w": "+5",
-      "s": "3",
-      "r": "10",
-      "n": "加片重量，不含杆",
-      "ss": "",
-      "unit": "kg added",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Smith split squat",
-      "w": "+15",
-      "s": "3",
-      "r": "12",
-      "n": "原称Smith单腿蹲；是否每侧12次未注明",
-      "ss": "",
-      "unit": "kg added",
-      "mode": "external",
-      "sid": "A"
-    }
-  ],
-  "2026-11-06": [
-    {
-      "en": "Hip abductor machine",
-      "w": "20",
-      "s": "3",
-      "r": "15 / 25 / 20",
-      "n": "逐组次数",
-      "ss": "",
-      "unit": "kg on machine",
-      "mode": "external",
-      "sid": "A"
-    },
-    {
-      "en": "Lisa shoulder DB routine",
-      "w": "2",
-      "s": "2",
-      "r": "",
-      "n": "每手2kg；原记录2组SPS",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "unknown",
-      "sid": "B"
-    },
-    {
-      "en": "Lisa shoulder plate routine",
-      "w": "5",
-      "s": "2",
-      "r": "",
-      "n": "5kg杠铃片；原记录2组SPS",
-      "ss": "",
-      "unit": "kg plate",
-      "mode": "unknown",
-      "sid": "B"
-    },
-    {
-      "en": "Lisa back routine",
-      "w": "4",
-      "s": "2",
-      "r": "",
-      "n": "每手4kg；原记录2组SPS",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "unknown",
-      "sid": "B"
-    },
-    {
-      "en": "Seated DB shoulder press",
-      "w": "6",
-      "s": "3",
-      "r": "12",
-      "n": "",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Barbell RDL",
-      "w": "+15",
-      "s": "3",
-      "r": "10",
-      "n": "原记录+15kg，是否含杆未注明",
-      "ss": "",
-      "unit": "kg (注明含杆或加片)",
-      "mode": "external",
-      "sid": "A"
-    },
-    {
-      "en": "Smith bench press",
-      "w": "+5",
-      "s": "3",
-      "r": "10",
-      "n": "加片重量，不含杆",
-      "ss": "",
-      "unit": "kg added",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Smith split squat",
-      "w": "+15",
-      "s": "3",
-      "r": "12",
-      "n": "原称Smith单腿蹲；是否每侧12次未注明",
-      "ss": "",
-      "unit": "kg added",
-      "mode": "external",
-      "sid": "A"
-    }
-  ],
-  "2026-09-17": [
-    {
-      "en": "Single-arm DB row",
-      "w": "",
-      "s": "",
-      "r": "",
-      "n": "原记录未填重量、组数、次数",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Cable pulldown (unspecified)",
-      "w": "",
-      "s": "",
-      "r": "",
-      "n": "原记录未填握法、重量、组数、次数",
-      "ss": "",
-      "unit": "kg on machine",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Stairmaster",
-      "w": "30",
-      "s": "",
-      "r": "",
-      "n": "30分钟",
-      "ss": "",
-      "unit": "min",
-      "mode": "timed",
-      "sid": "D"
-    },
-    {
-      "en": "Straight arm pulldown",
-      "w": "10",
-      "s": "3",
-      "r": "8",
-      "n": "",
-      "ss": "",
-      "unit": "kg",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Face pull",
-      "w": "12.5",
-      "s": "3",
-      "r": "12",
-      "n": "",
-      "ss": "",
-      "unit": "kg",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Lat pulldown",
-      "w": "25",
-      "s": "2",
-      "r": "8",
-      "n": "",
-      "ss": "",
-      "unit": "kg",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Lateral raise",
-      "w": "2",
-      "s": "3",
-      "r": "15",
-      "n": "",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Lisa back routine",
-      "w": "4",
-      "s": "2",
-      "r": "",
-      "n": "每手4kg；2组SPS",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "unknown",
-      "sid": "B"
-    },
-    {
-      "en": "Y-raise",
-      "w": "2",
-      "s": "3",
-      "r": "15",
-      "n": "",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Lunge-stance DB row",
-      "w": "8",
-      "s": "3",
-      "r": "10",
-      "n": "",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "external",
-      "sid": "B"
-    }
-  ],
-  "2026-09-15": [
-    {
-      "en": "Smith split squat",
-      "w": "+15",
-      "s": "3",
-      "r": "12",
-      "n": "原称Smith单腿蹲；是否每侧12次未注明",
-      "ss": "",
-      "unit": "kg added",
-      "mode": "external",
-      "sid": "A"
-    },
-    {
-      "en": "Barbell RDL",
-      "w": "+15",
-      "s": "3",
-      "r": "10",
-      "n": "原记录+15kg，是否含杆未注明",
-      "ss": "",
-      "unit": "kg (注明含杆或加片)",
-      "mode": "external",
-      "sid": "A"
-    },
-    {
-      "en": "Smith bench press",
-      "w": "+5",
-      "s": "3",
-      "r": "10",
-      "n": "加片重量，不含杆",
-      "ss": "",
-      "unit": "kg added",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Seated DB shoulder press",
-      "w": "6",
-      "s": "3",
-      "r": "12",
-      "n": "",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Lisa shoulder DB routine",
-      "w": "2",
-      "s": "2",
-      "r": "",
-      "n": "每手2kg；2组SPS",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "unknown",
-      "sid": "B"
-    },
-    {
-      "en": "Lisa shoulder plate routine",
-      "w": "5",
-      "s": "2",
-      "r": "",
-      "n": "5kg杠铃片；2组SPS",
-      "ss": "",
-      "unit": "kg plate",
-      "mode": "unknown",
-      "sid": "B"
-    },
-    {
-      "en": "Assisted pull-up",
-      "w": "22",
-      "s": "3",
-      "r": "10",
-      "n": "22kg为辅助重量",
-      "ss": "",
-      "unit": "kg assistance",
-      "mode": "assistance",
-      "sid": "B"
-    },
-    {
-      "en": "Hip abductor machine",
-      "w": "20",
-      "s": "3",
-      "r": "15 / 25 / 20",
-      "n": "逐组次数",
-      "ss": "",
-      "unit": "kg on machine",
-      "mode": "external",
-      "sid": "A"
-    }
-  ],
-  "2026-09-04": [
-    {
-      "en": "Incline treadmill walk",
-      "w": "10",
-      "s": "",
-      "r": "",
-      "n": "爬坡热身10分钟",
-      "ss": "",
-      "unit": "min",
-      "mode": "timed",
-      "sid": "D"
-    },
-    {
-      "en": "Assisted pull-up",
-      "w": "22",
-      "s": "4",
-      "r": "10",
-      "n": "22kg为辅助重量",
-      "ss": "",
-      "unit": "kg assistance",
-      "mode": "assistance",
-      "sid": "B"
-    },
-    {
-      "en": "Lisa back routine",
-      "w": "4",
-      "s": "2",
-      "r": "",
-      "n": "每手4kg",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "unknown",
-      "sid": "B"
-    },
-    {
-      "en": "Y-raise",
-      "w": "2",
-      "s": "",
-      "r": "",
-      "n": "超级组；次数及组数未注明",
-      "ss": "Lateral raise",
-      "unit": "kg/hand",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Lateral raise",
-      "w": "2",
-      "s": "",
-      "r": "",
-      "n": "超级组；次数及组数未注明",
-      "ss": "Y-raise",
-      "unit": "kg/hand",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Lunge-stance DB row",
-      "w": "8",
-      "s": "3",
-      "r": "10",
-      "n": "",
-      "ss": "",
-      "unit": "kg/hand",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Face pull",
-      "w": "12.5",
-      "s": "3",
-      "r": "12",
-      "n": "",
-      "ss": "",
-      "unit": "kg",
-      "mode": "external",
-      "sid": "B"
-    },
-    {
-      "en": "Elliptical steady state",
-      "w": "10",
-      "s": "",
-      "r": "",
-      "n": "阻力档位2；器械显示70 kcal，仅备注，不当作实测消耗",
-      "ss": "",
-      "unit": "min",
-      "mode": "timed",
-      "sid": "D"
-    }
-  ]
-};
 const SCOL = {A:"#1D9E75",B:"#378ADD",C:"#EF9F27",D:"#993C1D",E:"#7B5EA7"};
 
 // ============================================================
 // FOOD DATABASE — ${DB.length} plain-food entries, including raw/cooked variants
 // ============================================================
-const FCATS=[{"id": "all", "n": "All · 全部", "ic": "🍽"}, {"id": "myfood", "n": "My foods · 我的", "ic": "⭐"}, {"id": "root", "n": "Tubers · 薯类", "ic": "🥔"}, {"id": "grain", "n": "Grains · 谷物", "ic": "🌾"}, {"id": "legume", "n": "Beans & tofu · 豆类", "ic": "🫘"}, {"id": "veg", "n": "Vegetables · 蔬菜", "ic": "🥦"}, {"id": "fruit", "n": "Fruit · 水果", "ic": "🍎"}, {"id": "beef", "n": "Beef · 牛肉", "ic": "🥩"}, {"id": "protein", "n": "Meat & fish · 肉鱼", "ic": "🐟"}, {"id": "egg", "n": "Eggs · 蛋类", "ic": "🥚"}, {"id": "dairy", "n": "Plain dairy · 原味乳品", "ic": "🥛"}, {"id": "nut", "n": "Nuts & seeds · 坚果籽", "ic": "🥜"}];
+const FCATS=[{"id": "all", "n": "All · 全部", "ic": "🍽"}, {"id": "myfood", "n": "My foods · 我的", "ic": "⭐"}, {"id": "coffee", "n": "Coffee · 咖啡", "ic": "☕"}, {"id": "drink", "n": "Drinks · 饮品", "ic": "🧋"}, {"id": "bread", "n": "Bread · 面包", "ic": "🥐"}, {"id": "fast", "n": "Burgers · 汉堡", "ic": "🍔"}, {"id": "snack", "n": "Snacks · 零食", "ic": "🍪"}, {"id": "root", "n": "Tubers · 薯类", "ic": "🥔"}, {"id": "grain", "n": "Grains · 谷物", "ic": "🌾"}, {"id": "legume", "n": "Beans & tofu · 豆类", "ic": "🫘"}, {"id": "veg", "n": "Vegetables · 蔬菜", "ic": "🥦"}, {"id": "fruit", "n": "Fruit · 水果", "ic": "🍎"}, {"id": "beef", "n": "Beef · 牛肉", "ic": "🥩"}, {"id": "protein", "n": "Meat & fish · 肉鱼", "ic": "🐟"}, {"id": "egg", "n": "Eggs · 蛋类", "ic": "🥚"}, {"id": "dairy", "n": "Plain dairy · 原味乳品", "ic": "🥛"}, {"id": "nut", "n": "Nuts & seeds · 坚果籽", "ic": "🥜"}];
 
 // USDA SR Legacy, values per 100g edible portion. Raw/cooked entries are distinct.
 const DB=[
@@ -2435,7 +1702,7 @@ const DB=[
     "p": 12.5,
     "c": 73.5,
     "f": 2.3,
-    "visibility": "default"
+    "visibility": "dry"
   },
   {
     "cat": "grain",
@@ -5466,6 +4733,380 @@ const DB=[
     "c": 3.0,
     "f": 0.2,
     "visibility": "default"
+  },
+  {
+    "id": "usda_171890",
+    "fdcId": 171890,
+    "n": "黑咖啡／美式（无糖） Black coffee / Americano",
+    "cat": "coffee",
+    "aliases": "咖啡 coffee americano 冰美式 热美式",
+    "sourceDescription": "Beverages, coffee, brewed, prepared with tap water",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 240,
+    "servingLabel": "杯（240g）",
+    "visibility": "default",
+    "k": 1,
+    "p": 0.1,
+    "c": 0.0,
+    "f": 0.0
+  },
+  {
+    "id": "usda_171891",
+    "fdcId": 171891,
+    "n": "浓缩咖啡 Espresso",
+    "cat": "coffee",
+    "aliases": "咖啡 espresso 意式",
+    "sourceDescription": "Beverages, coffee, brewed, espresso, restaurant-prepared",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 30,
+    "servingLabel": "份（30g）",
+    "visibility": "default",
+    "k": 9,
+    "p": 0.1,
+    "c": 1.7,
+    "f": 0.2
+  },
+  {
+    "id": "usda_171889",
+    "fdcId": 171889,
+    "n": "低因黑咖啡 Decaf black coffee",
+    "cat": "coffee",
+    "aliases": "咖啡 coffee decaf",
+    "sourceDescription": "Beverages, coffee, brewed, prepared with tap water, decaffeinated",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 240,
+    "servingLabel": "杯（240g）",
+    "visibility": "default",
+    "k": 0,
+    "p": 0.1,
+    "c": 0.0,
+    "f": 0.0
+  },
+  {
+    "id": "usda_171917",
+    "fdcId": 171917,
+    "n": "绿茶（无糖） Green tea",
+    "cat": "drink",
+    "aliases": "茶 tea",
+    "sourceDescription": "Beverages, tea, green, brewed, regular",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 240,
+    "servingLabel": "杯（240g）",
+    "visibility": "default",
+    "k": 1,
+    "p": 0.2,
+    "c": 0.0,
+    "f": 0.0
+  },
+  {
+    "id": "usda_169098",
+    "fdcId": 169098,
+    "n": "橙汁 Orange juice",
+    "cat": "drink",
+    "aliases": "果汁 juice",
+    "sourceDescription": "Orange juice, raw (Includes foods for USDA's Food Distribution Program)",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 200,
+    "servingLabel": "杯（200g）",
+    "visibility": "default",
+    "k": 45,
+    "p": 0.7,
+    "c": 10.4,
+    "f": 0.2
+  },
+  {
+    "id": "usda_174852",
+    "fdcId": 174852,
+    "n": "可乐 Cola",
+    "cat": "drink",
+    "aliases": "可乐 cola coke 汽水",
+    "sourceDescription": "Beverages, carbonated, cola, regular",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 330,
+    "servingLabel": "份（330g）",
+    "visibility": "default",
+    "k": 42,
+    "p": 0.0,
+    "c": 10.4,
+    "f": 0.2
+  },
+  {
+    "id": "usda_172688",
+    "fdcId": 172688,
+    "n": "全麦面包 Whole-wheat bread",
+    "cat": "bread",
+    "aliases": "面包 bread toast 吐司",
+    "sourceDescription": "Bread, whole-wheat, commercially prepared",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 30,
+    "servingLabel": "片（30g）",
+    "visibility": "default",
+    "k": 252,
+    "p": 12.4,
+    "c": 42.7,
+    "f": 3.5
+  },
+  {
+    "id": "usda_174924",
+    "fdcId": 174924,
+    "n": "白吐司 White bread",
+    "cat": "bread",
+    "aliases": "面包 bread toast 吐司",
+    "sourceDescription": "Bread, white, commercially prepared (includes soft bread crumbs)",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 30,
+    "servingLabel": "片（30g）",
+    "visibility": "default",
+    "k": 266,
+    "p": 8.8,
+    "c": 49.4,
+    "f": 3.3
+  },
+  {
+    "id": "usda_172675",
+    "fdcId": 172675,
+    "n": "法棍／酸面包 French / sourdough bread",
+    "cat": "bread",
+    "aliases": "面包 baguette sourdough",
+    "sourceDescription": "Bread, french or vienna (includes sourdough)",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 50,
+    "servingLabel": "份（50g）",
+    "visibility": "default",
+    "k": 272,
+    "p": 10.8,
+    "c": 51.9,
+    "f": 2.4
+  },
+  {
+    "id": "usda_174987",
+    "fdcId": 174987,
+    "n": "黄油可颂 Butter croissant",
+    "cat": "bread",
+    "aliases": "面包 牛角包 croissant",
+    "sourceDescription": "Croissants, butter",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 60,
+    "servingLabel": "个（60g）",
+    "visibility": "default",
+    "k": 406,
+    "p": 8.2,
+    "c": 45.8,
+    "f": 21.0
+  },
+  {
+    "id": "usda_172716",
+    "fdcId": 172716,
+    "n": "巧克力曲奇 Chocolate-chip cookie",
+    "cat": "snack",
+    "aliases": "饼干 曲奇 cookie biscuit",
+    "sourceDescription": "Cookies, chocolate chip, commercially prepared, regular, higher fat, enriched",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 30,
+    "servingLabel": "块（30g）",
+    "visibility": "default",
+    "k": 492,
+    "p": 5.1,
+    "c": 65.4,
+    "f": 24.7
+  },
+  {
+    "id": "usda_174967",
+    "fdcId": 174967,
+    "n": "黄油酥饼 Shortbread",
+    "cat": "snack",
+    "aliases": "饼干 曲奇 biscuit cookie",
+    "sourceDescription": "Cookies, shortbread, commercially prepared, plain",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 20,
+    "servingLabel": "块（20g）",
+    "visibility": "default",
+    "k": 514,
+    "p": 5.4,
+    "c": 63.8,
+    "f": 26.2
+  },
+  {
+    "id": "usda_172746",
+    "fdcId": 172746,
+    "n": "苏打饼干 Soda crackers",
+    "cat": "snack",
+    "aliases": "饼干 cracker biscuit",
+    "sourceDescription": "Crackers, saltines (includes oyster, soda, soup)",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 30,
+    "servingLabel": "份（30g）",
+    "visibility": "default",
+    "k": 418,
+    "p": 9.5,
+    "c": 74.0,
+    "f": 8.6
+  },
+  {
+    "id": "usda_169677",
+    "fdcId": 169677,
+    "n": "薯片 Potato chips",
+    "cat": "snack",
+    "aliases": "零食 chips crisps",
+    "sourceDescription": "Snacks, potato chips, plain, salted",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 30,
+    "servingLabel": "份（30g）",
+    "visibility": "default",
+    "k": 532,
+    "p": 6.4,
+    "c": 53.8,
+    "f": 34.0
+  },
+  {
+    "id": "usda_170273",
+    "fdcId": 170273,
+    "n": "黑巧克力（70–85%） Dark chocolate",
+    "cat": "snack",
+    "aliases": "巧克力 chocolate",
+    "sourceDescription": "Chocolate, dark, 70-85% cacao solids",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 20,
+    "servingLabel": "份（20g）",
+    "visibility": "default",
+    "k": 598,
+    "p": 7.8,
+    "c": 45.9,
+    "f": 42.6
+  },
+  {
+    "id": "usda_167575",
+    "fdcId": 167575,
+    "n": "香草冰淇淋 Vanilla ice cream",
+    "cat": "snack",
+    "aliases": "冰淇淋 icecream dessert",
+    "sourceDescription": "Ice creams, vanilla",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 70,
+    "servingLabel": "球（70g）",
+    "visibility": "default",
+    "k": 207,
+    "p": 3.5,
+    "c": 23.6,
+    "f": 11.0
+  },
+  {
+    "id": "usda_170694",
+    "fdcId": 170694,
+    "n": "经典汉堡（含调味料） Hamburger",
+    "cat": "fast",
+    "aliases": "汉堡 burger hamburger",
+    "sourceDescription": "Fast foods, hamburger; single, regular patty; with condiments",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 150,
+    "servingLabel": "个（150g）",
+    "visibility": "default",
+    "k": 263,
+    "p": 13.3,
+    "c": 29.6,
+    "f": 10.2
+  },
+  {
+    "id": "usda_170691",
+    "fdcId": 170691,
+    "n": "芝士汉堡 Cheeseburger",
+    "cat": "fast",
+    "aliases": "汉堡 芝士 burger cheeseburger",
+    "sourceDescription": "Fast foods, cheeseburger; single, regular patty, with condiments",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 150,
+    "servingLabel": "个（150g）",
+    "visibility": "default",
+    "k": 270,
+    "p": 13.5,
+    "c": 25.5,
+    "f": 12.9
+  },
+  {
+    "id": "recipe_latte_whole",
+    "n": "全脂拿铁（无糖配方） Whole-milk latte",
+    "cat": "coffee",
+    "aliases": "咖啡 拿铁 latte cappuccino 卡布奇诺",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 230,
+    "servingLabel": "杯（230g配方）",
+    "visibility": "default",
+    "sourceDescription": "Recipe estimate: 200g milk (FDC 172217) + 30g espresso (FDC 171891) + 0g sugar",
+    "note": "配方估算：200g奶＋30g浓缩＋0g糖；门店杯量不同，以标签为准。",
+    "k": 54.2,
+    "p": 2.7,
+    "c": 4.4,
+    "f": 2.9
+  },
+  {
+    "id": "recipe_latte_skim",
+    "n": "脱脂拿铁（无糖配方） Skim-milk latte",
+    "cat": "coffee",
+    "aliases": "咖啡 拿铁 latte cappuccino 卡布奇诺",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 230,
+    "servingLabel": "杯（230g配方）",
+    "visibility": "default",
+    "sourceDescription": "Recipe estimate: 200g milk (FDC 173432) + 30g espresso (FDC 171891) + 0g sugar",
+    "note": "配方估算：200g奶＋30g浓缩＋0g糖；门店杯量不同，以标签为准。",
+    "k": 31.6,
+    "p": 3.0,
+    "c": 4.5,
+    "f": 0.2
+  },
+  {
+    "id": "recipe_cappuccino",
+    "n": "卡布奇诺（无糖配方） Cappuccino",
+    "cat": "coffee",
+    "aliases": "咖啡 拿铁 latte cappuccino 卡布奇诺",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 130,
+    "servingLabel": "杯（130g配方）",
+    "visibility": "default",
+    "sourceDescription": "Recipe estimate: 100g milk (FDC 172217) + 30g espresso (FDC 171891) + 0g sugar",
+    "note": "配方估算：100g奶＋30g浓缩＋0g糖；门店杯量不同，以标签为准。",
+    "k": 49.0,
+    "p": 2.4,
+    "c": 4.1,
+    "f": 2.6
+  },
+  {
+    "id": "recipe_latte_sweet",
+    "n": "全脂拿铁（加10g糖配方） Sweetened latte",
+    "cat": "coffee",
+    "aliases": "咖啡 拿铁 latte cappuccino 卡布奇诺",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 240,
+    "servingLabel": "杯（240g配方）",
+    "visibility": "default",
+    "sourceDescription": "Recipe estimate: 200g milk (FDC 172217) + 30g espresso (FDC 171891) + 10g sugar",
+    "note": "配方估算：200g奶＋30g浓缩＋10g糖；门店杯量不同，以标签为准。",
+    "k": 68.6,
+    "p": 2.6,
+    "c": 8.4,
+    "f": 2.8
   }
 ];
 
@@ -5484,34 +5125,21 @@ const MEALS_R=[
 ];
 
 // ============================================================
-// STATE — pre-seeded from training log
+// APP STATE — loaded only from the current workspace
 // ============================================================
-const S={days:{
-  "2026-04-02":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith RDL",w:"+10",s:"4",r:"12",n:""},{en:"Smith hip thrust",w:"+15",s:"4",r:"12",n:""}]}},
-  "2026-04-09":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith split squat",w:"+10",s:"4",r:"15",n:""},{en:"Smith RDL",w:"+10",s:"3",r:"15",n:""}]}},
-  "2026-04-16":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith split squat",w:"+10",s:"4",r:"15",n:""},{en:"Smith RDL",w:"+10",s:"3",r:"15",n:""}]}},
-  "2026-04-21":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith split squat",w:"+12.5",s:"4",r:"12",n:""},{en:"Smith hip thrust",w:"+15",s:"4",r:"12",n:""},{en:"Smith RDL",w:"+10",s:"4",r:"15",n:""}]}},
-  "2026-04-22":{tr:{sess:["B"],e:2,notes:"",exs:[{en:"Incline DB press 30°",w:"8",s:"4",r:"10",n:""},{en:"Seated DB shoulder press",w:"6",s:"4",r:"10",n:""}]}},
-  "2026-04-28":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith split squat",w:"+15",s:"3",r:"10",n:""}]}},
-  "2026-04-29":{tr:{sess:["B"],e:2,notes:"",exs:[{en:"Seated DB shoulder press",w:"6",s:"4",r:"10",n:""},{en:"Incline DB press 30°",w:"8",s:"4",r:"10",n:""}]}},
-  "2026-05-02":{tr:{sess:["B"],e:2,notes:"重量进步",exs:[{en:"Lat pulldown",w:"20",s:"4",r:"12",n:""},{en:"Seated DB shoulder press",w:"7",s:"3",r:"15",n:""},{en:"Smith split squat",w:"+10",s:"4",r:"12",n:""}]}},
-  "2026-05-08":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith split squat",w:"+15",s:"4",r:"12",n:""},{en:"Smith RDL",w:"+12.5",s:"4",r:"10",n:""}]}},
-  "2026-05-10":{tr:{sess:["B"],e:2,notes:"",exs:[{en:"Straight arm pulldown",w:"7.5",s:"4",r:"12",n:""},{en:"Incline DB press 30°",w:"8",s:"4",r:"10",n:""},{en:"Lat pulldown",w:"20",s:"4",r:"12",n:""}]}},
-  "2026-05-11":{tr:{sess:["B"],e:2,notes:"",exs:[{en:"Low cable crossover",w:"2.5",s:"4",r:"8",n:""},{en:"Seated DB shoulder press",w:"8",s:"4",r:"12",n:""},{en:"Incline DB press 30°",w:"8",s:"4",r:"10",n:""}]}},
-  "2026-05-13":{tr:{sess:["A"],e:2,notes:"",exs:[{en:"Smith split squat",w:"+15",s:"4",r:"12",n:""},{en:"Smith RDL",w:"+12.5",s:"4",r:"10",n:""}]}}
-}};
+const S={days:{}};
 let eid=1;
 let customExDB=[]; // saved custom exercises — persists in localStorage
 let customFoodDB=[]; // saved custom foods — persists in localStorage
-let currentWeight=52; // updated when user logs weight
+let currentWeight=0; // updated when user logs weight
 
 // ── Dynamic calorie targets (recalculate when weight changes) ──
-let PROFILE={height:162.5,age:26,goal:"Recomposition",weekly:4};
+let PROFILE={height:null,age:null,weight:null,sex:"",goal:"",weekly:null};
 function calcTGT(w){
-  const bmr=10*w+6.25*PROFILE.height-5*PROFILE.age-161; // Mifflin-St Jeor, female
-  const tdee=bmr*1.55; // moderately active (4×/week training)
-  const tk=Math.round(tdee*0.97); // training day: 3% below TDEE
-  const rk=Math.round(bmr*1.25); // rest day: lightly active
+  if(!profileReady(w)){const blank={k:0,p:0,c:0,f:0,needsProfile:true};return {training:{...blank},rest:{...blank}};}
+  const bmr=profileBMR(w);
+  const rk=Math.round(bmr*1.25);
+  const tk=rk; // all exercise additions are derived from the actual selected date
   const tp=Math.round(w*1.9); // protein: 1.9 g/kg
   const tc=Math.round(tk*0.45/4); // training carbs: 45% of kcal
   const rc=Math.round(rk*0.36/4); // rest carbs: 36% of kcal
@@ -5519,11 +5147,11 @@ function calcTGT(w){
   const rf=Math.max(30,Math.round((rk-tp*4-rc*4)/9));
   return {training:{k:tk,p:tp,c:tc,f:tf},rest:{k:rk,p:tp,c:rc,f:rf}};
 }
-let TGT=calcTGT(52);
+let TGT=calcTGT(currentWeight);
 
 // ── Calorie burn estimation (MET-based) ──
 // MET = metabolic equivalent; Cal = MET × weight_kg × hours
-const SESS_MET={A:5.0,B:4.5,C:4.0,D:8.0,E:6.5};
+const SESS_MET={A:3.5,B:3.5,C:2.8,D:5.0,E:5.0};
 const SESS_DUR={A:50,B:50,C:30,D:40,E:45}; // default minutes per type
 
 function estimateBurn(sessions,wkg,durMin,energy){
@@ -5534,21 +5162,32 @@ function estimateBurn(sessions,wkg,durMin,energy){
   return Math.round(avgMet*wkg*(durMin/60)*eMod);
 }
 
-function getBurnForDate(date){
-  const day=S.days[date];
-  if(!day?.tr)return 0;
-  const w=day.weight||currentWeight||52;
-  const dur=day.tr.dur||50;
-  const sess=new Set(day.tr.sess||[]);
-  const gym=day.tr.dur>0?estimateBurn(sess,w,day.tr.dur,day.tr.e||2):0;
-  const sport=(day.tr.activities||[]).reduce((sum,a)=>{const mets=a.type==="cycling"?{easy:4,moderate:7.5,hard:10}[a.intensity]:{easy:4.5,moderate:7,hard:9}[a.intensity];return sum+Math.round(mets*w*((a.duration||0)/60));},0);
-  return gym+sport;
+// Net exercise energy is added to a baseline that excludes planned workouts.
+function weightForDate(date){const keys=Object.keys(S.days).filter(k=>k<=date&&Number(S.days[k]?.weight)>0).sort();return keys.length?Number(S.days[keys[keys.length-1]].weight ):Number(PROFILE.weight)||0;}
+function hasTraining(date){const tr=S.days[date]?.tr;return !!tr&&((tr.exs||[]).length>0||(tr.activities||[]).some(a=>Number(a.duration)>0));}
+function dayMode(date){return hasTraining(date)?'training':'rest';}
+function sessionEnergy(tr,w){
+ if(!tr||!(w>0))return {net:0,gross:0,missing:!!tr,minutes:0};
+ const exs=tr.exs||[],cardio=exs.filter(e=>(e.sid||exerciseMeta(e.en)?.sid)==='D'&&(e.mode||exerciseMeta(e.en)?.mode)==='timed');
+ const cardioMin=cardio.reduce((sum,e)=>sum+Math.max(0,Number(e.w)||0),0);
+ const duration=Math.max(0,Number(tr.dur)||0),hasStrength=exs.some(e=>!cardio.includes(e));
+ const strengthMin=hasStrength?Math.max(0,duration-cardioMin):0;
+ const met=tr.intensity==='vigorous'?6:3.5;
+ let net=(met-1)*w*strengthMin/60,gross=met*w*strengthMin/60;
+ const cappedFactor=duration>0&&cardioMin>duration?duration/cardioMin:1;
+ for(const e of cardio){const mins=Math.max(0,Number(e.w)||0)*cappedFactor;net+=4*w*mins/60;gross+=5*w*mins/60;}
+ for(const a of tr.activities||[]){const mins=Math.max(0,Number(a.duration)||0);const mets=a.type==='cycling'?{easy:4,moderate:7.5,hard:10}[a.intensity]:{easy:4.5,moderate:7,hard:9}[a.intensity];const m=mets||5;net+=(m-1)*w*mins/60;gross+=m*w*mins/60;}
+ return {net:Math.round(net),gross:Math.round(gross),missing:hasStrength&&(!duration||duration<cardioMin)||cardio.some(e=>!(Number(e.w)>0)),minutes:duration||cardioMin};
 }
+function dailyTargets(date){
+ const w=weightForDate(date),bmr=profileBMR(w)===null?null:Math.round(profileBMR(w)),base=calcTGT(w).rest,energy=sessionEnergy(S.days[date]?.tr,w);
+ const k=base.k+energy.net,p=base.p,c=base.c+Math.round(energy.net*.7/4),f=base.f+Math.round(energy.net*.3/9);
+ return {k,p,c,f,bmr,needsProfile:!profileReady(w),base:base.k,exercise:energy.net,gross:energy.gross,missing:energy.missing,mode:dayMode(date),weight:w};
+}
+function getBurnForDate(date){return sessionEnergy(S.days[date]?.tr,weightForDate(date)).net;}
+function openTrainingForNutrition(){document.getElementById('td').value=nd();loadTrainingDate();showTab('T');}
+function viewSessionNutrition(){document.getElementById('nd').value=inputValue('td');showTab('N');}
 
-function updateHeader(){
-  const el=document.getElementById("hdr-wt");
-  if(el)el.textContent=currentWeight.toFixed(1);
-}
 
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function getDay(d){if(!S.days[d])S.days[d]={};return S.days[d];}
@@ -5559,7 +5198,7 @@ function tots(d){return ents(d).reduce((a,e)=>({k:a.k+e.k,p:a.p+e.p,c:a.c+e.c,f:
 // TRAINING LOG
 // ============================================================
 let selSess=new Set(['A']),elev=0,cxRows=[],cxId=0;
-let trainingDrafts={},activeTrainingDate='',recentExercisesOnly=true,loadingTraining=false;
+let trainingDrafts={},activeTrainingDate='',recentExercisesOnly=false,loadingTraining=false;
 document.getElementById('td').value=today();
 function safeHTML(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function exerciseMeta(en){return Object.values(EX).flatMap(g=>g.exs).find(x=>x.en===en);}
@@ -5574,13 +5213,13 @@ function captureTrainingForm(){
  Object.values(EX).flatMap(g=>g.exs).forEach(x=>{const k=`${x.sid}_${EX[x.sid].exs.indexOf(x)}`;const box=document.getElementById(`done_${k}`);if(box)draft.ex[x.en]={en:x.en,done:box.checked,...Object.fromEntries(['w','s','r','ss','n'].map(f=>[f,inputValue(`${f}_${k}`)])),unit:x.unit,mode:x.mode,sid:x.sid};});
  captureCxValues();captureMyInputs();
  draft.cx=cxRows.map(x=>({...x}));draft.sess=[...selSess];draft.e=elev;
- draft.notes=inputValue('snotes');draft.dur=inputValue('tdur');draft.weight=inputValue('tw');
+ draft.intensity=inputValue('training-intensity')||'moderate';draft.notes=inputValue('snotes');draft.dur=inputValue('tdur');draft.weight=inputValue('tw');
  draft.activity={};['activity-type','activity-duration','activity-distance','activity-intensity','activity-detail','activity-extra','activity-notes'].forEach(id=>draft.activity[id]=inputValue(id));
 }
 function makeTrainingDraft(date){
  const day=S.days[date]||{},tr=day.tr||{},entries={},custom=[];
  (tr.exs||[]).forEach(x=>{const meta=exerciseMeta(x.en);if(meta)entries[x.en]={...x,done:true,unit:x.unit||meta.unit,mode:x.mode||meta.mode,sid:meta.sid};else custom.push({...x,id:cxId++});});
- const a=tr.activities?.[0];return {ex:entries,cx:custom,my:{},sess:tr.sess?.length?tr.sess:['A'],e:tr.e||0,notes:tr.notes||'',dur:tr.dur||'',weight:day.weight||'',dirty:false,activity:{'activity-type':a?.type||'','activity-duration':a?.duration||'','activity-distance':a?.distance||'','activity-intensity':a?.intensity||'moderate','activity-detail':a?.detail||'','activity-extra':a?.extra||'','activity-notes':a?.notes||''}};
+ const a=tr.activities?.[0];return {ex:entries,cx:custom,my:{},sess:tr.sess?.length?tr.sess:['A'],e:tr.e||0,notes:tr.notes||'',dur:tr.dur||'',weight:day.weight||'',dirty:false,intensity:tr.intensity||'moderate',activity:{'activity-type':a?.type||'','activity-duration':a?.duration||'','activity-distance':a?.distance||'','activity-intensity':a?.intensity||'moderate','activity-detail':a?.detail||'','activity-extra':a?.extra||'','activity-notes':a?.notes||''}};
 }
 function loadTrainingDate(force=false){
  if(!force)captureTrainingForm();
@@ -5588,7 +5227,7 @@ function loadTrainingDate(force=false){
  if(force||!trainingDrafts[date])trainingDrafts[date]=makeTrainingDraft(date);
  const d=trainingDrafts[date];activeTrainingDate=date;loadingTraining=true;
  selSess=new Set(d.sess.filter(s=>EX[s]));if(!selSess.size)selSess.add('A');elev=d.e;
- cxRows=d.cx.map(x=>({...x}));document.getElementById('snotes').value=d.notes;document.getElementById('tdur').value=d.dur;document.getElementById('tw').value=d.weight;
+ cxRows=d.cx.map(x=>({...x}));document.getElementById('training-intensity').value=d.intensity||'moderate';document.getElementById('snotes').value=d.notes;document.getElementById('tdur').value=d.dur;document.getElementById('tw').value=d.weight;
  for(const [id,value] of Object.entries(d.activity)){const el=document.getElementById(id);if(el)el.value=value;}
  renderActivityFields();for(const [id,value] of Object.entries(d.activity)){const el=document.getElementById(id);if(el)el.value=value;}
  renderSessChips();drawExs();drawCxRows();drawMyExercises();setE(elev);loadingTraining=false;
@@ -5610,7 +5249,7 @@ function drawExs(){
  captureTrainingForm();const draft=trainingDrafts[activeTrainingDate],q=inputValue('exercise-search').toLowerCase().trim(),needles=q.split(/\s+/).filter(Boolean);
  let count=0,h='';
  Object.entries(EX).forEach(([sid,s])=>{
-  const filtered=s.exs.filter(x=>q?needles.every(n=>`${x.en} ${x.cn}`.toLowerCase().includes(n)):recentExercisesOnly?!!x.recent:selSess.has(sid));
+  const filtered=s.exs.filter(x=>q?needles.every(n=>`${x.en} ${x.cn}`.toLowerCase().includes(n)):recentExercisesOnly?!!getExerciseStats(x.en).last:selSess.has(sid));
   if(!filtered.length)return;
   h+=`<div class="sec-h"><div class="sec-dot" style="background:${s.col}"></div><div class="sec-nm" style="color:${s.col}">${s.ic} ${s.name}</div></div>`;
   filtered.forEach(x=>{
@@ -5641,8 +5280,9 @@ function drawMyExercises(skipCapture=false){
  document.getElementById('my-ex-list').innerHTML=customExDB.map((x,i)=>{const k=`mex_${i}`,row=draft?.my[x.en]||{};return `<div class="myex-card"><div class="myex-head"><div class="een">${safeHTML(x.en)}</div><button class="cx-del" onclick="removeMyEx('${safeHTML(x.id)}')" aria-label="Remove saved exercise">✕</button></div><div class="einps">${[['w','Weight / Time'],['s','Sets'],['r','Reps / Time'],['ss','Superset with'],['n','Notes']].map(([f,label])=>`<div class="ig"><label for="${f}_${k}">${label}</label><input id="${f}_${k}" value="${safeHTML(row[f])}"></div>`).join('')}</div></div>`;}).join('');
 }
 function setE(n){elev=n;[1,2,3].forEach(i=>{const b=document.getElementById('e'+i);b.style.background=i===n?'#1D9E75':'none';b.style.color=i===n?'#fff':'#888';});updBurn();}
-function onWtInput(){const v=Number(inputValue('tw'));if(v>30&&v<120){currentWeight=v;TGT=calcTGT(v);updateHeader();updBurn();drawMT();}}
-function updBurn(){const dur=Number(inputValue('tdur'));const el=document.getElementById('burn-display');if(!el)return;const burn=dur>0?estimateBurn(selSess,currentWeight,dur,elev):0;el.innerHTML=burn?`<div class="burn-box"><div><div class="burn-num">~${burn} kcal</div><div class="burn-meta">整次训练 ${dur} min · MET 粗略估算，不是实测消耗</div></div></div>`:'<div class="muted">填写整次训练时长后显示粗略消耗估算，不会把单个动作重量当成分钟。</div>';}
+function onWtInput(){const v=Number(inputValue('tw'));if(v>=20&&v<=400){currentWeight=v;TGT=calcTGT(v);updateHeader();updBurn();drawMT();}}
+function updBurn(){const el=document.getElementById('burn-display');if(!el)return;const duration=Number(inputValue('tdur'));const net=duration>0?Math.round(((inputValue('training-intensity')==='vigorous'?6:3.5)-1)*weightForDate(inputValue('td'))*duration/60):0;el.innerHTML=`<div class="muted">${duration>0?'整次常规力量训练参考净消耗约 '+net+' kcal；保存后按实际记录拆分有氧和力量时长，再更新当天饮食目标。':'填写整次训练时长，保存后联动当天饮食目标；未填时长不估算力量训练消耗。'}</div>`;}
+
 function gatherExs(){
  captureTrainingForm();const draft=trainingDrafts[activeTrainingDate];if(!draft)return[];
  const ex=Object.values(draft.ex).filter(x=>x.done).map(({done,...x})=>x);
@@ -5655,25 +5295,16 @@ function saveT(){
  if(activity&&!activity.duration){fb('tfb','请填写运动时长。');return;}
  for(const e of exs){const meta=exerciseMeta(e.en);if(meta?.mode==='timed'&&!(Number(e.w)>0)){fb('tfb',`${e.en}: 请填写正数时长。`);return;}if(e.s&&(!Number.isInteger(Number(e.s))||Number(e.s)<=0)){fb('tfb',`${e.en}: 组数须为正整数。`);return;}}
  const day=getDay(d),dur=Number(inputValue('tdur'))||0,wt=Number(inputValue('tw'));
+ const timedMinutes=exs.filter(e=>e.sid==='D'&&e.mode==='timed').reduce((sum,e)=>sum+(Number(e.w)||0),0);
+ if(dur>0&&timedMinutes>dur){fb('tfb','有氧动作分钟数大于整次训练时长，请核对后保存。');return;}
  if(dur<0){fb('tfb','训练时长不能为负数。');return;}
- day.tr={...day.tr,sess:[...new Set(exs.map(x=>x.sid||exerciseMeta(x.en)?.sid).filter(Boolean))],e:elev,notes:inputValue('snotes'),exs,dur,activities:activity?[activity]:[]};
+ day.tr={...day.tr,sess:[...new Set(exs.map(x=>x.sid||exerciseMeta(x.en)?.sid).filter(Boolean))],e:elev,notes:inputValue('snotes'),exs,dur,intensity:inputValue('training-intensity')||'moderate',activities:activity?[activity]:[]};
  if(exs.length&&!day.tr.sess.length)day.tr.sess=[...selSess];
- if(wt>30&&wt<120){day.weight=wt;currentWeight=wt;TGT=calcTGT(wt);updateHeader();}
- persist();trainingDrafts[d].dirty=false;renderDashboard();fb('tfb',`✓ ${d} 已保存 ${exs.length} 个动作`);
+ if(wt>=20&&wt<=400){day.weight=wt;currentWeight=wt;TGT=calcTGT(wt);updateHeader();}
+ if(day.nut)day.nut.type=dayMode(d);
+ persist();trainingDrafts[d].dirty=false;renderDashboard();renderN();fb('tfb',`✓ ${d} 已保存 ${exs.length} 个动作`);
 }
 function copyT(){const exs=gatherExs();let t=`${inputValue('td')}\n`+exs.map(x=>`${x.en}\n${exerciseSummary(x)}${x.ss?' · Superset: '+x.ss:''}${x.n?' · '+x.n:''}`).join('\n\n');if(inputValue('snotes'))t+='\n\n'+inputValue('snotes');navigator.clipboard.writeText(t).then(()=>fb('tfb','✓ Copied')).catch(()=>fb('tfb','复制失败，请使用导出备份。'));}
-function importRecentTraining(){
- if(cloudClient&&(!cloudUser||!cloudReady)){fb('tfb','请先登录并完成云同步，再导入历史训练。');return;}
- const added=[],skipped=[];
- for(const [date,exs] of Object.entries(RECENT_TRAINING)){
-  if(S.days[date]?.tr){skipped.push(date);continue;}
-  const day=getDay(date);day.tr={sess:[...new Set(exs.map(e=>e.sid))],e:0,notes:'导入用户训练日志；整次训练时长未注明。',exs:exs.map(x=>({...x})),dur:0,activities:[]};added.push(date);
-  if(trainingDrafts[date]&&!trainingDrafts[date].dirty)delete trainingDrafts[date];
- }
- if(added.length){persist();renderDashboard();}
- document.getElementById('training-import-result').textContent=`新增 ${added.length} 次；跳过 ${skipped.length} 个已有训练的日期。`;
- if(added.includes(activeTrainingDate))loadTrainingDate(true);
-}
 function fb(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;setTimeout(()=>{if(el.textContent===msg)el.textContent='';},7000);}}
 
 // ============================================================
@@ -5682,16 +5313,47 @@ function fb(id,msg){const el=document.getElementById(id);if(el){el.textContent=m
 let dtMode="training", selFood={}, openForm={}, selCat={};
 let nutritionDrafts={},renderedNutritionDate="",renderedFoodIds={};
 let showDryGrains=false;
+let expandedFoodCategories={};
+let foodEditState=null;
+function editFoodEntry(date,index){
+ const entry=S.days[date]?.nut?.entries?.[index];if(!entry)return;
+ foodEditState={date,index,original:JSON.stringify(entry),entry:{...entry},grams:entry.per==='per 100g edible portion'};
+ document.getElementById('edit-food-name').value=entry.fn;
+ document.getElementById('edit-food-amount').value=foodEditState.grams?Math.round(entry.qty*1000)/10:entry.qty;
+ document.getElementById('edit-food-unit').textContent=foodEditState.grams?'克（g）':`份数 · ${entry.per}`;
+ for(const [id,key] of [['kcal','k'],['protein','p'],['carbs','c'],['fat','f']])document.getElementById('edit-food-'+id).value=entry[key];
+ document.getElementById('edit-food-error').textContent='';document.getElementById('food-editor').showModal();
+}
+function scaleFoodEdit(){
+ if(!foodEditState)return;
+ const amount=Number(document.getElementById('edit-food-amount').value),qty=foodEditState.grams?amount/100:amount,original=foodEditState.entry;
+ if(!(qty>0)||!(original.qty>0))return;
+ const factor=qty/original.qty;
+ for(const [id,key] of [['kcal','k'],['protein','p'],['carbs','c'],['fat','f']])document.getElementById('edit-food-'+id).value=key==='k'?Math.round(original[key]*factor):Math.round(original[key]*factor*10)/10;
+}
+function saveFoodEdit(){
+ const state=foodEditState;if(!state)return;
+ const fail=message=>document.getElementById('edit-food-error').textContent=message;
+ const entry=S.days[state.date]?.nut?.entries?.[state.index];
+ if(!entry||JSON.stringify(entry)!==state.original){fail('这条记录已发生变化，请关闭后重新打开编辑。');return;}
+ const name=document.getElementById('edit-food-name').value.trim(),amount=Number(document.getElementById('edit-food-amount').value);
+ if(!name||!Number.isFinite(amount)||amount<=0){fail('请填写名称和正数份量。');return;}
+ const updates={fn:name,qty:state.grams?amount/100:amount};
+ for(const [id,key] of [['kcal','k'],['protein','p'],['carbs','c'],['fat','f']]){
+  const raw=document.getElementById('edit-food-'+id).value.trim(),value=Number(raw);
+  if(!raw||!Number.isFinite(value)||value<0){fail('热量和营养值须为零或正数。');return;}
+  updates[key]=key==='k'?Math.round(value):Math.round(value*10)/10;
+ }
+ Object.assign(entry,updates);persist();closeFoodEditor();renderN();renderDashboard();fb('nfb','✓ 已修改记录，营养合计已更新');
+}
+function closeFoodEditor(){document.getElementById('food-editor').close();foodEditState=null;}
+
 document.getElementById("nd").value=today();
 
-function setDT(t){
-  dtMode=t;
-  document.getElementById("dtT").classList.toggle("on",t==="training");
-  document.getElementById("dtR").classList.toggle("on",t==="rest");
-  renderN();
+function renderN(){
+ dtMode=dayMode(nd());document.getElementById('dtT').classList.toggle('on',dtMode==='training');document.getElementById('dtR').classList.toggle('on',dtMode==='rest');
+ drawHyd();drawBurnInfo();drawMT();drawMeals();
 }
-
-function renderN(){drawHyd();drawBurnInfo();drawMT();drawMeals();}
 
 function nd(){return document.getElementById("nd").value;}
 function getWater(d){return S.days[d]?.water||0;}
@@ -5699,23 +5361,9 @@ function adjWater(d,ml){getDay(d).water=Math.max(0,Math.min(4000,(getDay(d).wate
 
 // ── Burn info + net calories shown in nutrition tab ──
 function drawBurnInfo(){
-  const d=nd(),burn=getBurnForDate(d),tot=tots(d);
-  const el=document.getElementById("burn-info-nut");
-  if(!el)return;
-  if(!burn){el.innerHTML="";return;}
-  const net=Math.round(tot.k-burn);
-  const tgt=TGT[dtMode];
-  const netCol=net<tgt.k*0.75?"#378ADD":net>tgt.k*1.1?"#e05050":"#1D9E75";
-  el.innerHTML=`<div class="net-row">
-    <div class="net-card" style="background:#FDF0EC;border:0.5px solid #E8C4B2;">
-      <div class="net-v" style="color:#993C1D;">🔥 ${burn}</div>
-      <div class="net-l" style="color:#993C1D;">kcal burned (training)</div>
-    </div>
-    <div class="net-card" style="background:#f4f2ee;border:0.5px solid #e0ded8;">
-      <div class="net-v" style="color:${netCol};">${net}</div>
-      <div class="net-l" style="color:#888;">net kcal (intake − burn)</div>
-    </div>
-  </div>`;
+ const t=dailyTargets(nd());
+ if(t.needsProfile){document.getElementById('burn-info-nut').innerHTML=`<div class="section-card"><strong>${t.mode==='training'?'训练日':'休息日'}</strong><p>填写你自己的个人资料后，才会计算代谢、运动消耗及营养目标。</p><button class="btn1" onclick="showTab('S')">设置个人资料</button></div>`;return;}
+ document.getElementById('burn-info-nut').innerHTML=`<div class="section-card"><div class="section-title">${t.mode==='training'?'训练日':'休息日'} · 根据当天已保存记录自动判断</div><div class="energy-grid"><div>基础代谢估算<br><strong>${t.bmr} kcal</strong></div><div>日常消耗基线<br><strong>${t.base} kcal</strong></div><div>运动净消耗<br><strong>+${t.exercise} kcal${t.missing?'（部分）':''}</strong></div><div>当天摄入目标<br><strong>${t.k} kcal</strong></div></div><div class="muted" style="margin-top:9px">日常基线已包含静息消耗，运动只加净增量。蛋白质按体重维持；新增运动能量按约70%碳水、30%脂肪分配。这是估算，不是实测代谢。</div>${t.missing?'<div style="font-size:12px;color:#9b6424;margin-top:8px">已有训练记录，但缺少整次时长；补全后会更新消耗与目标。</div>':''}<button class="btn2" style="margin-top:9px" onclick="openTrainingForNutrition()">${t.mode==='training'?'查看／补全当天训练':'记录当天训练'}</button></div>`;
 }
 
 function drawHyd(){
@@ -5732,7 +5380,8 @@ function drawHyd(){
 }
 
 function drawMT(){
-  const d=nd(),tgt=TGT[dtMode],tot=tots(d);
+  const d=nd(),tgt=dailyTargets(d),tot=tots(d);
+  if(tgt.needsProfile){document.getElementById("mtg").innerHTML=[["Calories",tot.k,"kcal"],["Protein",tot.p,"g"],["Carbs",tot.c,"g"],["Fat",tot.f,"g"]].map(([name,value,unit])=>`<div class="mtc"><div class="mtl">${name}</div><div class="mtv">${Math.round(value*10)/10}${unit}</div><div class="muted">目标待设置</div></div>`).join("");return;}
   const items=[
     {l:"Calories",v:Math.round(tot.k),t:tgt.k,u:"kcal",c:"#1D9E75"},
     {l:"Protein",v:Math.round(tot.p*10)/10,t:tgt.p,u:"g",c:"#1D9E75"},
@@ -5780,7 +5429,7 @@ function drawMeals(){
     renderedNutritionDate=d;
   }
   const inputs=nutritionDrafts[d]?.inputs||{};
-  const MEALS=dtMode==="training"?MEALS_T:MEALS_R;
+  const MEALS=MEALS_T.filter(m=>m.id!=="pre"||dtMode==="training"||es.some(e=>e.mid===m.id));
   let h="";
   MEALS.forEach(m=>{
     const me=es.filter(e=>e.mid===m.id);
@@ -5795,25 +5444,27 @@ function drawMeals(){
     if(me.length){
       h+=`<div class="fents">`;
       me.forEach(e=>{h+=`<div class="frow">
-        <div class="fnm"><div class="fen">${e.fn}</div><div class="fdt">${e.per==="per 100g edible portion"?`${Math.round(e.qty*1000)/10} g`:safeHTML(e.per)+" × "+e.qty}</div></div>
+        <div class="fnm"><div class="fen">${safeHTML(e.fn)}</div><div class="fdt">${e.per==="per 100g edible portion"?`${Math.round(e.qty*1000)/10} g`:safeHTML(e.per)+" × "+e.qty}</div></div>
         <div class="fmacs"><span class="bm bp">${e.p}g P</span><span class="bm bc">${e.c}g C</span><span class="bm bf">${e.f}g F</span></div>
         <span class="fkc">${e.k} kcal</span>
-        <button class="delbtn" onclick="delEnt('${d}',${es.indexOf(e)})">✕</button>
+        <button class="food-edit-button" onclick="editFoodEntry('${d}',${es.indexOf(e)})">编辑</button><button class="delbtn" aria-label="删除这条食物记录" onclick="delEnt('${d}',${es.indexOf(e)})">删除</button>
       </div>`;});
       h+=`</div>`;
     }
     if(of){
       h+=`<div class="aform">
-        <div style="font-size:11px;color:#777;line-height:1.6;margin-bottom:8px;">默认按吃到盘里的熟重或可直接食用部分称重；熟食不含额外油和酱料。 <a href="https://fdc.nal.usda.gov/download-datasets/" target="_blank" rel="noopener">USDA 数据</a></div>
+        <div style="font-size:11px;color:#777;line-height:1.6;margin-bottom:8px;">按可食部分称重；咖啡可选一杯参考份量，奶咖标明配方估算。品牌零食、汉堡优先用包装或门店数据。 <a href="https://fdc.nal.usda.gov/download-datasets/" target="_blank" rel="noopener">USDA 数据</a></div>
         <label style="display:block;font-size:11px;color:#777;margin:5px 0 9px;"><input type="checkbox" ${showDryGrains?"checked":""} onchange="toggleDryGrains(this.checked)"> 显示烹饪前称重的干谷物</label>
-        <div class="cchips">${FCATS.map(c=>`<div class="cchip${cat===c.id?" on":""}" onclick="setCat('${m.id}','${c.id}')">${c.ic} ${c.n}</div>`).join("")}</div>
+        <div class="category-heading"><span class="muted">左右滑动选择分类，或展开全部</span><button type="button" class="btn2" onclick="toggleFoodCategories('${m.id}')">${expandedFoodCategories[m.id]?"收起分类":"全部分类"}</button></div>
+        <div class="cchips${expandedFoodCategories[m.id]?' is-expanded':''}" aria-label="食物分类">${FCATS.map(c=>`<button type="button" class="cchip${cat===c.id?" on":""}" onclick="setCat('${m.id}','${c.id}')">${c.ic} ${c.n}</button>`).join("")}</div>
         ${!sf?`<input class="fsrch" id="fs-${m.id}" type="text" placeholder="Search: 土豆 / potato · 燕麦 / oats · 鸡胸 / chicken" oninput="refilter('${m.id}')" value="${safeHTML(inputs[`fs-${m.id}`]||'')}">
         <div class="flist" id="fl-${m.id}">${foodResults(m.id,results)}</div>`:``}
         ${sf?`<div class="qrow">
-          <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:500;">${sf.n}</div><div style="font-size:11px;color:#888;">${sf.per}</div></div>
-          <input type="number" id="fq-${m.id}" min="0.1" step="${sf.baseGrams?1:0.1}" value="${sf.baseGrams||1}" aria-label="${sf.baseGrams?'Weight in grams':'Number of servings'}" oninput="updPrev('${m.id}')">
+          <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:500;">${sf.n}</div><div style="font-size:11px;color:#888;">${sf.per}${sf.note?" · "+safeHTML(sf.note):""}</div></div>
+          <input type="number" id="fq-${m.id}" min="0.1" step="${sf.baseGrams?1:0.1}" value="${sf.servingGrams||sf.baseGrams||1}" aria-label="${sf.baseGrams?'Weight in grams':'Number of servings'}" oninput="updPrev('${m.id}')">
           <span class="qunit">${sf.baseGrams?"g · 克":"× serving"}</span>
-          <span class="qprev" id="qp-${m.id}">${sf.k} kcal</span>
+          <span class="qprev" id="qp-${m.id}">${Math.round(sf.k*(sf.servingGrams||sf.baseGrams||1)/(sf.baseGrams||1))} kcal</span>
+          ${sf.servingGrams?`<button class="btn2" style="padding:7px;font-size:11px" onclick="useFoodServing('${m.id}',${sf.servingGrams})">1 ${safeHTML(sf.servingLabel)}</button>`:""}
           <button class="btn2" style="padding:7px;font-size:11px" onclick="changeFood('${m.id}')">换食物</button>
           <button class="qadd" onclick="confirmF('${m.id}','${d}')">Add</button>
         </div>`:``}
@@ -5834,6 +5485,7 @@ function drawMeals(){
     h+=`</div>`;
   });
   document.getElementById("meals").innerHTML=h;
+  bindCategoryDragging();
   document.querySelectorAll('#meals input').forEach(el=>{
     if(!(el.id in inputs))return;
     if(el.id.startsWith('fq-')){const mid=el.id.slice(3);if(nutritionDrafts[d]?.bases?.[mid]!==selFood[mid]?.id)return;}
@@ -5842,10 +5494,13 @@ function drawMeals(){
   renderedFoodIds=Object.fromEntries(Object.entries(selFood).filter(([,f])=>f).map(([mid,f])=>[mid,f.id]));
   Object.keys(selFood).forEach(mid=>{if(selFood[mid]&&document.getElementById(`fq-${mid}`))updPrev(mid);});
 }
+function useFoodServing(mid,grams){const el=document.getElementById(`fq-${mid}`);if(el){el.value=grams;updPrev(mid);}}
 function changeFood(mid){selFood[mid]=null;drawMeals();}
 
 function toggleDryGrains(enabled){showDryGrains=enabled;drawMeals();}
-function setCat(mid,cat){selCat[mid]=cat;drawMeals();setTimeout(()=>{const el=document.getElementById(`fs-${mid}`);if(el)el.focus();},30);}
+function toggleFoodCategories(mid){expandedFoodCategories[mid]=!expandedFoodCategories[mid];drawMeals();}
+function bindCategoryDragging(){document.querySelectorAll('.cchips:not(.is-expanded)').forEach(bar=>{let start=0,left=0,down=false,moved=false;bar.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==0)return;down=true;moved=false;start=e.clientX;left=bar.scrollLeft;});bar.addEventListener('pointermove',e=>{if(!down)return;const delta=e.clientX-start;if(Math.abs(delta)>5){moved=true;bar.setPointerCapture(e.pointerId);e.preventDefault();bar.scrollLeft=left-delta;}});const end=e=>{down=false;if(bar.hasPointerCapture(e.pointerId))bar.releasePointerCapture(e.pointerId);};bar.addEventListener('pointerup',end);bar.addEventListener('pointercancel',end);bar.addEventListener('click',e=>{if(moved){e.preventDefault();e.stopImmediatePropagation();}},true);});}
+function setCat(mid,cat){selCat[mid]=cat;expandedFoodCategories[mid]=false;drawMeals();setTimeout(()=>{const el=document.getElementById(`fs-${mid}`);if(el)el.focus();},30);}
 function foodResults(mid,foods){
   if(!foods.length)return '<div style="padding:12px;color:#777;">No matching foods · 没有匹配食物，可用下方自定义录入。</div>';
   return foods.map(f=>`<div class="fitem" onclick="pickF('${mid}','${f.id}')"><div class="finn">${f.n}</div><div class="fide">${f.per} · ${f.k} kcal · ${f.p}g P · ${f.c}g C · ${f.f}g F</div></div>`).join("");
@@ -5912,7 +5567,8 @@ function removeMyFood(id){
 }
 function pushEnt(date,mid,fn,per,qty,k,p,c,f){
   const day=getDay(date);
-  if(!day.nut)day.nut={type:dtMode,entries:[]};
+  if(!day.nut)day.nut={type:dayMode(date),entries:[]};
+  day.nut.type=dayMode(date);
   eid=Math.max(Date.now(),eid+1);
   day.nut.entries.push({id:eid,mid,fn,per,qty,k,p,c,f});
 }
@@ -6055,20 +5711,23 @@ function drawPRs(){
 function drawNutRev(){
   const dim=new Date(ry,rm+1,0).getDate();
   let logd=0,totK=0,totP=0,totC=0,totF=0;
+  const targetTotals={p:0,c:0,f:0};
   const bars=[],bcols=[];
   for(let d=1;d<=dim;d++){
     const k=dkey(d),day=S.days[k],es=day?.nut?.entries||[];
     if(es.length){
       const t=es.reduce((a,e)=>({k:a.k+e.k,p:a.p+e.p,c:a.c+e.c,f:a.f+e.f}),{k:0,p:0,c:0,f:0});
       logd++;totK+=t.k;totP+=t.p;totC+=t.c;totF+=t.f;
-      bars.push({d,k:Math.round(t.k),type:day.nut.type||"training"});
-      bcols.push(day.nut.type==="training"?"#1D9E7588":"#EF9F2788");
+      const target=dailyTargets(k);for(const key of ["p","c","f"])targetTotals[key]+=target[key];
+      bars.push({d,k:Math.round(t.k),type:dayMode(k),target:dailyTargets(k).k});
+      bcols.push(dayMode(k)==="training"?"#1D9E7588":"#EF9F2788");
     }
   }
   const avgK=logd?Math.round(totK/logd):0;
   const avgP=logd?Math.round(totP/logd):0;
   const avgC=logd?Math.round(totC/logd):0;
   const avgF=logd?Math.round(totF/logd):0;
+  const avgTarget=Object.fromEntries(["p","c","f"].map(key=>[key,logd?Math.round(targetTotals[key]/logd):dailyTargets(nd())[key]]));
 
   document.getElementById("nutstats").innerHTML=`
     <div class="nsc"><div class="nsv">${logd}</div><div class="nsl">Days logged</div></div>
@@ -6084,8 +5743,7 @@ function drawNutRev(){
         labels:bars.map(b=>String(b.d)),
         datasets:[
           {label:"Calories logged",data:bars.map(b=>b.k),backgroundColor:bcols,borderRadius:4,borderSkipped:false},
-          {type:"line",label:`Training target (${TGT.training.k})`,data:Array(bars.length).fill(TGT.training.k),borderColor:"#1D9E75",borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false},
-          {type:"line",label:`Rest target (${TGT.rest.k})`,data:Array(bars.length).fill(TGT.rest.k),borderColor:"#EF9F27",borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false}
+          {type:"line",label:"当天动态目标",data:bars.map(b=>b.target),borderColor:"#1D9E75",borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false}
         ]
       },
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:10},boxWidth:12,padding:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:"#f0ede8"},ticks:{font:{size:10}},beginAtZero:false}}}
@@ -6095,9 +5753,9 @@ function drawNutRev(){
   }
 
   document.getElementById("nutmacros").innerHTML=`
-    <div class="cc"><div class="cct">Avg protein</div><div class="ccv" style="color:#1D9E75;">${avgP}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Target ${TGT.training.p}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,Math.round(avgP/TGT.training.p*100))}%;background:#1D9E75;border-radius:99px;"></div></div></div>
-    <div class="cc"><div class="cct">Avg carbs</div><div class="ccv" style="color:#378ADD;">${avgC}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Train target ${TGT.training.c}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,Math.round(avgC/TGT.training.c*100))}%;background:#378ADD;border-radius:99px;"></div></div></div>
-    <div class="cc"><div class="cct">Avg fat</div><div class="ccv" style="color:#EF9F27;">${avgF}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Train target ${TGT.training.f}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,Math.round(avgF/TGT.training.f*100))}%;background:#EF9F27;border-radius:99px;"></div></div></div>`;
+    <div class="cc"><div class="cct">Avg protein</div><div class="ccv" style="color:#1D9E75;">${avgP}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Avg daily target ${avgTarget.p}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,(avgTarget.p?Math.round(avgP/avgTarget.p*100):0))}%;background:#1D9E75;border-radius:99px;"></div></div></div>
+    <div class="cc"><div class="cct">Avg carbs</div><div class="ccv" style="color:#378ADD;">${avgC}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Avg daily target ${avgTarget.c}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,(avgTarget.c?Math.round(avgC/avgTarget.c*100):0))}%;background:#378ADD;border-radius:99px;"></div></div></div>
+    <div class="cc"><div class="cct">Avg fat</div><div class="ccv" style="color:#EF9F27;">${avgF}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Avg daily target ${avgTarget.f}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,(avgTarget.f?Math.round(avgF/avgTarget.f*100):0))}%;background:#EF9F27;border-radius:99px;"></div></div></div>`;
 }
 
 // ============================================================
@@ -6235,9 +5893,9 @@ function saveCloudConfig(){
 }
 function cloudPayload(){return{version:5,days:S.days,customExercises:customExDB,customFoods:customFoodDB,profile:PROFILE};}
 function applyCloudPayload(data){
-  if(!data?.days)return;cloudApplying=true;S.days={...data.days};customExDB=data.customExercises||[];customFoodDB=data.customFoods||[];PROFILE={...PROFILE,...(data.profile||{})};
-  localStorage.setItem("gt_v3",JSON.stringify(S.days));localStorage.setItem("gt_cex",JSON.stringify(customExDB));localStorage.setItem("gt_cfd",JSON.stringify(customFoodDB));localStorage.setItem("gt_profile",JSON.stringify(PROFILE));
-  const keys=Object.keys(S.days).filter(d=>S.days[d].weight).sort();if(keys.length)currentWeight=S.days[keys[keys.length-1]].weight;TGT=calcTGT(currentWeight);updateHeader();refreshTrainingFromCloud();renderN();renderDashboard();cloudApplying=false;
+  if(!data?.days)return;cloudApplying=true;S.days={...data.days};customExDB=data.customExercises||[];customFoodDB=data.customFoods||[];PROFILE={...PROFILE,...(data.profile||{})};syncProfileFields();
+  localStorage.setItem(scopedKey("gt_v3"),JSON.stringify(S.days));localStorage.setItem(scopedKey("gt_cex"),JSON.stringify(customExDB));localStorage.setItem(scopedKey("gt_cfd"),JSON.stringify(customFoodDB));localStorage.setItem(scopedKey("gt_profile"),JSON.stringify(PROFILE));
+  const keys=Object.keys(S.days).filter(d=>S.days[d].weight).sort();if(keys.length)currentWeight=S.days[keys[keys.length-1]].weight;document.getElementById("set-weight").value=currentWeight||"";TGT=calcTGT(currentWeight);updateHeader();refreshTrainingFromCloud();renderN();renderDashboard();cloudApplying=false;
 }
 async function initCloud(){
   const cfg=cloudConfig();document.getElementById("cloud-url").value=cfg.url;document.getElementById("cloud-key").value=cfg.key;
@@ -6249,7 +5907,7 @@ async function initCloud(){
   }catch(e){setCloudStatus("Could not connect to Supabase","err");fb("cloud-fb",e.message||"Connection failed");}
 }
 async function handleCloudSession(session){
-  cloudUser=session?.user||null;document.getElementById("cloud-auth").style.display=cloudUser?"none":"block";document.getElementById("cloud-user").style.display=cloudUser?"block":"none";document.getElementById("cloud-signout").style.display=cloudUser?"block":"none";
+  clearTimeout(cloudTimer);cloudReady=false;cloudUser=session?.user||null;loadWorkspace(cloudUser?.id||'guest');document.getElementById("cloud-auth").style.display=cloudUser?"none":"block";document.getElementById("cloud-user").style.display=cloudUser?"block":"none";document.getElementById("cloud-signout").style.display=cloudUser?"block":"none";
   document.getElementById("cloud-password-setup").style.display=cloudUser?"block":"none";
   if(!cloudUser){
     document.getElementById("cloud-new-password").value="";
@@ -6287,6 +5945,7 @@ async function signInPassword(){
   }catch(error){setCloudStatus("Sign-in failed","err");fb("cloud-fb",cloudAuthError(error));}
   finally{button.disabled=false;}
 }
+async function registerAccount(){if(!cloudClient){fb('cloud-fb','请先配置服务连接，或继续使用本机模式。');return;}const email=cloudEmail(),password=inputValue('cloud-password');if(!email||password.length<8){fb('cloud-fb','请输入邮箱和至少8位密码。');return;}const button=document.getElementById('cloud-signup');button.disabled=true;try{const {data,error}=await cloudClient.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});if(error)throw error;document.getElementById('cloud-password').value='';fb('cloud-fb',data?.session?'注册成功，已进入空白账号。':'请查看邮箱并确认账号，再回到应用使用密码登录。');}catch(e){fb('cloud-fb',e.message||'注册失败');}finally{button.disabled=false;}}
 async function sendSetupLink(){
   if(!cloudClient){fb("cloud-fb","请先配置 Supabase 连接。");return;}
   const email=cloudEmail();if(!email)return;
@@ -6315,22 +5974,23 @@ async function saveAccountPassword(){
     if(error)throw error;
     if(!data?.user)throw new Error("密码尚未保存，请重试。");
     input.value="";confirm.value="";
-    fb("cloud-password-fb","密码已保存。现在可以回到主屏幕应用，用原邮箱和这个密码登录。");
+    fb("cloud-password-fb","密码已保存。现在可以回到主屏幕应用，用邮箱和这个密码登录。");
   }catch(error){fb("cloud-password-fb",cloudAuthError(error));}
   finally{button.disabled=false;}
 }
-async function cloudSignOut(){if(cloudClient)await cloudClient.auth.signOut();cloudUser=null;cloudReady=false;setCloudStatus("Signed out");}
+async function cloudSignOut(){if(cloudClient)await cloudClient.auth.signOut();await handleCloudSession(null);setCloudStatus('Signed out');}
 async function reconcileCloud(){
-  const{data,error}=await cloudClient.from("wellness_tracker_state").select("data,updated_at").eq("user_id",cloudUser.id).maybeSingle();if(error){setCloudStatus("Cloud read failed","err");fb("cloud-fb",error.message);return;}
-  const localStamp=localStorage.getItem("gt_local_updated")||"";if(!data){cloudReady=true;await pushCloud();return;}
-  if(localStamp&&localStamp>data.updated_at){cloudReady=true;await pushCloud();}else{applyCloudPayload(data.data);localStorage.setItem("gt_local_updated",data.updated_at);cloudReady=true;setCloudStatus(`Synced ${fmtTs(data.updated_at)}`,"ok");}
+  const expectedUser=cloudUser?.id;if(!expectedUser)return;const{data,error}=await cloudClient.from("wellness_tracker_state").select("data,updated_at").eq("user_id",expectedUser).maybeSingle();if(cloudUser?.id!==expectedUser)return;if(error){setCloudStatus("Cloud read failed","err");fb("cloud-fb",error.message);return;}
+  const localStamp=localStorage.getItem(scopedKey("gt_local_updated"))||"";if(!data){cloudReady=true;await pushCloud();return;}
+  if(localStamp&&localStamp>data.updated_at){cloudReady=true;await pushCloud();}else{applyCloudPayload(data.data);localStorage.setItem(scopedKey("gt_local_updated"),data.updated_at);cloudReady=true;setCloudStatus(`Synced ${fmtTs(data.updated_at)}`,"ok");}
 }
 function scheduleCloudSync(){if(!cloudReady||!cloudUser||cloudApplying)return;clearTimeout(cloudTimer);setCloudStatus("Saving…","busy");cloudTimer=setTimeout(pushCloud,900);}
 async function pushCloud(){
-  if(!cloudClient||!cloudUser)return;const now=new Date().toISOString();setCloudStatus("Saving…","busy");const{error}=await cloudClient.from("wellness_tracker_state").upsert({user_id:cloudUser.id,data:cloudPayload(),updated_at:now},{onConflict:"user_id"});
-  if(error){setCloudStatus(navigator.onLine?"Sync failed":"Offline — saved locally","err");return;}localStorage.setItem("gt_local_updated",now);cloudReady=true;setCloudStatus(`Synced ${fmtTs(now)}`,"ok");
+  if(!cloudClient||!cloudUser||!cloudReady)return;const userId=cloudUser.id,stampKey=scopedKey('gt_local_updated');const now=new Date().toISOString();setCloudStatus("Saving…","busy");const{error}=await cloudClient.from("wellness_tracker_state").upsert({user_id:userId,data:cloudPayload(),updated_at:now},{onConflict:"user_id"});
+  if(cloudUser?.id!==userId)return;
+  if(error){setCloudStatus(navigator.onLine?"Sync failed":"Offline — saved locally","err");return;}localStorage.setItem(stampKey,now);cloudReady=true;setCloudStatus(`Synced ${fmtTs(now)}`,"ok");
 }
-window.addEventListener("online",()=>{if(cloudUser){cloudReady=true;scheduleCloudSync();}});window.addEventListener("offline",()=>setCloudStatus("Offline — saved locally","busy"));
+window.addEventListener("online",()=>{if(cloudUser){if(cloudReady)scheduleCloudSync();else reconcileCloud();}});window.addEventListener("offline",()=>setCloudStatus("Offline — saved locally","busy"));
 
 // ============================================================
 // TAB NAV
@@ -6361,11 +6021,6 @@ function renderDashboard(){
   document.getElementById("week-summary").innerHTML=`<strong>${sessions}</strong> workouts · <strong>${logged}</strong> nutrition days logged. Aim for consistency, not a perfect streak.`;
   if(day.recovery){document.getElementById("rec-sleep").value=day.recovery.sleep||"";document.getElementById("rec-sore").value=day.recovery.soreness||"";}
 }
-function saveSettings(){
-  const p={height:+document.getElementById("set-height").value||162.5,age:+document.getElementById("set-age").value||26,goal:document.getElementById("set-goal").value,weekly:+document.getElementById("set-weekly").value||4};
-  PROFILE=p;localStorage.setItem("gt_profile",JSON.stringify(p));TGT=calcTGT(currentWeight);renderN();updateHeader();fb("sfb-settings","✓ Settings and nutrition targets updated");
-}
-
 // Init review month title
 const _MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
 document.getElementById("montitle").textContent=`${_MN[rm]} ${ry}`;
@@ -6373,26 +6028,37 @@ document.getElementById("montitle").textContent=`${_MN[rm]} ${ry}`;
 // ============================================================
 // LOCAL STORAGE — auto-save so data survives tab close
 // ============================================================
-function persist(){
-  try{
-    localStorage.setItem("gt_v3",JSON.stringify(S.days));
-    localStorage.setItem("gt_cex",JSON.stringify(customExDB));
-    localStorage.setItem("gt_cfd",JSON.stringify(customFoodDB));
-    localStorage.setItem("gt_local_updated",new Date().toISOString());
-  }catch(e){}
-  scheduleCloudSync();
+function blankProfile(){return {height:null,age:null,weight:null,sex:'',goal:'',weekly:null};}
+function profileReady(w=currentWeight){return Number(w)>0&&Number(PROFILE.height)>0&&Number(PROFILE.age)>=18&&['female','male'].includes(PROFILE.sex);}
+function profileBMR(w){return profileReady(w)?10*w+6.25*Number(PROFILE.height)-5*Number(PROFILE.age)+(PROFILE.sex==='male'?5:-161):null;}
+function syncProfileFields(){for(const [id,key] of [['set-height','height'],['set-age','age'],['set-weight','weight'],['set-sex','sex'],['set-goal','goal'],['set-weekly','weekly']]){const el=document.getElementById(id);if(el)el.value=PROFILE[key]??'';}}
+function updateHeader(){const el=document.getElementById('profile-sub');if(el)el.textContent=profileReady()?`${PROFILE.height} cm · ${currentWeight} kg · ${PROFILE.goal||'个人记录'}`:'欢迎使用 Wellness · 先记录，或在 Settings 填写个人资料以启用可选目标估算';}
+function saveSettings(){
+ const p={height:Number(inputValue('set-height'))||null,age:Number(inputValue('set-age'))||null,weight:Number(inputValue('set-weight'))||null,sex:inputValue('set-sex'),goal:inputValue('set-goal'),weekly:Number(inputValue('set-weekly'))||null};
+ if(p.height&&(p.height<80||p.height>250)||p.weight&&(p.weight<20||p.weight>400)||p.age&&(p.age<18||p.age>110)){fb('sfb-settings','请核对身高、体重和年龄；本估算适用于成人。');return;}
+ PROFILE=p;currentWeight=p.weight||0;TGT=calcTGT(currentWeight);persist();updateHeader();renderN();fb('sfb-settings',profileReady()?'✓ 已保存资料并更新目标':'已保存；补全身高、年龄、体重及公式参数后才显示估算目标');
 }
-function hydrate(){
-  try{
-    const d=localStorage.getItem("gt_v3");
-    if(d)Object.assign(S.days,JSON.parse(d));
-    const ce=localStorage.getItem("gt_cex");
-    if(ce)customExDB=JSON.parse(ce);
-    const cf=localStorage.getItem("gt_cfd");
-    if(cf)customFoodDB=JSON.parse(cf);
-    const pr=localStorage.getItem("gt_profile");
-    if(pr){PROFILE={...PROFILE,...JSON.parse(pr)};document.getElementById("set-height").value=PROFILE.height;document.getElementById("set-age").value=PROFILE.age;document.getElementById("set-goal").value=PROFILE.goal;document.getElementById("set-weekly").value=PROFILE.weekly;}
-  }catch(e){}
+let workspaceScope='guest';
+function scopedKey(key){return `wellness:v6:${workspaceScope}:${key}`;}
+function storeWorkspace(){for(const [key,value] of [['gt_v3',S.days],['gt_cex',customExDB],['gt_cfd',customFoodDB],['gt_profile',PROFILE]])localStorage.setItem(scopedKey(key),JSON.stringify(value));}
+function persist(){try{storeWorkspace();localStorage.setItem(scopedKey('gt_local_updated'),new Date().toISOString());}catch(e){fb('sync-fb','本机存储不可用，请导出备份。');}scheduleCloudSync();}
+function hydrate(){try{const days=JSON.parse(localStorage.getItem(scopedKey('gt_v3'))||'{}');S.days=days;customExDB=JSON.parse(localStorage.getItem(scopedKey('gt_cex'))||'[]');customFoodDB=JSON.parse(localStorage.getItem(scopedKey('gt_cfd'))||'[]');PROFILE={...blankProfile(),...JSON.parse(localStorage.getItem(scopedKey('gt_profile'))||'{}')};currentWeight=Number(PROFILE.weight)||0;syncProfileFields();}catch(e){}}
+function loadWorkspace(scope){
+ if(workspaceScope===scope)return;
+ if(typeof cancelSessionOCR==='function')cancelSessionOCR();if(typeof parsedSession!=='undefined')parsedSession=null;for(const id of ['session-raw','session-import-duration']){const el=document.getElementById(id);if(el)el.value='';}document.getElementById('session-preview').innerHTML='';document.getElementById('session-parse-status').textContent='';document.getElementById('session-apply').disabled=true;
+ workspaceScope=scope;S.days={};PROFILE=blankProfile();customExDB=[];customFoodDB=[];currentWeight=0;
+ trainingDrafts={};activeTrainingDate='';cxRows=[];nutritionDrafts={};renderedNutritionDate='';renderedFoodIds={};selFood={};openForm={};selCat={};
+ closeFoodEditor();hydrate();TGT=calcTGT(currentWeight);updateHeader();loadTrainingDate(true);renderN();renderDashboard();updateSyncBar();
+}
+function previewLegacyData(){
+ try{const days=JSON.parse(localStorage.getItem('gt_v3')||'{}');const count=Object.keys(days).length;const el=document.getElementById('legacy-info');el.textContent=count?`发现此设备旧版记录 ${count} 天。确认这是你的记录后，可仅补入当前工作区的空日期；已有日期不会覆盖。`:'此设备没有旧版记录。';document.getElementById('legacy-import').hidden=!count;}catch(e){fb('legacy-info','旧版数据无法读取。');}
+}
+function importLegacyData(){
+ try{const old=JSON.parse(localStorage.getItem('gt_v3')||'{}');let count=0;for(const [date,day] of Object.entries(old)){if(!S.days[date]){S.days[date]=day;count++;}}
+ if(!PROFILE.height){const p=JSON.parse(localStorage.getItem('gt_profile')||'{}');PROFILE={...PROFILE,...p};syncProfileFields();}
+ const ce=JSON.parse(localStorage.getItem('gt_cex')||'[]'),cf=JSON.parse(localStorage.getItem('gt_cfd')||'[]');for(const x of ce)if(!customExDB.some(y=>y.en===x.en))customExDB.push(x);for(const x of cf)if(!customFoodDB.some(y=>y.id===x.id))customFoodDB.push(x);
+ persist();trainingDrafts={};activeTrainingDate='';loadTrainingDate(true);renderN();renderDashboard();updateHeader();fb('legacy-info',`已补入 ${count} 天，旧版原始备份仍在此设备。`);
+ }catch(e){fb('legacy-info','旧版记录导入失败。');}
 }
 
 // ── Initialise ──

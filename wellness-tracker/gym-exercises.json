@@ -8,23 +8,11 @@
         "en": "Smith split squat",
         "cn": "史密斯机分腿蹲",
         "unit": "kg added",
-        "def": "+15",
+        "def": "",
         "prev": "",
         "sec": "Main",
         "mode": "external",
-        "sid": "A",
-        "recent": {
-          "en": "Smith split squat",
-          "w": "+15",
-          "s": "3",
-          "r": "12",
-          "n": "原称Smith单腿蹲；是否每侧12次未注明",
-          "ss": "",
-          "unit": "kg added",
-          "mode": "external",
-          "sid": "A",
-          "date": "2026-11-11"
-        }
+        "sid": "A"
       },
       {
         "en": "Smith RDL",
@@ -108,25 +96,13 @@
       },
       {
         "en": "Barbell RDL",
-        "cn": "杠铃罗马尼亚硬拉 RMN",
-        "unit": "kg (注明含杆或加片)",
+        "cn": "杠铃罗马尼亚硬拉",
+        "unit": "kg total",
         "mode": "external",
         "prev": "",
         "sec": "Gym staples",
-        "def": "+15",
-        "sid": "A",
-        "recent": {
-          "en": "Barbell RDL",
-          "w": "+15",
-          "s": "3",
-          "r": "10",
-          "n": "原记录+15kg，是否含杆未注明",
-          "ss": "",
-          "unit": "kg (注明含杆或加片)",
-          "mode": "external",
-          "sid": "A",
-          "date": "2026-11-11"
-        }
+        "def": "",
+        "sid": "A"
       },
       {
         "en": "Conventional deadlift",
@@ -235,20 +211,8 @@
         "mode": "external",
         "prev": "",
         "sec": "Gym staples",
-        "def": "20",
-        "sid": "A",
-        "recent": {
-          "en": "Hip abductor machine",
-          "w": "20",
-          "s": "3",
-          "r": "15 / 25 / 20",
-          "n": "逐组次数",
-          "ss": "",
-          "unit": "kg on machine",
-          "mode": "external",
-          "sid": "A",
-          "date": "2026-11-06"
-        }
+        "def": "",
+        "sid": "A"
       },
       {
         "en": "Hip adductor machine",
@@ -311,23 +275,11 @@
         "en": "Seated DB shoulder press",
         "cn": "坐姿哑铃肩推",
         "unit": "kg/hand",
-        "def": "6",
+        "def": "",
         "prev": "",
         "sec": "Push",
         "mode": "external",
-        "sid": "B",
-        "recent": {
-          "en": "Seated DB shoulder press",
-          "w": "6",
-          "s": "3",
-          "r": "12",
-          "n": "",
-          "ss": "",
-          "unit": "kg/hand",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-06"
-        }
+        "sid": "B"
       },
       {
         "en": "Low cable crossover",
@@ -343,45 +295,21 @@
         "en": "Lat pulldown",
         "cn": "高位下拉",
         "unit": "kg",
-        "def": "25",
+        "def": "",
         "prev": "",
         "sec": "Pull",
         "mode": "external",
-        "sid": "B",
-        "recent": {
-          "en": "Lat pulldown",
-          "w": "25",
-          "s": "2",
-          "r": "8",
-          "n": "",
-          "ss": "",
-          "unit": "kg",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-09-17"
-        }
+        "sid": "B"
       },
       {
         "en": "Straight arm pulldown",
         "cn": "直臂下拉",
         "unit": "kg",
-        "def": "10",
+        "def": "",
         "prev": "",
         "sec": "Pull",
         "mode": "external",
-        "sid": "B",
-        "recent": {
-          "en": "Straight arm pulldown",
-          "w": "10",
-          "s": "3",
-          "r": "8",
-          "n": "",
-          "ss": "",
-          "unit": "kg",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "sid": "B"
       },
       {
         "en": "Roman chair row",
@@ -397,67 +325,31 @@
         "en": "Face pull",
         "cn": "面拉",
         "unit": "kg",
-        "def": "12.5",
+        "def": "",
         "prev": "",
         "sec": "Pull",
         "mode": "external",
-        "sid": "B",
-        "recent": {
-          "en": "Face pull",
-          "w": "12.5",
-          "s": "3",
-          "r": "12",
-          "n": "",
-          "ss": "",
-          "unit": "kg",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "sid": "B"
       },
       {
         "en": "Lateral raise",
         "cn": "侧平举",
         "unit": "kg/hand",
-        "def": "2",
+        "def": "",
         "prev": "",
         "sec": "Shoulder health",
         "mode": "external",
-        "sid": "B",
-        "recent": {
-          "en": "Lateral raise",
-          "w": "2",
-          "s": "3",
-          "r": "15",
-          "n": "每手2kg",
-          "ss": "Y-raise",
-          "unit": "kg/hand",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "sid": "B"
       },
       {
         "en": "Y-raise",
         "cn": "Y字训练",
         "unit": "kg/hand",
-        "def": "2",
+        "def": "",
         "prev": "",
         "sec": "Shoulder health",
         "mode": "external",
-        "sid": "B",
-        "recent": {
-          "en": "Y-raise",
-          "w": "2",
-          "s": "3",
-          "r": "10",
-          "n": "每手2kg",
-          "ss": "Lateral raise",
-          "unit": "kg/hand",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "sid": "B"
       },
       {
         "en": "Smith bench press",
@@ -466,20 +358,8 @@
         "mode": "external",
         "prev": "",
         "sec": "Gym staples",
-        "def": "+5",
-        "sid": "B",
-        "recent": {
-          "en": "Smith bench press",
-          "w": "+5",
-          "s": "3",
-          "r": "10",
-          "n": "加片重量，不含杆",
-          "ss": "",
-          "unit": "kg added",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "def": "",
+        "sid": "B"
       },
       {
         "en": "Barbell bench press",
@@ -559,19 +439,7 @@
         "prev": "",
         "sec": "Gym staples",
         "def": "",
-        "sid": "B",
-        "recent": {
-          "en": "Single-arm DB row",
-          "w": "",
-          "s": "",
-          "r": "",
-          "n": "原记录未填重量、组数、次数",
-          "ss": "",
-          "unit": "kg/hand",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-09-17"
-        }
+        "sid": "B"
       },
       {
         "en": "Lunge-stance DB row",
@@ -580,20 +448,8 @@
         "mode": "external",
         "prev": "",
         "sec": "Gym staples",
-        "def": "8",
-        "sid": "B",
-        "recent": {
-          "en": "Lunge-stance DB row",
-          "w": "8",
-          "s": "3",
-          "r": "12",
-          "n": "",
-          "ss": "",
-          "unit": "kg/hand",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "def": "",
+        "sid": "B"
       },
       {
         "en": "Barbell bent-over row",
@@ -634,28 +490,6 @@
         "sec": "Gym staples",
         "def": "",
         "sid": "B"
-      },
-      {
-        "en": "Cable pulldown (unspecified)",
-        "cn": "绳索下拉（原记录，握法未注明）",
-        "unit": "kg on machine",
-        "mode": "external",
-        "prev": "",
-        "sec": "Gym staples",
-        "def": "",
-        "sid": "B",
-        "recent": {
-          "en": "Cable pulldown (unspecified)",
-          "w": "",
-          "s": "",
-          "r": "",
-          "n": "原记录未填握法、重量、组数、次数",
-          "ss": "",
-          "unit": "kg on machine",
-          "mode": "external",
-          "sid": "B",
-          "date": "2026-09-17"
-        }
       },
       {
         "en": "Reverse pec deck",
@@ -734,20 +568,8 @@
         "mode": "assistance",
         "prev": "",
         "sec": "Pull",
-        "def": "22",
-        "sid": "B",
-        "recent": {
-          "en": "Assisted pull-up",
-          "w": "22",
-          "s": "4",
-          "r": "6",
-          "n": "22kg 为辅助重量",
-          "ss": "",
-          "unit": "kg assistance",
-          "mode": "assistance",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
+        "def": "",
+        "sid": "B"
       },
       {
         "en": "Pull-up",
@@ -768,72 +590,6 @@
         "sec": "Push",
         "def": "",
         "sid": "B"
-      },
-      {
-        "en": "Lisa back routine",
-        "cn": "Lisa 背（个人组合）",
-        "unit": "kg/hand",
-        "mode": "unknown",
-        "prev": "",
-        "sec": "Your routines",
-        "def": "4",
-        "sid": "B",
-        "recent": {
-          "en": "Lisa back routine",
-          "w": "4",
-          "s": "2",
-          "r": "",
-          "n": "每手4kg；原记录2组SPS，组合细节未注明",
-          "ss": "",
-          "unit": "kg/hand",
-          "mode": "unknown",
-          "sid": "B",
-          "date": "2026-11-11"
-        }
-      },
-      {
-        "en": "Lisa shoulder DB routine",
-        "cn": "Lisa 肩部哑铃组合",
-        "unit": "kg/hand",
-        "mode": "unknown",
-        "prev": "",
-        "sec": "Your routines",
-        "def": "2",
-        "sid": "B",
-        "recent": {
-          "en": "Lisa shoulder DB routine",
-          "w": "2",
-          "s": "2",
-          "r": "",
-          "n": "每手2kg；原记录2组SPS",
-          "ss": "",
-          "unit": "kg/hand",
-          "mode": "unknown",
-          "sid": "B",
-          "date": "2026-11-06"
-        }
-      },
-      {
-        "en": "Lisa shoulder plate routine",
-        "cn": "Lisa 肩部杠铃片组合",
-        "unit": "kg plate",
-        "mode": "unknown",
-        "prev": "",
-        "sec": "Your routines",
-        "def": "5",
-        "sid": "B",
-        "recent": {
-          "en": "Lisa shoulder plate routine",
-          "w": "5",
-          "s": "2",
-          "r": "",
-          "n": "5kg杠铃片；原记录2组SPS",
-          "ss": "",
-          "unit": "kg plate",
-          "mode": "unknown",
-          "sid": "B",
-          "date": "2026-11-06"
-        }
       }
     ]
   },
@@ -993,23 +749,11 @@
         "en": "Elliptical steady state",
         "cn": "椭圆机",
         "unit": "min",
-        "def": "10",
+        "def": "",
         "prev": "",
         "sec": "Steady state",
         "mode": "timed",
-        "sid": "D",
-        "recent": {
-          "en": "Elliptical steady state",
-          "w": "10",
-          "s": "",
-          "r": "",
-          "n": "阻力档位2；器械显示70 kcal，仅备注，不当作实测消耗",
-          "ss": "",
-          "unit": "min",
-          "mode": "timed",
-          "sid": "D",
-          "date": "2026-09-04"
-        }
+        "sid": "D"
       },
       {
         "en": "Rowing machine",
@@ -1025,23 +769,11 @@
         "en": "Stairmaster",
         "cn": "爬楼机",
         "unit": "min",
-        "def": "30",
+        "def": "",
         "prev": "",
         "sec": "Steady state",
         "mode": "timed",
-        "sid": "D",
-        "recent": {
-          "en": "Stairmaster",
-          "w": "30",
-          "s": "",
-          "r": "",
-          "n": "30分钟",
-          "ss": "",
-          "unit": "min",
-          "mode": "timed",
-          "sid": "D",
-          "date": "2026-09-17"
-        }
+        "sid": "D"
       },
       {
         "en": "Incline treadmill walk",
@@ -1050,20 +782,8 @@
         "mode": "timed",
         "prev": "",
         "sec": "Steady state",
-        "def": "10",
-        "sid": "D",
-        "recent": {
-          "en": "Incline treadmill walk",
-          "w": "10",
-          "s": "",
-          "r": "",
-          "n": "爬坡热身10分钟",
-          "ss": "",
-          "unit": "min",
-          "mode": "timed",
-          "sid": "D",
-          "date": "2026-09-04"
-        }
+        "def": "",
+        "sid": "D"
       },
       {
         "en": "Stationary bike",

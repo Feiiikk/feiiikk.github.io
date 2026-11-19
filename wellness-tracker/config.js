@@ -1,6 +1,6 @@
-// Local mode is active until these values are replaced. See DEPLOY.md.
+// Public starter: each installation configures its own Supabase project in Settings.
+// Publishable keys belong here only after the database's row policies are verified.
 window.TRACKER_CONFIG = window.TRACKER_CONFIG || {
-  supabaseUrl: "https://tpgiaubfrcqftpkglqss.supabase.co",
-  supabaseAnonKey: "sb_publishable_WCY_w3ZpA9QjMTAnN2SIGg_Q5yOknl3",
-  allowedEmail: "koffee1024@outlook.com"
+  supabaseUrl: "",
+  supabaseAnonKey: ""
 };

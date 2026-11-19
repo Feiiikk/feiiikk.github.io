@@ -1,0 +1,6 @@
+Tesseract.js 6.0.1 (naptha/tesseract.js), Apache-2.0
+Tesseract.js-core 6.0.0 (naptha/tesseract.js-core), Apache-2.0
+Tesseract tessdata_fast English and Simplified Chinese LSTM models
+(tesseract-ocr/tessdata_fast), Apache-2.0. Downloaded 2026-11-18.
+Runtime and models are served from the same site; the app does not upload images.
+The baseline LSTM build is used for broad WebAssembly compatibility.
