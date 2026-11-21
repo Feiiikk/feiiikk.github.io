@@ -6,7 +6,13 @@ Use **Sign in** in the Home Screen app with your existing account email and pass
 
 Entries are saved on the device and sync after you reconnect. Use **Backups → Export backup** to save a separate JSON copy of your records. To run these files on another server or preview on your computer, see [DEPLOY.md](DEPLOY.md).
 
-## Version 2 experience
+## Study areas
+
+Use **BNEF**, **French**, or **Japanese** at the top of the tracker. Language entries include a material type, a skill, minutes, and optional source links and notes. The language Library keeps recent materials and course links. Monthly Review totals time by skill.
+
+All three areas are included in a new backup and use the same offline and cloud sync. Restoring an older, BNEF-only backup preserves the language records on this device.
+
+## Logging and courses
 
 - Create a course and category without leaving a study entry.
 - Type an existing course or a brand-new course in the same searchable field; new courses are created when the session is saved.

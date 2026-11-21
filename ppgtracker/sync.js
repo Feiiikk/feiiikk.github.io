@@ -97,7 +97,7 @@ function mergeStudySnapshots(base, local, remote, defaultTargets) {
   ).map(row=>row.name);
   return {
     data:{
-      version:8,
+      version:STUDY_DATA_VERSION,
       logs,courses,customCats,publishers,
       categoryOverrides:mergeValue(base?.categoryOverrides,local.categoryOverrides,remote.categoryOverrides,['categoryOverrides']),
       targets:mergeValue(base?.targets || defaultTargets,local.targets,remote.targets,['targets']),
