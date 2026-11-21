@@ -259,7 +259,7 @@ textarea:focus{outline:none;border-color:#1D9E75;}
 <style>
 .category-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.category-heading button{flex-shrink:0;min-height:44px}
 .cchips{display:flex!important;flex-wrap:nowrap!important;gap:8px;overflow-x:auto!important;overflow-y:hidden;max-width:100%;min-width:0;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;cursor:grab;scrollbar-width:thin;padding:4px 0 10px}.cchip{flex:0 0 auto;white-space:nowrap;min-height:44px;font:inherit;font-size:14px;user-select:none}.cchips:active{cursor:grabbing}.cchips.is-expanded{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));overflow:visible!important;cursor:default}.cchips.is-expanded .cchip{white-space:normal;text-align:left}.category-heading .muted{font-size:13px!important}
-#session-import-panel input,#session-import-panel textarea{max-width:100%;width:100%;font:inherit;font-size:16px;padding:10px;border:1px solid #ddd;border-radius:8px}#session-import-panel input[type=checkbox]{width:24px;max-width:24px}#session-preview{margin-top:12px}#session-preview label{display:block;margin:8px 0;font-size:14px}#session-import-panel summary{min-height:44px}button[hidden]{display:none!important}
+#session-import-panel input,#session-import-panel select,#session-import-panel textarea{max-width:100%;width:100%;font:inherit;font-size:16px;padding:10px;border:1px solid #ddd;border-radius:8px}#session-import-panel input[type=checkbox]{width:24px;max-width:24px}#session-preview{margin-top:12px}#session-preview label{display:block;margin:8px 0;font-size:14px}#session-import-panel summary{min-height:44px}button[hidden]{display:none!important}.session-image-button{position:relative;display:inline-flex;align-items:center;cursor:pointer}.session-image-button input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}.session-image-button:focus-within{outline:2px solid #1D9E75}
 @media(max-width:480px){.cchips.is-expanded{grid-template-columns:1fr 1fr}.category-heading{align-items:flex-start}}
 </style>
 <style>
@@ -393,7 +393,29 @@ textarea:focus{outline:none;border-color:#1D9E75;}
 <div id="tab-T" style="display:none;">
   <div class="training-start"><button class="btn1" id="repeat-session" onclick="repeatLastSession()">重复上次训练</button><span class="muted" id="repeat-session-date"></span><button class="btn2" onclick="saveT()">保存训练</button></div>
   <div class="row"><label for="td">训练日期</label><input type="date" id="td" onchange="loadTrainingDate()"></div>
-<details class="section-card" id="session-import-panel"><summary style="font-size:17px;font-weight:700;cursor:pointer">识别训练日志：文字／截图</summary><p class="muted">在设备内解析。截图不上传；识别后先核对预览，再填入草稿，最后自行保存训练。</p><label for="session-import-date">训练日期</label><input id="session-import-date" type="date"><label for="session-raw" style="display:block;margin-top:12px">粘贴今天的训练文字（每行一个动作）</label><textarea id="session-raw" rows="6" placeholder="动作名称 重量kg 组数×次数"></textarea><div class="btnrow"><button class="btn1" onclick="previewTrainingImport()">解析文字</button><label class="btn2" style="display:inline-flex;align-items:center;cursor:pointer">选择截图<input id="session-image" type="file" accept="image/png,image/jpeg,image/webp" onchange="recognizeSessionImage(event)" style="display:none"></label><button class="btn2" id="session-ocr-cancel" hidden onclick="cancelSessionOCR()">取消识别</button></div><div id="session-parse-status" class="muted" style="margin:10px 0" role="status"></div><label for="session-import-duration">整次训练时长（分钟，可留空）</label><input id="session-import-duration" type="number" min="1"><div id="session-preview"></div><button class="btn1" id="session-apply" disabled onclick="applyTrainingImport()">确认，追加到训练草稿</button><datalist id="exercise-name-options"></datalist></details>
+<details class="section-card" id="session-import-panel">
+  <summary style="font-size:17px;font-weight:700;cursor:pointer">识别训练日志：文字／截图</summary>
+  <p class="muted">粘贴文字或选择截图。识别在设备上完成，核对后可填入训练草稿。</p>
+  <label for="session-import-date">训练日期</label>
+  <input id="session-import-date" type="date">
+  <label for="session-raw" style="display:block;margin-top:12px">训练文字</label>
+  <textarea id="session-raw" rows="6" placeholder="11.11&#10;RMN 3×10 +15kg&#10;辅助引体 22kg 4×6"></textarea>
+  <div class="btnrow">
+    <button class="btn1" type="button" onclick="previewTrainingImport()">解析文字</button>
+    <label class="btn2 session-image-button">选择截图<input id="session-image" type="file" accept="image/*" onchange="recognizeSessionImage(event)"></label>
+    <button class="btn2" id="session-ocr-cancel" type="button" hidden onclick="cancelSessionOCR()">取消识别</button>
+  </div>
+  <div id="session-parse-status" class="muted" style="margin:10px 0" role="status"></div>
+  <div id="session-import-day-choice" hidden>
+    <label for="session-import-day">选择要填入的日期</label>
+    <select id="session-import-day"></select>
+  </div>
+  <label for="session-import-duration">整次训练时长（分钟，可留空）</label>
+  <input id="session-import-duration" type="number" min="1" inputmode="numeric">
+  <div id="session-preview"></div>
+  <button class="btn1" id="session-apply" type="button" disabled onclick="applyTrainingImport()">确认，追加到训练草稿</button>
+  <datalist id="exercise-name-options"></datalist>
+</details>
   <div style="font-size:12px;color:#888;margin-bottom:8px;">点动作填写，勾选要保存的项目。</div>
 
   <div class="section-card"><div class="row" style="margin-bottom:8px"><button class="btn2" id="recent-exercises" aria-pressed="true" onclick="toggleRecentExercises()">最近动作</button><span class="muted" id="exercise-count"></span></div><input class="fsrch" id="exercise-search" aria-label="搜索动作" placeholder="搜索全部动作：卧推 / bench · abductor · 划船 / row" oninput="drawExs()"></div>
@@ -6300,7 +6322,9 @@ function persist(){try{storeWorkspace();localStorage.setItem(scopedKey('gt_local
 function hydrate(){try{const days=JSON.parse(localStorage.getItem(scopedKey('gt_v3'))||'{}');S.days=days;customExDB=JSON.parse(localStorage.getItem(scopedKey('gt_cex'))||'[]');customFoodDB=JSON.parse(localStorage.getItem(scopedKey('gt_cfd'))||'[]');PROFILE={...blankProfile(),...JSON.parse(localStorage.getItem(scopedKey('gt_profile'))||'{}')};currentWeight=Number(PROFILE.weight)||0;syncProfileFields();}catch(e){}}
 function loadWorkspace(scope){
  if(workspaceScope===scope)return;
- if(typeof cancelSessionOCR==='function')cancelSessionOCR();if(typeof parsedSession!=='undefined')parsedSession=null;for(const id of ['session-raw','session-import-duration']){const el=document.getElementById(id);if(el)el.value='';}document.getElementById('session-preview').innerHTML='';document.getElementById('session-parse-status').textContent='';document.getElementById('session-apply').disabled=true;
+ if(typeof cancelSessionOCR==='function')cancelSessionOCR();
+ if(typeof resetTrainingImportPreview==='function')resetTrainingImportPreview();
+ for(const id of ['session-raw','session-import-duration'])document.getElementById(id).value='';
  workspaceScope=scope;S.days={};PROFILE=blankProfile();customExDB=[];customFoodDB=[];currentWeight=0;
  trainingDrafts={};activeTrainingDate='';cxRows=[];nutritionDrafts={};renderedNutritionDate='';renderedFoodIds={};selFood={};openForm={};selCat={};
  closeFoodEditor();expandedExercises.clear();hydrate();currentWeight=weightForDate(today());TGT=calcTGT(currentWeight);updateHeader();loadTrainingDate(true);renderN();renderDashboard();updateSyncBar();
