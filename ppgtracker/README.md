@@ -1,8 +1,10 @@
 # Transition Tracker
 
-Open `index.html` directly for local-only use. To enable private cross-device sync, follow `DEPLOY.md`.
+Install the hosted tracker on iPhone from Safari with **Share → Add to Home Screen**. If your iOS version shows **Open as Web App**, enable it. Open the resulting icon once while online to prepare the offline cache.
 
-The application remains dependency-free in local mode. Cloud mode loads the official Supabase browser client only after Supabase is configured.
+Use **Sign in** in the Home Screen app with your existing account email and password. The hosted BNEF and Wellness trackers use the same Supabase account, with separate tracker data. If you need to set a password, send yourself a sign-in link, open it in Safari, and select **Account → Set or change password**. Back on the Home Screen, sign in with the password you set.
+
+Entries are saved on the device and sync after you reconnect. Use **Backups → Export backup** to save a separate JSON copy of your records. To run these files on another server or preview on your computer, see [DEPLOY.md](DEPLOY.md).
 
 ## Version 2 experience
 
