@@ -2,9 +2,9 @@
 
 ## 1. Create Supabase
 
-Create a Supabase project, then run `supabase.sql` in its SQL editor. In Authentication, disable public sign-ups after creating your own account (or keep the SQL email allow-list policy and replace the email there).
+Create a Supabase project, then replace `OWNER_EMAIL_HERE` in a private copy of `supabase.sql` and run that copy in its SQL editor. In Authentication, disable public sign-ups after creating your own account (or keep the SQL email allow-list policy and replace the email there).
 
-Copy `config.example.js` to `config.js` and enter the project URL, publishable anon key, and your email. The anon key is safe in browser code; the row-level security policy is what protects the data. Never use a service-role key here.
+Copy `config.example.js` to `config.js` and enter the project URL and publishable anon key. The anon key is safe in browser code; the row-level security policy is what protects the data. Never use a service-role key here.
 
 ## 2. Import existing data
 

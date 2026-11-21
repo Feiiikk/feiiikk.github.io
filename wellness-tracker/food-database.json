@@ -3721,6 +3721,57 @@
       "p": 2.6,
       "c": 8.4,
       "f": 2.8
+    },
+    {
+      "id": "usda_175215",
+      "fdcId": 175215,
+      "n": "无糖豆浆 Unsweetened soy milk",
+      "cat": "drink",
+      "aliases": "豆乳 豆漿 豆奶 soymilk",
+      "sourceDescription": "Soymilk (all flavors), unsweetened, with added calcium, vitamins A and D",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 240,
+      "servingLabel": "杯（240g）",
+      "visibility": "default",
+      "k": 33,
+      "p": 2.9,
+      "c": 1.7,
+      "f": 1.6
+    },
+    {
+      "id": "usda_173177",
+      "fdcId": 173177,
+      "n": "乳清分离蛋白粉 Whey protein isolate",
+      "cat": "dairy",
+      "aliases": "乳清蛋白 蛋白粉 whey protein powder",
+      "sourceDescription": "Beverages, Whey protein powder isolate",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 30,
+      "servingLabel": "份（30g）",
+      "visibility": "default",
+      "k": 359,
+      "p": 58.1,
+      "c": 29.1,
+      "f": 1.2
+    },
+    {
+      "id": "usda_170885",
+      "fdcId": 170885,
+      "n": "液态酸乳清 Fluid acid whey",
+      "cat": "dairy",
+      "aliases": "乳清 酸乳清 yogurt whey",
+      "sourceDescription": "Whey, acid, fluid",
+      "per": "per 100g edible portion",
+      "baseGrams": 100,
+      "servingGrams": 100,
+      "servingLabel": "份（100g）",
+      "visibility": "default",
+      "k": 24,
+      "p": 0.8,
+      "c": 5.1,
+      "f": 0.1
     }
   ]
 }

@@ -1,6 +1,6 @@
-// Public starter: each installation configures its own Supabase project in Settings.
-// Publishable keys belong here only after the database's row policies are verified.
-window.TRACKER_CONFIG = window.TRACKER_CONFIG || {
-  supabaseUrl: "",
-  supabaseAnonKey: ""
+// Existing hosted project. Browser publishable key; access is controlled in Supabase.
+window.TRACKER_CONFIG = {
+  supabaseUrl: "https://tpgiaubfrcqftpkglqss.supabase.co",
+  supabaseAnonKey: "sb_publishable_WCY_w3ZpA9QjMTAnN2SIGg_Q5yOknl3",
+  allowSignup: false
 };

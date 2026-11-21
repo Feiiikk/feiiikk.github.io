@@ -1169,16 +1169,32 @@ async function loadSupabase(){
 }
 async function signIn(){
   if(!cloudClient){alert('Cloud sync is not configured yet. Follow DEPLOY.md first.');return;}
-  const email=document.getElementById('auth-email').value.trim().toLowerCase(),allowed=(window.TRACKER_CONFIG.allowedEmail||'').toLowerCase();
-  if(!email||email!==allowed){alert('Use the email address approved in config.js.');return;}
-  const {error}=await cloudClient.auth.signInWithOtp({email,options:{emailRedirectTo:location.href.split('#')[0]}});if(error){alert(error.message);return;}toast('Secure sign-in link sent ✓');
+  const email=document.getElementById('auth-email').value.trim().toLowerCase();
+  if(!email){alert('Enter your existing account email.');return;}
+  const {error}=await cloudClient.auth.signInWithOtp({email,options:{shouldCreateUser:false,emailRedirectTo:location.href.split('#')[0]}});if(error){alert(error.message);return;}toast('Secure sign-in link sent ✓');
 }
 async function onSession(session){
-  const allowed=(window.TRACKER_CONFIG.allowedEmail||'').toLowerCase();if(!session.user||session.user.email?.toLowerCase()!==allowed){await cloudClient.auth.signOut();setSyncStatus('Access denied','bad');return;}
-  cloudUser=session.user;document.getElementById('auth-button').textContent='Synced';toggleAuth(false);setSyncStatus('Loading cloud…','warn');
-  const {data,error}=await cloudClient.from('tracker_state').select('data,revision').eq('user_id',cloudUser.id).maybeSingle();
-  if(error){setSyncStatus('Sync error','bad');console.error(error);return;}
-  if(data?.data){applySnapshot(cleanBackup(data.data),{sync:false});cloudRevision=data.revision||0;renderDashboard();renderCourses();}else await saveCloud();
+  if (!session.user) return;
+  const user = session.user;
+  if (cloudUser?.id === user.id) return;
+  cloudUser = null;
+  setSyncStatus('Loading cloud…','warn');
+  const {data,error} = await cloudClient.from('tracker_state').select('data,revision').eq('user_id',user.id).maybeSingle();
+  if (error) {setSyncStatus('Sync error','bad');return;}
+  const {data:{session:currentSession}} = await cloudClient.auth.getSession();
+  if (currentSession?.user?.id !== user.id) return;
+  if (data?.data) {
+    applySnapshot(cleanBackup(data.data),{sync:false});
+    cloudRevision=data.revision||0;
+    renderDashboard();renderCourses();
+  } else {
+    const {error:writeError} = await cloudClient.from('tracker_state').insert({user_id:user.id,data:snapshot(),revision:1,updated_at:new Date().toISOString()});
+    if (writeError) {setSyncStatus('Account not permitted for cloud sync','bad');return;}
+    cloudRevision=1;
+  }
+  cloudUser=user;
+  document.getElementById('auth-button').textContent='Synced';
+  toggleAuth(false);
   setSyncStatus('Synced','ok');
 }
 async function saveCloud(){

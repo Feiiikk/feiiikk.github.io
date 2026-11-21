@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -262,8 +262,29 @@ textarea:focus{outline:none;border-color:#1D9E75;}
 #session-import-panel input,#session-import-panel textarea{max-width:100%;width:100%;font:inherit;font-size:16px;padding:10px;border:1px solid #ddd;border-radius:8px}#session-import-panel input[type=checkbox]{width:24px;max-width:24px}#session-preview{margin-top:12px}#session-preview label{display:block;margin:8px 0;font-size:14px}#session-import-panel summary{min-height:44px}button[hidden]{display:none!important}
 @media(max-width:480px){.cchips.is-expanded{grid-template-columns:1fr 1fr}.category-heading{align-items:flex-start}}
 </style>
+<style>
+#app-toast{position:fixed;z-index:9500;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 28px);padding:12px 18px;border-radius:12px;background:#193d32;color:white;box-shadow:0 8px 26px #183a3233;font-size:15px;pointer-events:none;opacity:0}
+#app-toast.visible{opacity:1}#app-toast.error{background:#812f2c}
+.training-start{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
+.training-start .muted{flex:1;min-width:110px}
+.training-meta{margin-bottom:12px}.training-meta>summary{min-height:44px;cursor:pointer;font-weight:600;line-height:44px}
+.compact-exercise{border:1px solid #e3e7e2;margin-bottom:5px}
+.compact-exercise-row{display:flex;align-items:center;gap:8px;padding:2px 8px 2px 12px}
+.compact-exercise-row>input{width:24px;height:24px;min-height:24px;accent-color:#157a58;flex-shrink:0}
+.exercise-toggle{display:flex;align-items:center;gap:8px;width:100%;min-width:0;min-height:51px;background:none;border:0;text-align:left;color:inherit;padding:6px 2px;cursor:pointer}
+.exercise-name{flex:1;min-width:0}.exercise-name strong,.exercise-name small{display:block;line-height:1.25}.exercise-name strong{font-size:15px}.exercise-name small{font-size:12px;color:#535d57}.exercise-last{white-space:nowrap;color:#486258;font-size:13px}.exercise-chevron{font-size:18px;color:#436458}
+.compact-exercise:not(.is-expanded) .einps{display:none}.compact-exercise.is-expanded .einps{display:grid!important;border-top:1px solid #e3e7e2}.compact-exercise.is-expanded .exercise-chevron{transform:rotate(180deg)}
+.list-heading{font-size:15px;margin:11px 0 5px}.compact-empty{padding:8px 0}
+.recovery-fields{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px;align-items:end}.recovery-fields label{display:grid;min-width:0;gap:4px;font-size:14px}.recovery-fields input,.recovery-fields select{width:100%;min-width:0}.recovery-fields button{min-height:44px}
+.nutrition-start{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-bottom:12px}.nutrition-start select{min-width:0;width:100%;padding:9px;border:1px solid #d0ced8;border-radius:8px;background:white}
+.day-badge{display:inline-flex;align-items:center;padding:6px 11px;border-radius:999px;background:#eaece7;color:#38574b;white-space:nowrap;font-weight:600}.day-badge.training{background:#dff3e9}
+.profile-one-liner{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;margin:5px 0 10px}.profile-one-liner .btn2{font-size:14px;padding:6px 10px}
+.plain-intake{margin-bottom:10px;color:#495750;font-size:14px}.food-result-button{display:block;width:100%;background:white;border:0;border-bottom:1px solid #eee;text-align:left;color:inherit;cursor:pointer}
+@media(max-width:390px){.exercise-last{font-size:12px}.compact-exercise-row{gap:6px}.recovery-fields{gap:6px}.recovery-fields button{padding-inline:9px}}
+</style>
 </head>
 <body>
+<div id="app-toast" role="status" aria-live="polite"></div>
 
 <div style="margin-bottom:13px;">
   <div style="font-size:18px;font-weight:700;">Wellness Tracker</div>
@@ -271,20 +292,20 @@ textarea:focus{outline:none;border-color:#1D9E75;}
 </div>
 
 <div class="nav" role="tablist">
-  <button class="nb on" onclick="showTab('D')" id="nb-D">Today</button>
-  <button class="nb" onclick="showTab('T')" id="nb-T">Training</button>
-  <button class="nb" onclick="showTab('N')" id="nb-N">Nutrition log</button>
-  <button class="nb" onclick="showTab('R')" id="nb-R">Progress</button>
-  <button class="nb" onclick="showTab('S')" id="nb-S">Settings</button>
+  <button class="nb on" onclick="showTab('D')" id="nb-D">今日</button>
+  <button class="nb" onclick="showTab('T')" id="nb-T">训练</button>
+  <button class="nb" onclick="showTab('N')" id="nb-N">饮食</button>
+  <button class="nb" onclick="showTab('R')" id="nb-R">进度</button>
+  <button class="nb" onclick="showTab('S')" id="nb-S">设置</button>
 </div>
 
 <div id="tab-S" style="display:none;">
 <div class="cloud-card">
-  <div class="cloud-top"><div><div class="section-title" style="margin:0">☁ Private cloud sync</div><div class="cloud-state" style="margin-top:4px"><span class="cloud-dot" id="cloud-dot"></span><span id="cloud-status">Checking configuration…</span></div></div><button class="btn2" id="cloud-signout" style="display:none" onclick="cloudSignOut()">Sign out</button></div>
-  <div id="cloud-auth">
+  <div class="cloud-top"><div><div class="section-title" style="margin:0">☁ 云同步</div><div class="cloud-state" style="margin-top:4px"><span class="cloud-dot" id="cloud-dot"></span><span id="cloud-status">正在检查连接…</span></div></div><button class="btn2" id="cloud-signout" style="display:none" onclick="cloudSignOut()">退出登录</button></div>
+  <div id="cloud-auth" hidden>
     <div class="muted" style="margin-top:9px">使用账号邮箱和密码，在当前应用内登录。</div>
-    <div class="auth-row"><input id="cloud-email" type="email" autocomplete="username" aria-label="Account email" placeholder="账号邮箱"></div>
-    <div class="auth-row"><input id="cloud-password" type="password" autocomplete="current-password" aria-label="Account password" placeholder="账号密码" onkeydown="if(event.key==='Enter')signInPassword()"><button class="btn1" id="cloud-password-login" onclick="signInPassword()">密码登录</button></div>
+    <div class="auth-row"><input id="cloud-email" type="email" autocomplete="username" aria-label="账号邮箱" placeholder="账号邮箱"></div>
+    <div class="auth-row"><input id="cloud-password" type="password" autocomplete="current-password" aria-label="账号密码" placeholder="账号密码" onkeydown="if(event.key==='Enter')signInPassword()"><button class="btn1" id="cloud-password-login" onclick="signInPassword()">密码登录</button></div>
     <button class="btn2" id="cloud-signup" onclick="registerAccount()">用以上邮箱与密码注册</button><div class="muted">新账号从空白记录开始，本机访客记录不会自动上传到账号。</div>
     <details style="margin-top:10px"><summary style="cursor:pointer;font-size:12px">还没有密码／忘记密码？</summary><div class="muted" style="margin-top:8px">填写上方邮箱，发送登录邮件。点击邮件链接后在 Safari 中打开 Settings，为原账号设置密码，再回到主屏幕应用用密码登录。</div><button class="btn2" id="cloud-send-link" style="margin-top:8px" onclick="sendSetupLink()">发送登录邮件</button></details>
     <div class="fb" id="cloud-fb" role="status" aria-live="polite"></div>
@@ -292,46 +313,46 @@ textarea:focus{outline:none;border-color:#1D9E75;}
   <div id="cloud-user" class="muted" style="display:none;margin-top:9px"></div>
   <details id="cloud-password-setup" style="display:none;margin-top:12px"><summary style="cursor:pointer;font-size:12px">为当前账号设置／更改登录密码</summary>
     <div class="muted" style="margin-top:8px">只更改当前已登录账号的密码，云端记录继续属于同一个账号。密码至少 8 位，且须满足项目的密码规则。</div>
-    <div class="auth-row"><input id="cloud-new-password" type="password" autocomplete="new-password" aria-label="New account password" placeholder="新密码（至少 8 位）"></div>
-    <div class="auth-row"><input id="cloud-confirm-password" type="password" autocomplete="new-password" aria-label="Confirm new account password" placeholder="再次输入新密码"><button class="btn1" id="cloud-save-password" onclick="saveAccountPassword()">保存密码</button></div>
+    <div class="auth-row"><input id="cloud-new-password" type="password" autocomplete="new-password" aria-label="新密码" placeholder="新密码（至少 8 位）"></div>
+    <div class="auth-row"><input id="cloud-confirm-password" type="password" autocomplete="new-password" aria-label="确认密码" placeholder="再次输入新密码"><button class="btn1" id="cloud-save-password" onclick="saveAccountPassword()">保存密码</button></div>
     <div class="fb" id="cloud-password-fb" role="status" aria-live="polite"></div>
   </details>
-  <details class="cloud-config" id="cloud-config"><summary style="font-size:11px;cursor:pointer;color:#71687e">Supabase connection</summary><label>Project URL<input id="cloud-url" placeholder="https://your-project.supabase.co"></label><label>Publishable key<input id="cloud-key" placeholder="sb_publishable_…"></label><button class="btn2" style="margin-top:8px" onclick="saveCloudConfig()">Save connection</button></details>
+  <details class="cloud-config" id="cloud-config"><summary style="font-size:11px;cursor:pointer;color:#71687e">高级连接设置</summary><label>项目地址<input id="cloud-url" placeholder="https://your-project.supabase.co"></label><label>公开密钥<input id="cloud-key" placeholder="sb_publishable_…"></label><button class="btn2" style="margin-top:8px" onclick="saveCloudConfig()">保存连接</button></details>
 </div>
 <div class="section-card">
-  <div class="section-title">Profile &amp; target assumptions</div>
-  <div class="muted" style="margin-bottom:10px;">These settings explain the estimates. They are planning aids, not medical advice.</div>
+  <div class="section-title">个人资料与营养目标</div>
+  <div class="muted" style="margin-bottom:10px;">填写资料后可查看估算的营养目标。</div>
   <div class="settings-grid">
     <label>体重 (kg)<input id="set-weight" type="number" step="0.1" min="20" max="400" placeholder="填写体重"></label><label>代谢估算参数（成人，可不填）<select id="set-sex"><option value="">暂不估算</option><option value="female">女性公式</option><option value="male">男性公式</option></select></label>
-    <label>Height (cm)<input id="set-height" type="number" placeholder="填写身高"></label>
-    <label>Age<input id="set-age" type="number" min="18" placeholder="填写年龄"></label>
-    <label>Goal<select id="set-goal"><option value="">选择目标（可选）</option><option>Recomposition</option><option>Maintain</option><option>Performance</option><option>General health</option></select></label>
-    <label>Weekly training target<input id="set-weekly" type="number" placeholder="可选" min="1" max="14"></label>
+    <label>身高（cm）<input id="set-height" type="number" placeholder="填写身高"></label>
+    <label>年龄<input id="set-age" type="number" min="18" placeholder="填写年龄"></label>
+    <label>目标<select id="set-goal"><option value="">选择目标（可选）</option><option value="Recomposition">增肌减脂</option><option value="Maintain">维持</option><option value="Performance">运动表现</option><option value="General health">一般健康</option></select></label>
+    <label>每周计划训练次数<input id="set-weekly" type="number" placeholder="可选" min="1" max="14"></label>
   </div>
-  <button class="btn1" style="margin-top:10px" onclick="saveSettings()">Save settings</button>
+  <button class="btn1" style="margin-top:10px" onclick="saveSettings()">保存设置</button>
   <div class="fb" id="sfb-settings"></div>
 </div>
 <details class="section-card"><summary>升级用户：恢复此设备旧版记录</summary><p class="muted">旧版记录留在此设备，不自动合并进任何新账号。请先确认当前账号是你自己的。</p><button class="btn2" onclick="previewLegacyData()">检查旧版本机记录</button><p id="legacy-info" role="status"></p><button hidden id="legacy-import" class="btn2" onclick="importLegacyData()">确认属于我，补入空日期</button></details>
 <div class="sync-bar">
   <div class="sync-top">
     <div>
-      <div style="font-size:13px;font-weight:600;color:#1a1a18;">📦 Emergency backup</div>
-      <div class="sync-status" id="sync-status">Loading…</div>
+      <div style="font-size:13px;font-weight:600;color:#1a1a18;">📦 数据备份</div>
+      <div class="sync-status" id="sync-status">正在加载…</div>
     </div>
     <div class="sync-btns">
-      <button class="sbtn sbtn-exp" onclick="downloadExport()">⬇ Export</button>
-      <button class="sbtn sbtn-imp" onclick="triggerImport()">⬆ Import</button>
+      <button class="sbtn sbtn-exp" onclick="downloadExport()">⬇ 导出</button>
+      <button class="sbtn sbtn-imp" onclick="triggerImport()">⬆ 导入</button>
       <input type="file" id="import-file-input" accept=".json,application/json" style="display:none;" onchange="handleImportFile(event)">
     </div>
   </div>
-  <div class="muted" style="margin-top:8px">Cloud sync is the normal workflow. Export occasionally as an independent backup.</div>
+  <div class="muted" style="margin-top:8px">可导出一份独立备份。</div>
   <div class="import-preview" id="import-preview" style="display:none;">
     <div style="font-size:12px;font-weight:500;color:#1a1a18;" id="import-info"></div>
-    <div style="font-size:11px;color:#888;margin-top:4px;"><strong>Merge</strong> keeps your existing data and adds incoming (incoming wins on same dates). <strong>Replace</strong> overwrites everything.</div>
+    <div style="font-size:11px;color:#888;margin-top:4px;">合并会保留其他日期，重叠日期以导入数据为准。替换会覆盖全部记录。</div>
     <div class="import-actions">
-      <button class="imp-merge" onclick="confirmImport('merge')">✦ Merge with my data</button>
-      <button class="imp-replace" onclick="confirmImport('replace')">Replace all</button>
-      <button class="imp-cancel" onclick="cancelImport()">Cancel</button>
+      <button class="imp-merge" onclick="confirmImport('merge')">合并数据</button>
+      <button class="imp-replace" onclick="confirmImport('replace')">替换全部</button>
+      <button class="imp-cancel" onclick="cancelImport()">取消</button>
     </div>
   </div>
   <div class="fb" id="sync-fb" style="margin-top:6px;min-height:0;"></div>
@@ -341,80 +362,84 @@ textarea:focus{outline:none;border-color:#1D9E75;}
 <!-- ====== TODAY DASHBOARD ====== -->
 <div id="tab-D">
   <div class="dash-hero">
-    <div class="hero-kicker">TODAY'S RHYTHM</div>
-    <h1 id="dash-greeting">Today, at a glance</h1>
+
+    <h1 id="dash-greeting">今日概览</h1>
     <p id="dash-date"></p>
     <div class="quick-actions">
-      <button class="quick" onclick="showTab('T')">＋ Start or log workout</button>
-      <button class="quick" onclick="showTab('N')">＋ Log food or water</button>
-      <button class="quick" onclick="openTodayHistory()">↗ Review today</button>
+      <button class="quick" onclick="showTab('T')">＋ 记录训练</button>
+      <button class="quick" onclick="showTab('N')">＋ 记录饮食</button>
+      <button class="quick" onclick="openTodayHistory()">查看今日记录</button>
     </div>
   </div>
   <div class="today-grid" id="today-grid"></div>
   <div class="section-card">
-    <div class="section-title">Daily plate check</div>
-    <div class="muted" style="margin-bottom:9px;">A quick alternative when detailed calorie logging is too much.</div>
+    <div class="section-title">今日餐盘</div>
+    <div class="muted" style="margin-bottom:9px;">可快速勾选今天吃过的食物类型。</div>
     <div class="plate-grid" id="plate-grid"></div>
   </div>
   <div class="section-card">
-    <div class="section-title">This week</div>
+    <div class="section-title">本周</div>
     <div id="week-summary" class="muted"></div>
   </div>
   <div class="section-card">
-    <div class="section-title">Recovery check-in</div>
-    <div class="muted" style="margin-bottom:8px;">Optional: use this to spot patterns, not to grade yourself.</div>
-    <div class="row" style="margin:0"><label>Sleep</label><input class="sminput" id="rec-sleep" type="number" min="0" max="15" step="0.5" placeholder="7.5"><span class="muted">hrs</span><label>Soreness</label><select id="rec-sore"><option value="">—</option><option>Low</option><option>Moderate</option><option>High</option></select><button class="btn2" onclick="saveRecovery()">Save</button></div>
+    <div class="section-title">恢复记录</div>
+    <div class="muted" style="margin-bottom:8px;"></div>
+    <div class="recovery-fields"><label>睡眠（小时）<input class="sminput" id="rec-sleep" type="number" min="0" max="15" step="0.5" inputmode="decimal"></label><label>酸痛程度<select id="rec-sore"><option value="">—</option><option value="Low">轻微</option><option value="Moderate">中等</option><option value="High">明显</option></select></label><button class="btn2" onclick="saveRecovery()">保存</button></div>
     <div class="fb" id="rec-fb"></div>
   </div>
 </div>
 
 <!-- ====== TRAINING ====== -->
 <div id="tab-T" style="display:none;">
+  <div class="training-start"><button class="btn1" id="repeat-session" onclick="repeatLastSession()">重复上次训练</button><span class="muted" id="repeat-session-date"></span><button class="btn2" onclick="saveT()">保存训练</button></div>
+  <div class="row"><label for="td">训练日期</label><input type="date" id="td" onchange="loadTrainingDate()"></div>
 <details class="section-card" id="session-import-panel"><summary style="font-size:17px;font-weight:700;cursor:pointer">识别训练日志：文字／截图</summary><p class="muted">在设备内解析。截图不上传；识别后先核对预览，再填入草稿，最后自行保存训练。</p><label for="session-import-date">训练日期</label><input id="session-import-date" type="date"><label for="session-raw" style="display:block;margin-top:12px">粘贴今天的训练文字（每行一个动作）</label><textarea id="session-raw" rows="6" placeholder="动作名称 重量kg 组数×次数"></textarea><div class="btnrow"><button class="btn1" onclick="previewTrainingImport()">解析文字</button><label class="btn2" style="display:inline-flex;align-items:center;cursor:pointer">选择截图<input id="session-image" type="file" accept="image/png,image/jpeg,image/webp" onchange="recognizeSessionImage(event)" style="display:none"></label><button class="btn2" id="session-ocr-cancel" hidden onclick="cancelSessionOCR()">取消识别</button></div><div id="session-parse-status" class="muted" style="margin:10px 0" role="status"></div><label for="session-import-duration">整次训练时长（分钟，可留空）</label><input id="session-import-duration" type="number" min="1"><div id="session-preview"></div><button class="btn1" id="session-apply" disabled onclick="applyTrainingImport()">确认，追加到训练草稿</button><datalist id="exercise-name-options"></datalist></details>
-  <div style="font-size:12px;color:#888;margin-bottom:8px;">选择动作分类或搜索整个动作库。勾选已完成的动作后填写；切换分类、搜索和日期会保留当前页面的草稿，点击 Save session 才保存记录。</div>
+  <div style="font-size:12px;color:#888;margin-bottom:8px;">点动作填写，勾选要保存的项目。</div>
+
+  <div class="section-card"><div class="row" style="margin-bottom:8px"><button class="btn2" id="recent-exercises" aria-pressed="true" onclick="toggleRecentExercises()">最近动作</button><span class="muted" id="exercise-count"></span></div><input class="fsrch" id="exercise-search" aria-label="搜索动作" placeholder="搜索全部动作：卧推 / bench · abductor · 划船 / row" oninput="drawExs()"></div>
   <div class="sch-wrap" id="sch-wrap"></div>
+<details class="section-card training-meta"><summary>时长、体重与其他运动</summary>
   <div class="row">
-    <label for="td">Date</label><input type="date" id="td" onchange="loadTrainingDate()">
-    <label for="tw" style="margin-left:4px;">Weight</label>
-    <input type="number" class="sminput" id="tw" step="0.1" min="20" max="400" placeholder="可选体重" oninput="onWtInput()" title="Log today's body weight (kg)">
+    <label for="tw" style="margin-left:4px;">体重</label>
+    <input type="number" class="sminput" id="tw" step="0.1" min="20" max="400" placeholder="可选体重" oninput="onWtInput()" title="记录体重（kg）">
     <span style="font-size:11px;color:#888;">kg</span>
-    <label for="tdur" style="margin-left:4px;">Duration</label>
-    <input type="number" class="sminput" id="tdur" min="10" max="180" placeholder="50" oninput="updBurn()" title="Total session length in minutes">
+    <label for="tdur" style="margin-left:4px;">时长</label>
+    <input type="number" class="sminput" id="tdur" min="10" max="180" placeholder="50" oninput="updBurn()" title="总训练时长（分钟）">
     <span style="font-size:11px;color:#888;">min</span>
     <div class="ebar">
-      <span style="font-size:11px;color:#888;">Energy</span>
-      <button class="ebtn" onclick="setE(1)" id="e1">Low</button>
-      <button class="ebtn" onclick="setE(2)" id="e2">Good</button>
-      <button class="ebtn" onclick="setE(3)" id="e3">Strong 💪</button>
+      <span style="font-size:11px;color:#888;">精力</span>
+      <button class="ebtn" onclick="setE(1)" id="e1">偏低</button>
+      <button class="ebtn" onclick="setE(2)" id="e2">良好</button>
+      <button class="ebtn" onclick="setE(3)" id="e3">充沛</button>
     </div>
   </div>
   <div class="activity-box">
-    <div class="section-title" style="margin-bottom:3px;">Ride or tennis</div>
-    <div class="muted">Log sport sessions separately from gym exercises. They still count toward your weekly activity.</div>
+    <div class="section-title" style="margin-bottom:3px;">骑行或网球</div>
+    <div class="muted">骑行和网球可与健身房动作分别记录。</div>
     <div class="activity-grid" style="margin-top:9px;">
-      <label>Activity<select id="activity-type" onchange="renderActivityFields()"><option value="">No sport activity</option><option value="cycling">🚴 Cycling</option><option value="tennis">🎾 Tennis</option></select></label>
-      <label>Duration (min)<input id="activity-duration" type="number" min="1" placeholder="60"></label>
-      <label>Distance (km)<input id="activity-distance" type="number" min="0" step="0.1" placeholder="optional"></label>
-      <label>Intensity<select id="activity-intensity"><option value="easy">Easy</option><option value="moderate" selected>Moderate</option><option value="hard">Hard</option></select></label>
+      <label>运动<select id="activity-type" onchange="renderActivityFields()"><option value="">无</option><option value="cycling">🚴 骑行</option><option value="tennis">🎾 网球</option></select></label>
+      <label>时长（分钟）<input id="activity-duration" type="number" min="1" placeholder="60"></label>
+      <label>距离（km）<input id="activity-distance" type="number" min="0" step="0.1" placeholder="选填"></label>
+      <label>强度<select id="activity-intensity"><option value="easy">轻松</option><option value="moderate" selected>中等</option><option value="hard">高强度</option></select></label>
     </div>
     <div class="activity-fields" id="activity-fields"></div>
   </div>
-  <div class="section-card"><div class="row" style="margin-bottom:8px"><button class="btn2" id="recent-exercises" aria-pressed="false" onclick="toggleRecentExercises()">我的历史动作</button><span class="muted" id="exercise-count"></span><button class="btn1" onclick="saveT()">保存训练</button></div><input class="fsrch" id="exercise-search" aria-label="Search gym exercises" placeholder="搜索全部动作：卧推 / bench · abductor · 划船 / row" oninput="drawExs()"><div class="muted">重量口径：哑铃按每只；Smith 加片重量与杠铃总重分开记录。组次不同可填 15 / 25 / 20，超级组填配对动作。</div></div>
+  </details>
   <div id="exlist"></div>
-  <div class="slbl" style="margin-top:2px;">Custom / unlisted exercises</div>
+  <div class="slbl" style="margin-top:2px;">自定义动作</div>
   <div id="cxlist"></div>
-  <button class="add-cx" onclick="addCx()">＋ Add custom exercise (or anything not on the list above)</button>
+  <button class="add-cx" onclick="addCx()">＋ 添加自定义动作</button>
   <div id="my-ex-section" style="display:none;">
-    <div class="myex-hdr">⭐ My saved exercises <span style="font-size:10px;color:#aaa;font-weight:400;">— tap ✕ to remove</span></div>
+    <div class="myex-hdr">⭐ 我的动作 <span style="font-size:10px;color:#aaa;font-weight:400;"></span></div>
     <div id="my-ex-list"></div>
   </div>
   <label class="muted" for="training-intensity">训练强度（用于消耗估算）</label><select id="training-intensity" style="margin:5px 0 12px;padding:8px" onchange="updBurn()"><option value="moderate">常规力量训练／含组间休息</option><option value="vigorous">持续高强度力量训练</option></select>
   <div id="burn-display"></div>
-  <div class="slbl">Session notes</div>
-  <textarea id="snotes" rows="2" placeholder="How did it feel? New weight? Anything to flag next time..."></textarea>
+  <div class="slbl">训练备注</div>
+  <textarea id="snotes" rows="2" placeholder="记录训练感受或下次要留意的事"></textarea>
   <div class="btnrow">
-    <button class="btn1" onclick="saveT()">Save session</button>
-    <button class="btn2" onclick="copyT()">Copy log</button><button class="btn2" onclick="viewSessionNutrition()">查看当天饮食</button>
+    <button class="btn1" onclick="saveT()">保存训练</button>
+    <button class="btn2" onclick="copyT()">复制记录</button><button class="btn2" onclick="viewSessionNutrition()">查看当天饮食</button>
   </div>
   <div class="fb" id="tfb"></div>
 </div>
@@ -422,17 +447,15 @@ textarea:focus{outline:none;border-color:#1D9E75;}
 <!-- ====== NUTRITION ====== -->
 <div id="tab-N" style="display:none;">
   <div class="row">
-    <label for="nd">Date</label>
+    <label for="nd">日期</label>
     <input type="date" id="nd" onchange="renderN()">
-    <div class="dtrow" style="margin-bottom:0;flex:1;margin-left:4px;">
-      <button class="dtb" disabled aria-disabled="true" id="dtT" style="font-size:12px;">Training day <span class="tag tg">自动</span></button>
-      <button class="dtb" disabled aria-disabled="true" id="dtR" style="font-size:12px;">Rest day <span class="tag ta">自动</span></button>
-    </div>
+    <span class="day-badge" id="nutrition-day" role="status"></span>
   </div>
-  <div id="hydrow"></div>
+  <div class="nutrition-start"><select aria-label="选择餐次" id="quick-meal"></select><button class="btn1" onclick="openMealPicker(inputValue('quick-meal'))">＋ 记录食物</button></div>
   <div id="burn-info-nut"></div>
   <div class="mtg" id="mtg"></div>
   <div id="meals"></div>
+  <div id="hydrow"></div>
   <div class="fb" id="nfb"></div>
 </div>
 
@@ -442,32 +465,32 @@ textarea:focus{outline:none;border-color:#1D9E75;}
     <button onclick="chMon(-1)">‹</button>
     <div class="montitle" id="montitle"></div>
     <button onclick="chMon(1)">›</button>
-    <button class="expbtn" onclick="downloadExport()">⬇ Export data</button>
+    <button class="expbtn" onclick="downloadExport()">⬇ 导出数据</button>
   </div>
   <div class="revtabs">
-    <button class="rtab on" onclick="setRTab('tr')" id="rt-tr">Training</button>
-    <button class="rtab" onclick="setRTab('nut')" id="rt-nut">Nutrition</button>
+    <button class="rtab on" onclick="setRTab('tr')" id="rt-tr">训练</button>
+    <button class="rtab" onclick="setRTab('nut')" id="rt-nut">饮食</button>
   </div>
   <div id="rev-tr">
     <div class="sgrid" id="rstats"></div>
     <div id="rcal"></div>
     <div id="wt-chart-wrap" style="display:none;">
-      <div class="slbl" style="margin-top:4px;">Weight trend this month</div>
-      <div class="cfull"><div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Body weight (kg) — dotted line = 52 kg baseline</div><div class="cfullw"><canvas id="wtchart"></canvas></div></div>
+      <div class="slbl" style="margin-top:4px;">本月体重变化</div>
+      <div class="cfull"><div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">体重（kg），虚线为本月第一笔体重</div><div class="cfullw"><canvas id="wtchart"></canvas></div></div>
     </div>
-    <div class="slbl" style="margin-top:4px;">Strength progression (all time)</div>
+    <div class="slbl" style="margin-top:4px;">力量进步</div>
     <label class="muted" for="progress-exercise">选择动作查看历史负重</label><select id="progress-exercise" style="width:100%;padding:9px;margin:6px 0 10px" onchange="drawCharts(this.value)"></select>
     <div class="cgrid" id="rcharts"></div>
-    <div class="slbl">Current bests</div>
+    <div class="slbl">最佳记录</div>
     <div class="prcard" id="rprs"></div>
   </div>
   <div id="rev-nut" style="display:none;">
     <div class="nutsg" id="nutstats"></div>
     <div class="cfull">
-      <div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Daily calories — teal = training day · amber = rest day</div>
+      <div style="font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">每日热量（绿色为训练日，橙色为休息日）</div>
       <div class="cfullw"><canvas id="nutchart"></canvas></div>
     </div>
-    <div class="slbl">Average macros (logged days only)</div>
+    <div class="slbl">平均营养摄入（已记录日期）</div>
     <div class="cgrid" id="nutmacros"></div>
   </div>
 </div>
@@ -1385,7 +1408,7 @@ const SCOL = {A:"#1D9E75",B:"#378ADD",C:"#EF9F27",D:"#993C1D",E:"#7B5EA7"};
 // ============================================================
 // FOOD DATABASE — ${DB.length} plain-food entries, including raw/cooked variants
 // ============================================================
-const FCATS=[{"id": "all", "n": "All · 全部", "ic": "🍽"}, {"id": "myfood", "n": "My foods · 我的", "ic": "⭐"}, {"id": "coffee", "n": "Coffee · 咖啡", "ic": "☕"}, {"id": "drink", "n": "Drinks · 饮品", "ic": "🧋"}, {"id": "bread", "n": "Bread · 面包", "ic": "🥐"}, {"id": "fast", "n": "Burgers · 汉堡", "ic": "🍔"}, {"id": "snack", "n": "Snacks · 零食", "ic": "🍪"}, {"id": "root", "n": "Tubers · 薯类", "ic": "🥔"}, {"id": "grain", "n": "Grains · 谷物", "ic": "🌾"}, {"id": "legume", "n": "Beans & tofu · 豆类", "ic": "🫘"}, {"id": "veg", "n": "Vegetables · 蔬菜", "ic": "🥦"}, {"id": "fruit", "n": "Fruit · 水果", "ic": "🍎"}, {"id": "beef", "n": "Beef · 牛肉", "ic": "🥩"}, {"id": "protein", "n": "Meat & fish · 肉鱼", "ic": "🐟"}, {"id": "egg", "n": "Eggs · 蛋类", "ic": "🥚"}, {"id": "dairy", "n": "Plain dairy · 原味乳品", "ic": "🥛"}, {"id": "nut", "n": "Nuts & seeds · 坚果籽", "ic": "🥜"}];
+const FCATS=[{"id": "myfood", "n": "我的", "ic": "⭐"}, {"id": "recent", "n": "最近", "ic": "🕘"}, {"id": "all", "n": "全部", "ic": "🍽"}, {"id": "coffee", "n": "咖啡", "ic": "☕"}, {"id": "drink", "n": "饮品", "ic": "🧋"}, {"id": "bread", "n": "面包", "ic": "🥐"}, {"id": "fast", "n": "汉堡", "ic": "🍔"}, {"id": "snack", "n": "零食", "ic": "🍪"}, {"id": "root", "n": "薯类", "ic": "🥔"}, {"id": "grain", "n": "谷物", "ic": "🌾"}, {"id": "legume", "n": "豆类", "ic": "🫘"}, {"id": "veg", "n": "蔬菜", "ic": "🥦"}, {"id": "fruit", "n": "水果", "ic": "🍎"}, {"id": "beef", "n": "牛肉", "ic": "🥩"}, {"id": "protein", "n": "肉鱼", "ic": "🐟"}, {"id": "egg", "n": "蛋类", "ic": "🥚"}, {"id": "dairy", "n": "原味乳品", "ic": "🥛"}, {"id": "nut", "n": "坚果籽", "ic": "🥜"}];
 
 // USDA SR Legacy, values per 100g edible portion. Raw/cooked entries are distinct.
 const DB=[
@@ -5107,21 +5130,72 @@ const DB=[
     "p": 2.6,
     "c": 8.4,
     "f": 2.8
+  },
+  {
+    "id": "usda_175215",
+    "fdcId": 175215,
+    "n": "无糖豆浆 Unsweetened soy milk",
+    "cat": "drink",
+    "aliases": "豆乳 豆漿 豆奶 soymilk",
+    "sourceDescription": "Soymilk (all flavors), unsweetened, with added calcium, vitamins A and D",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 240,
+    "servingLabel": "杯（240g）",
+    "visibility": "default",
+    "k": 33,
+    "p": 2.9,
+    "c": 1.7,
+    "f": 1.6
+  },
+  {
+    "id": "usda_173177",
+    "fdcId": 173177,
+    "n": "乳清分离蛋白粉 Whey protein isolate",
+    "cat": "dairy",
+    "aliases": "乳清蛋白 蛋白粉 whey protein powder",
+    "sourceDescription": "Beverages, Whey protein powder isolate",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 30,
+    "servingLabel": "份（30g）",
+    "visibility": "default",
+    "k": 359,
+    "p": 58.1,
+    "c": 29.1,
+    "f": 1.2
+  },
+  {
+    "id": "usda_170885",
+    "fdcId": 170885,
+    "n": "液态酸乳清 Fluid acid whey",
+    "cat": "dairy",
+    "aliases": "乳清 酸乳清 yogurt whey",
+    "sourceDescription": "Whey, acid, fluid",
+    "per": "per 100g edible portion",
+    "baseGrams": 100,
+    "servingGrams": 100,
+    "servingLabel": "份（100g）",
+    "visibility": "default",
+    "k": 24,
+    "p": 0.8,
+    "c": 5.1,
+    "f": 0.1
   }
 ];
 
 const MEALS_T=[
-  {id:"bkf",n:"Breakfast",ic:"🌅"},
-  {id:"pre",n:"Pre-workout snack",ic:"⚡"},
-  {id:"lun",n:"Lunch / Post-workout",ic:"🍱"},
-  {id:"snk",n:"Snack",ic:"🫐"},
-  {id:"din",n:"Dinner",ic:"🍽"}
+  {id:"bkf",n:"早餐",ic:"🌅"},
+  {id:"pre",n:"训练前加餐",ic:"⚡"},
+  {id:"lun",n:"午餐／训练后",ic:"🍱"},
+  {id:"snk",n:"加餐",ic:"🫐"},
+  {id:"din",n:"晚餐",ic:"🍽"}
 ];
 const MEALS_R=[
-  {id:"bkf",n:"Breakfast",ic:"🌅"},
-  {id:"lun",n:"Lunch",ic:"🍱"},
-  {id:"snk",n:"Snack",ic:"🫐"},
-  {id:"din",n:"Dinner",ic:"🍽"}
+  {id:"bkf",n:"早餐",ic:"🌅"},
+  {id:"lun",n:"午餐",ic:"🍱"},
+  {id:"snk",n:"加餐",ic:"🫐"},
+  {id:"din",n:"晚餐",ic:"🍽"}
 ];
 
 // ============================================================
@@ -5198,7 +5272,7 @@ function tots(d){return ents(d).reduce((a,e)=>({k:a.k+e.k,p:a.p+e.p,c:a.c+e.c,f:
 // TRAINING LOG
 // ============================================================
 let selSess=new Set(['A']),elev=0,cxRows=[],cxId=0;
-let trainingDrafts={},activeTrainingDate='',recentExercisesOnly=false,loadingTraining=false;
+let trainingDrafts={},activeTrainingDate='',recentExercisesOnly=true,loadingTraining=false;
 document.getElementById('td').value=today();
 function safeHTML(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function exerciseMeta(en){return Object.values(EX).flatMap(g=>g.exs).find(x=>x.en===en);}
@@ -5218,14 +5292,14 @@ function captureTrainingForm(){
 }
 function makeTrainingDraft(date){
  const day=S.days[date]||{},tr=day.tr||{},entries={},custom=[];
- (tr.exs||[]).forEach(x=>{const meta=exerciseMeta(x.en);if(meta)entries[x.en]={...x,done:true,unit:x.unit||meta.unit,mode:x.mode||meta.mode,sid:meta.sid};else custom.push({...x,id:cxId++});});
+ (tr.exs||[]).forEach(x=>{const meta=exerciseMeta(x.en);if(meta&&!entries[x.en])entries[x.en]={...x,done:true,unit:x.unit||meta.unit,mode:x.mode||meta.mode,sid:meta.sid};else custom.push({...x,id:cxId++});});
  const a=tr.activities?.[0];return {ex:entries,cx:custom,my:{},sess:tr.sess?.length?tr.sess:['A'],e:tr.e||0,notes:tr.notes||'',dur:tr.dur||'',weight:day.weight||'',dirty:false,intensity:tr.intensity||'moderate',activity:{'activity-type':a?.type||'','activity-duration':a?.duration||'','activity-distance':a?.distance||'','activity-intensity':a?.intensity||'moderate','activity-detail':a?.detail||'','activity-extra':a?.extra||'','activity-notes':a?.notes||''}};
 }
 function loadTrainingDate(force=false){
  if(!force)captureTrainingForm();
  const date=inputValue('td');if(!date)return;
  if(force||!trainingDrafts[date])trainingDrafts[date]=makeTrainingDraft(date);
- const d=trainingDrafts[date];activeTrainingDate=date;loadingTraining=true;
+ const d=trainingDrafts[date];if(activeTrainingDate!==date)expandedExercises.clear();activeTrainingDate=date;loadingTraining=true;
  selSess=new Set(d.sess.filter(s=>EX[s]));if(!selSess.size)selSess.add('A');elev=d.e;
  cxRows=d.cx.map(x=>({...x}));document.getElementById('training-intensity').value=d.intensity||'moderate';document.getElementById('snotes').value=d.notes;document.getElementById('tdur').value=d.dur;document.getElementById('tw').value=d.weight;
  for(const [id,value] of Object.entries(d.activity)){const el=document.getElementById(id);if(el)el.value=value;}
@@ -5234,7 +5308,7 @@ function loadTrainingDate(force=false){
 }
 function refreshTrainingFromCloud(){if(!trainingDrafts[activeTrainingDate]?.dirty)loadTrainingDate(true);}
 function renderSessChips(){
- document.getElementById('sch-wrap').innerHTML=Object.entries(EX).map(([id,s])=>`<button type="button" class="sch${selSess.has(id)&&!recentExercisesOnly?' on':''}" aria-pressed="${selSess.has(id)&&!recentExercisesOnly}" onclick="togSess('${id}')" style="border-color:${s.col};color:${selSess.has(id)&&!recentExercisesOnly?'white':s.col};background:${selSess.has(id)&&!recentExercisesOnly?s.col:'white'}">${s.ic} ${s.name}</button>`).join('');
+ document.getElementById('sch-wrap').innerHTML=Object.entries(EX).map(([id,s])=>`<button type="button" class="sch${selSess.has(id)&&!recentExercisesOnly?' on':''}" aria-pressed="${selSess.has(id)&&!recentExercisesOnly}" onclick="togSess('${id}')" style="border-color:${s.col};color:${selSess.has(id)&&!recentExercisesOnly?'white':s.col};background:${selSess.has(id)&&!recentExercisesOnly?s.col:'white'}">${s.ic} ${categoryNames[id]}</button>`).join('');
  const b=document.getElementById('recent-exercises');if(b){b.setAttribute('aria-pressed',String(recentExercisesOnly));b.style.background=recentExercisesOnly?'#E1F5EE':'white';}
 }
 function togSess(id){captureTrainingForm();recentExercisesOnly=false;if(selSess.has(id)){if(selSess.size>1)selSess.delete(id);}else selSess.add(id);document.getElementById('exercise-search').value='';renderSessChips();drawExs();updBurn();}
@@ -5244,54 +5318,187 @@ function exerciseSummary(e,meta=exerciseMeta(e.en)){
  if(meta?.mode==='timed')return `${e.w||'—'} ${unit}${e.s?' × '+e.s+' sets':''}${e.r?' · '+e.r:''}`;
  return `${e.w||'—'} ${unit} · ${e.s||'—'} sets × ${e.r||'—'} reps`;
 }
-function drawExs(){
- if(!activeTrainingDate){loadTrainingDate();return;}
- captureTrainingForm();const draft=trainingDrafts[activeTrainingDate],q=inputValue('exercise-search').toLowerCase().trim(),needles=q.split(/\s+/).filter(Boolean);
- let count=0,h='';
- Object.entries(EX).forEach(([sid,s])=>{
-  const filtered=s.exs.filter(x=>q?needles.every(n=>`${x.en} ${x.cn}`.toLowerCase().includes(n)):recentExercisesOnly?!!getExerciseStats(x.en).last:selSess.has(sid));
-  if(!filtered.length)return;
-  h+=`<div class="sec-h"><div class="sec-dot" style="background:${s.col}"></div><div class="sec-nm" style="color:${s.col}">${s.ic} ${s.name}</div></div>`;
-  filtered.forEach(x=>{
-   count++;const k=`${sid}_${s.exs.indexOf(x)}`,state=draft.ex[x.en],hist=getExerciseStats(x.en,inputValue('td')),last=hist.last;
-   const provided=x.recent,defaults=provided&&provided.date<inputValue('td')&&(!last||provided.date>last.date)?provided:last||{};const value=f=>safeHTML(state?.[f]??defaults[f]??'');
-   const bestText=hist.best?`${x.mode==='assistance'?'最低辅助':'Best recorded'}: ${exerciseSummary(hist.best,x)} · ${fmtShortDate(hist.best.date)}`:'';
-   h+=`<div class="ecard${state?.done?' is-done':''}" id="card_${k}"><div class="ehead"><label class="performed"><input type="checkbox" id="done_${k}" ${state?.done?'checked':''} onchange="toggleExercise('${k}')"> Performed · 已完成</label><div class="een">${safeHTML(x.en)}</div><div class="ecn">${safeHTML(x.cn)}</div><div class="history-badges"><span class="hbadge">${last?'Last: '+safeHTML(exerciseSummary(last,x))+' · '+fmtShortDate(last.date):'尚无已保存历史'}</span>${bestText?`<span class="hbadge best">${safeHTML(bestText)}</span>`:''}</div>${provided?`<div class="muted" style="margin-top:5px">你的日志参考 ${provided.date}: ${safeHTML(exerciseSummary(provided,x))}${provided.n?' · '+safeHTML(provided.n):''}</div>`:''}${x.mode==='assistance'?'<div class="muted">这里记录辅助重量，同一器械辅助越少，独立承重越多。</div>':''}</div><div class="einps">
-    <div class="ig"><label for="w_${k}">${safeHTML(x.unit)}</label><input id="w_${k}" type="text" value="${value('w')}" placeholder="${x.mode==='timed'?'Duration':'Load / BW'}"></div>
-    <div class="ig"><label for="s_${k}">Sets</label><input id="s_${k}" type="number" min="1" step="1" value="${value('s')}" placeholder="${x.mode==='timed'?'optional':'3'}"></div>
-    <div class="ig"><label for="r_${k}">${x.mode==='timed'?'Intervals / notes':'Reps / set'}</label><input id="r_${k}" value="${value('r')}" placeholder="${x.mode==='timed'?'optional':'12 / 10 / 8'}"></div>
-    <div class="ig"><label for="ss_${k}">Superset with</label><input id="ss_${k}" value="${value('ss')}" placeholder="配对动作"></div>
-    <div class="ig"><label for="n_${k}">Notes</label><input id="n_${k}" value="${value('n')}" placeholder="是否含杆／每侧次数…"></div>
-   </div></div>`;
-  });
- });
- document.getElementById('exlist').innerHTML=h||'<div class="muted">没有匹配动作，可在下方自定义。</div>';
- const selected=Object.values(draft.ex).filter(x=>x.done).length;document.getElementById('exercise-count').textContent=`${count} 个匹配动作 · 已选 ${selected} 个（含其他分类）`;
+function lastSessionBefore(date) {
+  const previous = Object.keys(S.days).filter(day => day < date && hasTraining(day)).sort().pop();
+  return previous ? { date: previous, session: S.days[previous].tr } : null;
 }
-function toggleExercise(k){document.getElementById(`card_${k}`)?.classList.toggle('is-done',document.getElementById(`done_${k}`)?.checked);captureTrainingForm();const d=trainingDrafts[activeTrainingDate];if(d)d.dirty=true;document.getElementById('exercise-count').textContent=`已选 ${Object.values(d?.ex||{}).filter(x=>x.done).length} 个动作（含其他分类）`;}
-function drawCxRows(){document.getElementById('cxlist').innerHTML=cxRows.map(row=>`<div class="cx-row"><input class="cxi-n" id="cxen_${row.id}" placeholder="Exercise name" aria-label="Custom exercise name" value="${safeHTML(row.en)}"><input class="cxi-s" id="cxw_${row.id}" placeholder="Wt/Time" value="${safeHTML(row.w)}"><input class="cxi-s" id="cxs_${row.id}" type="number" min="1" placeholder="Sets" value="${safeHTML(row.s)}"><input class="cxi-s" id="cxr_${row.id}" placeholder="Reps" value="${safeHTML(row.r)}"><input class="cxi-l" id="cxss_${row.id}" placeholder="Superset with" value="${safeHTML(row.ss)}"><input class="cxi-l" id="cxn_${row.id}" placeholder="Notes / units" value="${safeHTML(row.n)}"><button class="cx-save" onclick="saveMyEx(${row.id})" title="Save to My exercises">⭐</button><button class="cx-del" onclick="rmCx(${row.id})" aria-label="Remove custom row">✕</button></div>`).join('');}
+
+function repeatLastSession() {
+  captureTrainingForm();
+  const previous = lastSessionBefore(activeTrainingDate);
+  const draft = trainingDrafts[activeTrainingDate];
+  if (!previous || !draft) return;
+  Object.values(previous.session.exs || []).forEach(row => {
+    const meta = exerciseMeta(row.en);
+    if (meta && !draft.ex[row.en]?.done) {
+      draft.ex[row.en] = { ...row, sid: meta.sid, mode: meta.mode, unit: meta.unit, done: true };
+      selSess.add(meta.sid);
+    } else if (!meta && !draft.cx.some(item => item.en === row.en)) {
+      draft.cx.push({ ...row, id: cxId++ });
+    }
+  });
+  const activity = previous.session.activities?.[0];
+  if (activity && !inputValue('activity-type')) {
+    for (const [id, field] of Object.entries({'activity-type':'type','activity-duration':'duration','activity-distance':'distance','activity-intensity':'intensity'})) {
+      document.getElementById(id).value = activity[field] ?? '';
+    }
+    renderActivityFields();
+    for (const [id, field] of Object.entries({'activity-detail':'detail','activity-extra':'extra','activity-notes':'notes'})) {
+      const element = document.getElementById(id);
+      if (element) element.value = activity[field] ?? '';
+    }
+  }
+  if (!inputValue('tdur') && previous.session.dur) document.getElementById('tdur').value = previous.session.dur;
+  draft.sess = [...selSess];
+  draft.dirty = true;
+  cxRows = draft.cx.map(row => ({ ...row }));
+  document.getElementById('exercise-search').value = '';
+  recentExercisesOnly = true;
+  loadingTraining = true;
+  renderSessChips();
+  drawExs();
+  drawCxRows();
+  loadingTraining = false;
+  updBurn();
+  showToast('已填入上次训练。核对后保存。');
+}
+
+function showToast(message, isError=false) {
+  const toast = document.getElementById('app-toast');
+  toast.textContent = message;
+  toast.classList.toggle('error', isError);
+  toast.classList.add('visible');
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.classList.remove('visible'), 4500);
+}
+
+function exerciseLoadLabel(exercise) {
+  if (exercise.mode === 'assistance') return '辅助重量（kg）';
+  if (exercise.mode === 'timed') return exercise.unit === 'sec' ? '时长（秒）' : '时长（分钟）';
+  if (exercise.unit === 'reps') return '次数';
+  if (exercise.unit === 'reps/side') return '每侧次数';
+  if (exercise.unit.includes('/hand')) return '每只重量（kg）';
+  if (exercise.unit.includes('/side')) return '每侧重量（kg）';
+  if (exercise.unit.includes('added')) return '加片重量（kg）';
+  return '重量（kg）';
+}
+
+function updateExerciseCount() {
+  const draft = trainingDrafts[activeTrainingDate];
+  const count = Object.values(draft?.ex || {}).filter(row => row.done).length;
+  document.getElementById('exercise-count').textContent = `已选 ${count} 个动作`;
+}
+
+function toggleExerciseDetails(key) {
+  const card = document.getElementById(`card_${key}`);
+  const button = document.getElementById(`expand_${key}`);
+  const open = card.classList.toggle('is-expanded');
+  button.setAttribute('aria-expanded', String(open));
+  if (open && !document.getElementById(`done_${key}`).checked) {
+    document.getElementById(`done_${key}`).checked = true;
+    toggleExercise(key);
+  }
+  expandedExercises.set(key, open);
+}
+
+function toggleExercise(key) {
+  const checked = document.getElementById(`done_${key}`).checked;
+  const card = document.getElementById(`card_${key}`);
+  card.classList.toggle('is-done', checked);
+  card.classList.toggle('is-expanded', checked);
+  expandedExercises.set(key, checked);
+  document.getElementById(`expand_${key}`).setAttribute('aria-expanded', String(checked));
+  captureTrainingForm();
+  trainingDrafts[activeTrainingDate].dirty = true;
+  updateExerciseCount();
+}
+
+const expandedExercises = new Map();
+const categoryNames = {A:'下肢',B:'上肢',C:'核心',D:'有氧',E:'全身'};
+
+function drawExs() {
+  if (!activeTrainingDate) {
+    loadTrainingDate();
+    return;
+  }
+  captureTrainingForm();
+  const draft = trainingDrafts[activeTrainingDate];
+  const date = inputValue('td');
+  const query = inputValue('exercise-search').trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const catalog = Object.values(EX).flatMap(group => group.exs).map(exercise => ({
+    exercise, last: getExerciseStats(exercise.en, date).last
+  }));
+  const recent = catalog.filter(row => row.last).sort((a,b) => b.last.date.localeCompare(a.last.date)).slice(0,10);
+  const visible = query.length
+    ? catalog.filter(({exercise}) => query.every(word => `${exercise.en} ${exercise.cn}`.toLowerCase().includes(word)))
+    : recentExercisesOnly ? recent : catalog.filter(({exercise}) => selSess.has(exercise.sid));
+  const selected = catalog.filter(({exercise}) => draft.ex[exercise.en]?.done);
+  const selectedNames = new Set(selected.map(({exercise}) => exercise.en));
+  const rest = visible.filter(({exercise}) => !selectedNames.has(exercise.en));
+
+  function renderRow({exercise, last}) {
+    const key = `${exercise.sid}_${EX[exercise.sid].exs.indexOf(exercise)}`;
+    const state = draft.ex[exercise.en];
+    const open = expandedExercises.get(key) === true;
+    const value = field => {
+      const raw = state?.[field] ?? (field === 'n' || field === 'ss' ? '' : last?.[field]) ?? '';
+      return safeHTML(field === 'w' && raw === 'BW' ? '' : raw);
+    };
+    const timed = exercise.mode === 'timed';
+    const bodyweight = !timed && exercise.mode !== 'assistance' && !['reps','reps/side'].includes(exercise.unit);
+    const lastLoad = last?.w === 'BW' || (!last?.w && bodyweight) ? '自重' : last?.w ? `${last.w} ${timed ? exercise.unit : 'kg'}` : '—';
+    return `<div class="ecard compact-exercise${state?.done?' is-done':''}${open?' is-expanded':''}" id="card_${key}">
+      <div class="compact-exercise-row">
+        <input aria-label="记录 ${safeHTML(exercise.cn)}" type="checkbox" id="done_${key}" ${state?.done?'checked':''} onchange="toggleExercise('${key}')">
+        <button type="button" class="exercise-toggle" id="expand_${key}" aria-expanded="${open}" aria-controls="fields_${key}" onclick="toggleExerciseDetails('${key}')">
+          <span class="exercise-name"><strong>${safeHTML(exercise.cn)}</strong><small>${safeHTML(exercise.en)}</small></span>
+          <span class="exercise-last">${last ? '上次 ' + safeHTML(lastLoad) : '填写'}</span><span aria-hidden="true" class="exercise-chevron">⌄</span>
+        </button>
+      </div>
+      <div class="einps" id="fields_${key}">
+        <div class="ig"><label for="w_${key}">${exerciseLoadLabel(exercise)}</label><input id="w_${key}" type="text" inputmode="decimal" value="${value('w')}" placeholder="${bodyweight?'留空记自重':'选填'}"></div>
+        <div class="ig"><label for="s_${key}">组数</label><input id="s_${key}" type="number" inputmode="numeric" min="1" step="1" value="${value('s')}" placeholder="选填"></div>
+        <div class="ig"><label for="r_${key}">${timed?'间歇／次数':'每组次数'}</label><input id="r_${key}" value="${value('r')}" placeholder="例如 12 / 10 / 8"></div>
+        <div class="ig"><label for="ss_${key}">超级组搭配</label><input id="ss_${key}" value="${value('ss')}" placeholder="选填"></div>
+        <div class="ig"><label for="n_${key}">备注</label><input id="n_${key}" value="${value('n')}" placeholder="选填"></div>
+      </div>
+    </div>`;
+  }
+  const heading = query.length ? '搜索结果' : recentExercisesOnly ? '最近练过的动作' : '动作库';
+  const nothing = query.length ? '找不到匹配动作。也可以在下方添加自定义动作。' :
+    recentExercisesOnly ? '保存第一节训练后，最近练过的动作会显示在这里。' : '选择一个动作分类。';
+  document.getElementById('exlist').innerHTML =
+    (selected.length ? `<h3 class="list-heading">本次训练</h3>${selected.map(renderRow).join('')}` : '') +
+    `<h3 class="list-heading">${heading}</h3>${rest.length?rest.map(renderRow).join(''):`<p class="muted compact-empty">${nothing}</p>`}`;
+  const previous = lastSessionBefore(date);
+  document.getElementById('repeat-session').disabled = !previous;
+  document.getElementById('repeat-session-date').textContent = previous ? previous.date : '暂无可重复的训练';
+  updateExerciseCount();
+}
+
+function drawCxRows(){document.getElementById('cxlist').innerHTML=cxRows.map(row=>`<div class="cx-row"><input class="cxi-n" id="cxen_${row.id}" placeholder="动作名称" aria-label="自定义动作名称" value="${safeHTML(row.en)}"><input class="cxi-s" id="cxw_${row.id}" inputmode="decimal" placeholder="重量／时长" value="${safeHTML(row.w)}"><input class="cxi-s" id="cxs_${row.id}" type="number" min="1" placeholder="组数" value="${safeHTML(row.s)}"><input class="cxi-s" id="cxr_${row.id}" placeholder="次数" value="${safeHTML(row.r)}"><input class="cxi-l" id="cxss_${row.id}" placeholder="超级组搭配" value="${safeHTML(row.ss)}"><input class="cxi-l" id="cxn_${row.id}" placeholder="备注／单位" value="${safeHTML(row.n)}"><button class="cx-save" onclick="saveMyEx(${row.id})" title="加入我的动作">⭐</button><button class="cx-del" onclick="rmCx(${row.id})" aria-label="移除此动作">✕</button></div>`).join('');}
 function addCx(){captureCxValues();const row={id:cxId++,en:'',w:'',s:'',r:'',ss:'',n:''};cxRows.push(row);drawCxRows();document.getElementById(`cxen_${row.id}`)?.focus();}
 function rmCx(id){captureCxValues();cxRows=cxRows.filter(r=>r.id!==id);drawCxRows();captureTrainingForm();}
-function saveMyEx(rowId){captureTrainingForm();const en=inputValue(`cxen_${rowId}`).trim();if(!en){fb('tfb','Type an exercise name first');return;}if(customExDB.some(x=>x.en.toLowerCase()===en.toLowerCase())){fb('tfb','Already in My exercises');return;}customExDB.push({id:'cex_'+Date.now(),en});persist();drawMyExercises();fb('tfb','Saved to My exercises');}
+function saveMyEx(rowId){captureTrainingForm();const en=inputValue(`cxen_${rowId}`).trim();if(!en){fb('tfb','请填写动作名称');return;}if(customExDB.some(x=>x.en.toLowerCase()===en.toLowerCase())){fb('tfb','已在我的动作中');return;}customExDB.push({id:'cex_'+Date.now(),en});persist();drawMyExercises();fb('tfb','已加入我的动作');}
 function removeMyEx(id){captureMyInputs();customExDB=customExDB.filter(x=>x.id!==id);persist();drawMyExercises(true);}
 function drawMyExercises(skipCapture=false){
  if(!skipCapture&&!loadingTraining)captureMyInputs();const sec=document.getElementById('my-ex-section');sec.style.display=customExDB.length?'block':'none';
  const draft=trainingDrafts[activeTrainingDate];
- document.getElementById('my-ex-list').innerHTML=customExDB.map((x,i)=>{const k=`mex_${i}`,row=draft?.my[x.en]||{};return `<div class="myex-card"><div class="myex-head"><div class="een">${safeHTML(x.en)}</div><button class="cx-del" onclick="removeMyEx('${safeHTML(x.id)}')" aria-label="Remove saved exercise">✕</button></div><div class="einps">${[['w','Weight / Time'],['s','Sets'],['r','Reps / Time'],['ss','Superset with'],['n','Notes']].map(([f,label])=>`<div class="ig"><label for="${f}_${k}">${label}</label><input id="${f}_${k}" value="${safeHTML(row[f])}"></div>`).join('')}</div></div>`;}).join('');
+ document.getElementById('my-ex-list').innerHTML=customExDB.map((x,i)=>{const k=`mex_${i}`,row=draft?.my[x.en]||{};return `<div class="myex-card"><div class="myex-head"><div class="een">${safeHTML(x.en)}</div><button class="cx-del" onclick="removeMyEx('${safeHTML(x.id)}')" aria-label="移除已收藏动作">✕</button></div><div class="einps">${[['w','重量／时长'],['s','组数'],['r','次数／时长'],['ss','超级组搭配'],['n','备注']].map(([f,label])=>`<div class="ig"><label for="${f}_${k}">${label}</label><input id="${f}_${k}" ${f==='w'?'inputmode="decimal"':''} value="${safeHTML(row[f])}"></div>`).join('')}</div></div>`;}).join('');
 }
 function setE(n){elev=n;[1,2,3].forEach(i=>{const b=document.getElementById('e'+i);b.style.background=i===n?'#1D9E75':'none';b.style.color=i===n?'#fff':'#888';});updBurn();}
 function onWtInput(){const v=Number(inputValue('tw'));if(v>=20&&v<=400){currentWeight=v;TGT=calcTGT(v);updateHeader();updBurn();drawMT();}}
-function updBurn(){const el=document.getElementById('burn-display');if(!el)return;const duration=Number(inputValue('tdur'));const net=duration>0?Math.round(((inputValue('training-intensity')==='vigorous'?6:3.5)-1)*weightForDate(inputValue('td'))*duration/60):0;el.innerHTML=`<div class="muted">${duration>0?'整次常规力量训练参考净消耗约 '+net+' kcal；保存后按实际记录拆分有氧和力量时长，再更新当天饮食目标。':'填写整次训练时长，保存后联动当天饮食目标；未填时长不估算力量训练消耗。'}</div>`;}
+function updBurn(){const el=document.getElementById('burn-display');if(!el)return;const duration=Number(inputValue('tdur'));const net=duration>0?Math.round(((inputValue('training-intensity')==='vigorous'?6:3.5)-1)*weightForDate(inputValue('td'))*duration/60):0;el.innerHTML=`<div class="muted">${duration>0&&weightForDate(inputValue('td'))>0?'整次常规力量训练参考净消耗约 '+net+' kcal；保存后按实际记录拆分有氧和力量时长，再更新当天饮食目标。':'填写整次训练时长，保存后联动当天饮食目标；未填时长不估算力量训练消耗。'}</div>`;}
 
 function gatherExs(){
  captureTrainingForm();const draft=trainingDrafts[activeTrainingDate];if(!draft)return[];
- const ex=Object.values(draft.ex).filter(x=>x.done).map(({done,...x})=>x);
+ const ex=Object.values(draft.ex).filter(x=>x.done).map(({done,...x})=>({...x,w:x.w.trim()||(!['timed','assistance'].includes(x.mode)&&!['reps','reps/side'].includes(x.unit)?'BW':'')}));
  for(const x of Object.values(draft.my)){if(x.w||x.s||x.r){if(!ex.some(e=>e.en===x.en))ex.push({...x,cx:true});}}
  cxRows.forEach(({id,...row})=>{if(row.en?.trim())ex.push({...row,en:row.en.trim(),cx:true});});return ex;
 }
 function saveT(){
- const d=inputValue('td');if(!d)return;const exs=gatherExs(),activity=gatherActivity();
- if(!exs.length&&!activity){fb('tfb','请选择已完成动作或添加运动。');return;}
+ const d=inputValue('td');if(!d){showToast('请选择训练日期。',true);return;}const exs=gatherExs(),activity=gatherActivity();
+ if(!exs.length&&!activity){fb('tfb','请勾选要保存的动作，或添加运动。');return;}
  if(activity&&!activity.duration){fb('tfb','请填写运动时长。');return;}
  for(const e of exs){const meta=exerciseMeta(e.en);if(meta?.mode==='timed'&&!(Number(e.w)>0)){fb('tfb',`${e.en}: 请填写正数时长。`);return;}if(e.s&&(!Number.isInteger(Number(e.s))||Number(e.s)<=0)){fb('tfb',`${e.en}: 组数须为正整数。`);return;}}
  const day=getDay(d),dur=Number(inputValue('tdur'))||0,wt=Number(inputValue('tw'));
@@ -5302,10 +5509,10 @@ function saveT(){
  if(exs.length&&!day.tr.sess.length)day.tr.sess=[...selSess];
  if(wt>=20&&wt<=400){day.weight=wt;currentWeight=wt;TGT=calcTGT(wt);updateHeader();}
  if(day.nut)day.nut.type=dayMode(d);
- persist();trainingDrafts[d].dirty=false;renderDashboard();renderN();fb('tfb',`✓ ${d} 已保存 ${exs.length} 个动作`);
+ persist();trainingDrafts[d].dirty=false;expandedExercises.clear();drawExs();renderDashboard();renderN();fb('tfb',`✓ ${d} 已保存 ${exs.length} 个动作`);
 }
-function copyT(){const exs=gatherExs();let t=`${inputValue('td')}\n`+exs.map(x=>`${x.en}\n${exerciseSummary(x)}${x.ss?' · Superset: '+x.ss:''}${x.n?' · '+x.n:''}`).join('\n\n');if(inputValue('snotes'))t+='\n\n'+inputValue('snotes');navigator.clipboard.writeText(t).then(()=>fb('tfb','✓ Copied')).catch(()=>fb('tfb','复制失败，请使用导出备份。'));}
-function fb(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;setTimeout(()=>{if(el.textContent===msg)el.textContent='';},7000);}}
+function copyT(){const exs=gatherExs();let t=`${inputValue('td')}\n`+exs.map(x=>`${x.en}\n${exerciseSummary(x)}${x.ss?' · Superset: '+x.ss:''}${x.n?' · '+x.n:''}`).join('\n\n');if(inputValue('snotes'))t+='\n\n'+inputValue('snotes');navigator.clipboard.writeText(t).then(()=>fb('tfb','✓ 已复制')).catch(()=>fb('tfb','复制失败，请使用导出备份。'));}
+function fb(id,msg){if(id==='tfb')showToast(msg,!msg.startsWith('✓'));const el=document.getElementById(id);if(el){el.textContent=msg;setTimeout(()=>{if(el.textContent===msg)el.textContent='';},7000);}}
 
 // ============================================================
 // NUTRITION LOG
@@ -5351,7 +5558,14 @@ function closeFoodEditor(){document.getElementById('food-editor').close();foodEd
 document.getElementById("nd").value=today();
 
 function renderN(){
- dtMode=dayMode(nd());document.getElementById('dtT').classList.toggle('on',dtMode==='training');document.getElementById('dtR').classList.toggle('on',dtMode==='rest');
+ dtMode=dayMode(nd());
+ const badge=document.getElementById('nutrition-day');
+ badge.textContent=dtMode==='training'?'训练日':'休息日';
+ badge.classList.toggle('training',dtMode==='training');
+ const quickMeal=document.getElementById('quick-meal'),previous=quickMeal.value;
+ const options=dtMode==='training'?MEALS_T:MEALS_R;
+ quickMeal.innerHTML=options.map(meal=>`<option value="${meal.id}">${meal.n}</option>`).join('');
+ if(options.some(meal=>meal.id===previous))quickMeal.value=previous;
  drawHyd();drawBurnInfo();drawMT();drawMeals();
 }
 
@@ -5362,7 +5576,11 @@ function adjWater(d,ml){getDay(d).water=Math.max(0,Math.min(4000,(getDay(d).wate
 // ── Burn info + net calories shown in nutrition tab ──
 function drawBurnInfo(){
  const t=dailyTargets(nd());
- if(t.needsProfile){document.getElementById('burn-info-nut').innerHTML=`<div class="section-card"><strong>${t.mode==='training'?'训练日':'休息日'}</strong><p>填写你自己的个人资料后，才会计算代谢、运动消耗及营养目标。</p><button class="btn1" onclick="showTab('S')">设置个人资料</button></div>`;return;}
+ if(t.needsProfile){
+  let hidden=false;try{hidden=localStorage.getItem(scopedKey('hide_profile_prompt'))==='1';}catch{}
+  document.getElementById('burn-info-nut').innerHTML=hidden?'':`<div class="profile-one-liner"><span>填写资料可查看营养目标</span><button class="btn2" onclick="showTab('S')">设置</button><button class="btn2" aria-label="关闭资料提醒" onclick="dismissProfilePrompt()">关闭</button></div>`;
+  return;
+ }
  document.getElementById('burn-info-nut').innerHTML=`<div class="section-card"><div class="section-title">${t.mode==='training'?'训练日':'休息日'} · 根据当天已保存记录自动判断</div><div class="energy-grid"><div>基础代谢估算<br><strong>${t.bmr} kcal</strong></div><div>日常消耗基线<br><strong>${t.base} kcal</strong></div><div>运动净消耗<br><strong>+${t.exercise} kcal${t.missing?'（部分）':''}</strong></div><div>当天摄入目标<br><strong>${t.k} kcal</strong></div></div><div class="muted" style="margin-top:9px">日常基线已包含静息消耗，运动只加净增量。蛋白质按体重维持；新增运动能量按约70%碳水、30%脂肪分配。这是估算，不是实测代谢。</div>${t.missing?'<div style="font-size:12px;color:#9b6424;margin-top:8px">已有训练记录，但缺少整次时长；补全后会更新消耗与目标。</div>':''}<button class="btn2" style="margin-top:9px" onclick="openTrainingForNutrition()">${t.mode==='training'?'查看／补全当天训练':'记录当天训练'}</button></div>`;
 }
 
@@ -5370,7 +5588,7 @@ function drawHyd(){
   const d=nd(),ml=getWater(d),tgt=2500,pct=Math.min(100,Math.round(ml/tgt*100));
   document.getElementById("hydrow").innerHTML=`<div class="hydrow">
     <div style="font-size:15px;">💧</div>
-    <div class="hydl">Hydration <span style="font-size:10px;color:#aaa;">target 2,500 ml</span></div>
+    <div class="hydl">饮水 <span style="font-size:10px;color:#aaa;">目标 2,500 ml</span></div>
     <button class="hydbtn" onclick="adjWater('${d}',-250)">−</button>
     <div class="hydv">${ml} ml</div>
     <button class="hydbtn" onclick="adjWater('${d}',250)">+</button>
@@ -5381,12 +5599,12 @@ function drawHyd(){
 
 function drawMT(){
   const d=nd(),tgt=dailyTargets(d),tot=tots(d);
-  if(tgt.needsProfile){document.getElementById("mtg").innerHTML=[["Calories",tot.k,"kcal"],["Protein",tot.p,"g"],["Carbs",tot.c,"g"],["Fat",tot.f,"g"]].map(([name,value,unit])=>`<div class="mtc"><div class="mtl">${name}</div><div class="mtv">${Math.round(value*10)/10}${unit}</div><div class="muted">目标待设置</div></div>`).join("");return;}
+  if(tgt.needsProfile){document.getElementById("mtg").innerHTML=`<div class="plain-intake" style="grid-column:1/-1">摄入 ${Math.round(tot.k)} kcal · 蛋白质 ${Math.round(tot.p*10)/10}g · 碳水 ${Math.round(tot.c*10)/10}g · 脂肪 ${Math.round(tot.f*10)/10}g</div>`;return;}
   const items=[
-    {l:"Calories",v:Math.round(tot.k),t:tgt.k,u:"kcal",c:"#1D9E75"},
-    {l:"Protein",v:Math.round(tot.p*10)/10,t:tgt.p,u:"g",c:"#1D9E75"},
-    {l:"Carbs",v:Math.round(tot.c*10)/10,t:tgt.c,u:"g",c:"#378ADD"},
-    {l:"Fat",v:Math.round(tot.f*10)/10,t:tgt.f,u:"g",c:"#EF9F27"}
+    {l:"热量",v:Math.round(tot.k),t:tgt.k,u:"kcal",c:"#1D9E75"},
+    {l:"蛋白质",v:Math.round(tot.p*10)/10,t:tgt.p,u:"g",c:"#1D9E75"},
+    {l:"碳水",v:Math.round(tot.c*10)/10,t:tgt.c,u:"g",c:"#378ADD"},
+    {l:"脂肪",v:Math.round(tot.f*10)/10,t:tgt.f,u:"g",c:"#EF9F27"}
   ];
   document.getElementById("mtg").innerHTML=items.map(it=>{
     const rem=Math.round((it.t-it.v)*10)/10;
@@ -5394,25 +5612,87 @@ function drawMT(){
     const over=pct>=106;
     return `<div class="mtc"><div class="mtl">${it.l}</div>
       <div class="mtv">${it.v}<span style="font-size:10px;color:#aaa;font-weight:400;">/${it.t}${it.u}</span></div>
-      <div class="mts${over?" mtover":""}">${rem>=0?rem+it.u+" left":"over "+(rem*-1)+it.u}</div>
+      <div class="mts${over?" mtover":""}">${rem>=0?rem+it.u+" 剩余":"超出 "+(rem*-1)+it.u}</div>
       <div class="mtr"><div class="mtf" style="width:${pct}%;background:${over?"#e05050":it.c};"></div></div>
     </div>`;
   }).join("");
 }
 
-function filt(q,cat){
+function defaultFoodCategory() {
+  return customFoodDB.length ? 'myfood' : recentFoods().length ? 'recent' : 'myfood';
+}
+
+function recentFoods() {
+  const catalog = [...customFoodDB, ...DB];
+  const byId = new Map(catalog.map(food => [food.id, food]));
+  const byName = new Map(catalog.map(food => [food.n, food]));
+  const seen = new Set();
+  const recent = [];
+  for (const date of Object.keys(S.days).sort().reverse()) {
+    for (const entry of [...ents(date)].reverse()) {
+      const food = byId.get(entry.foodId) || byName.get(entry.fn);
+      if (!food || food.visibility === 'hidden' || food.visibility === 'dry' && !showDryGrains || seen.has(food.id)) continue;
+      seen.add(food.id);
+      recent.push(food);
+      if (recent.length === 12) return recent;
+    }
+  }
+  return recent;
+}
+
+function searchFoodTokens(text) {
+  return String(text || '').normalize('NFKC').toLowerCase().match(/[a-z0-9]+|[\p{Script=Han}]+/gu) || [];
+}
+
+function filt(query, category) {
+  const tokens = searchFoodTokens(query);
+  const visible = food => food.visibility !== 'hidden' && (food.visibility !== 'dry' || showDryGrains);
   let list;
-  if(cat==="myfood"){
-    list=customFoodDB.slice();
-  } else {
-    list=cat==="all"?[...DB,...customFoodDB]:DB.filter(f=>f.cat===cat);
-    list=list.filter(f=>f.visibility!=="hidden" && (f.visibility!=="dry" || showDryGrains));
+  if (category === 'myfood' && !tokens.length) list = customFoodDB;
+  else if (category === 'recent' && !tokens.length) list = recentFoods();
+  else if (category === 'all' || category === 'recent' || category === 'myfood') list = [...customFoodDB, ...DB];
+  else list = DB.filter(food => food.cat === category);
+  return list.filter(food => visible(food) && tokens.every(token => {
+    const terms = searchFoodTokens(`${food.n} ${food.aliases || ''}`);
+    if (/^[a-z0-9]+$/.test(token)) return terms.some(term => term === token || term === token + 's' || token === term + 's');
+    return terms.some(term => term.includes(token));
+  }));
+}
+
+function dismissProfilePrompt() {
+  try { localStorage.setItem(scopedKey('hide_profile_prompt'), '1'); } catch {}
+  document.getElementById('burn-info-nut').replaceChildren();
+}
+
+function openMealPicker(mid) {
+  openForm[mid] = true;
+  drawMeals();
+  document.getElementById(`fs-${mid}`)?.scrollIntoView({block:'center'});
+}
+
+function logCustomFood(mid, date, saveFavorite=true) {
+  const name = inputValue(`cfn-${mid}`).trim();
+  const calories = inputValue(`cfk-${mid}`).trim();
+  const values = ['k','p','c','f'].map(key => Number(inputValue(`cf${key}-${mid}`)));
+  if (!name || !calories || values.some(value => !Number.isFinite(value) || value < 0)) {
+    showToast('请填写名称和热量。营养数值可以是零。', true);
+    return;
   }
-  if(q){
-    const needles=q.toLowerCase().trim().split(/\s+/).filter(Boolean);
-    list=list.filter(f=>needles.every(needle=>`${f.n} ${f.aliases||""} ${f.per} ${f.cat}`.toLowerCase().includes(needle)));
+  const [k,p,c,f] = values;
+  const serving = {n:name,per:'自定义份',k,p,c,f,cat:'myfood'};
+  let favorite = customFoodDB.find(food => food.n.toLowerCase() === name.toLowerCase()
+    && ['k','p','c','f'].every(key => food[key] === serving[key]));
+  if (saveFavorite && !favorite) {
+    favorite = {...serving,id:'cfd_'+crypto.randomUUID()};
+    customFoodDB.unshift(favorite);
   }
-  return list;
+  pushEnt(date,mid,name,serving.per,1,k,p,c,f,saveFavorite ? favorite.id : undefined);
+  openForm[mid] = false;
+  persist();
+  renderN();
+  const fields = nutritionDrafts[date]?.inputs;
+  if (fields) for (const key of ['n','k','p','c','f']) delete fields[`cf${key}-${mid}`];
+  showToast(saveFavorite ? '已记录并加入我的食物。' : '已记录食物。');
 }
 
 function captureNutritionDraft(){
@@ -5439,7 +5719,7 @@ function drawMeals(){
     h+=`<div class="msec">
       <div class="mhead">
         <div class="mnam"><span style="font-size:15px;">${m.ic}</span><span class="mttl">${m.n}</span>${mk>0?`<span class="mkcl">${mk} kcal</span>`:""}</div>
-        <button class="addbtn" onclick="togForm('${m.id}')">${of?"✕ Cancel":"+ Add food"}</button>
+        <button class="addbtn" onclick="togForm('${m.id}')">${of?"取消":"＋ 记录食物"}</button>
       </div>`;
     if(me.length){
       h+=`<div class="fents">`;
@@ -5457,28 +5737,28 @@ function drawMeals(){
         <label style="display:block;font-size:11px;color:#777;margin:5px 0 9px;"><input type="checkbox" ${showDryGrains?"checked":""} onchange="toggleDryGrains(this.checked)"> 显示烹饪前称重的干谷物</label>
         <div class="category-heading"><span class="muted">左右滑动选择分类，或展开全部</span><button type="button" class="btn2" onclick="toggleFoodCategories('${m.id}')">${expandedFoodCategories[m.id]?"收起分类":"全部分类"}</button></div>
         <div class="cchips${expandedFoodCategories[m.id]?' is-expanded':''}" aria-label="食物分类">${FCATS.map(c=>`<button type="button" class="cchip${cat===c.id?" on":""}" onclick="setCat('${m.id}','${c.id}')">${c.ic} ${c.n}</button>`).join("")}</div>
-        ${!sf?`<input class="fsrch" id="fs-${m.id}" type="text" placeholder="Search: 土豆 / potato · 燕麦 / oats · 鸡胸 / chicken" oninput="refilter('${m.id}')" value="${safeHTML(inputs[`fs-${m.id}`]||'')}">
+        ${!sf?`<input class="fsrch" id="fs-${m.id}" type="text" placeholder="搜索食物，例如豆浆、鸡蛋、whey" oninput="refilter('${m.id}')" value="${safeHTML(inputs[`fs-${m.id}`]||'')}">
         <div class="flist" id="fl-${m.id}">${foodResults(m.id,results)}</div>`:``}
         ${sf?`<div class="qrow">
-          <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:500;">${sf.n}</div><div style="font-size:11px;color:#888;">${sf.per}${sf.note?" · "+safeHTML(sf.note):""}</div></div>
-          <input type="number" id="fq-${m.id}" min="0.1" step="${sf.baseGrams?1:0.1}" value="${sf.servingGrams||sf.baseGrams||1}" aria-label="${sf.baseGrams?'Weight in grams':'Number of servings'}" oninput="updPrev('${m.id}')">
-          <span class="qunit">${sf.baseGrams?"g · 克":"× serving"}</span>
+          <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:500;">${sf.n}</div><div style="font-size:11px;color:#888;">${foodServingLabel(sf.per)}${sf.note?" · "+safeHTML(sf.note):""}</div></div>
+          <input type="number" id="fq-${m.id}" min="0.1" step="${sf.baseGrams?1:0.1}" value="${sf.servingGrams||sf.baseGrams||1}" aria-label="${sf.baseGrams?'重量（g）':'份数'}" oninput="updPrev('${m.id}')">
+          <span class="qunit">${sf.baseGrams?"克（g）":"份"}</span>
           <span class="qprev" id="qp-${m.id}">${Math.round(sf.k*(sf.servingGrams||sf.baseGrams||1)/(sf.baseGrams||1))} kcal</span>
           ${sf.servingGrams?`<button class="btn2" style="padding:7px;font-size:11px" onclick="useFoodServing('${m.id}',${sf.servingGrams})">1 ${safeHTML(sf.servingLabel)}</button>`:""}
           <button class="btn2" style="padding:7px;font-size:11px" onclick="changeFood('${m.id}')">换食物</button>
-          <button class="qadd" onclick="confirmF('${m.id}','${d}')">Add</button>
+          <button class="qadd" onclick="confirmF('${m.id}','${d}')">添加</button>
         </div>`:``}
-        <div style="font-size:10px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-top:8px;margin-bottom:5px;">Or enter custom</div>
+        <div style="font-size:10px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-top:8px;margin-bottom:5px;">自定义食物</div>
         <div class="custg">
-          <input id="cfn-${m.id}" type="text" placeholder="Food name">
+          <input id="cfn-${m.id}" type="text" placeholder="食物名称">
           <input id="cfk-${m.id}" type="number" placeholder="kcal">
-          <input id="cfp-${m.id}" type="number" placeholder="P (g)">
-          <input id="cfc-${m.id}" type="number" placeholder="C (g)">
-          <input id="cff-${m.id}" type="number" placeholder="F (g)">
+          <input id="cfp-${m.id}" type="number" placeholder="蛋白质（g）">
+          <input id="cfc-${m.id}" type="number" placeholder="碳水（g）">
+          <input id="cff-${m.id}" type="number" placeholder="脂肪（g）">
         </div>
         <div style="display:flex;gap:7px;margin-top:6px;">
-          <button class="custbtn" style="flex:1;" onclick="addCust('${m.id}','${d}')">Add once</button>
-          <button class="custbtn" style="flex:1.4;border-color:#7B5EA755;color:#7B5EA7;" onclick="addSaveFood('${m.id}','${d}')">⭐ Add &amp; save to My foods</button>
+          <button class="custbtn" style="flex:1;" onclick="logCustomFood('${m.id}','${d}',false)">仅记这次</button>
+          <button class="custbtn" style="flex:1.4;border-color:#7B5EA755;color:#7B5EA7;" onclick="logCustomFood('${m.id}','${d}')">记录并加入我的食物</button>
         </div>
       </div>`;
     }
@@ -5500,13 +5780,14 @@ function changeFood(mid){selFood[mid]=null;drawMeals();}
 function toggleDryGrains(enabled){showDryGrains=enabled;drawMeals();}
 function toggleFoodCategories(mid){expandedFoodCategories[mid]=!expandedFoodCategories[mid];drawMeals();}
 function bindCategoryDragging(){document.querySelectorAll('.cchips:not(.is-expanded)').forEach(bar=>{let start=0,left=0,down=false,moved=false;bar.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==0)return;down=true;moved=false;start=e.clientX;left=bar.scrollLeft;});bar.addEventListener('pointermove',e=>{if(!down)return;const delta=e.clientX-start;if(Math.abs(delta)>5){moved=true;bar.setPointerCapture(e.pointerId);e.preventDefault();bar.scrollLeft=left-delta;}});const end=e=>{down=false;if(bar.hasPointerCapture(e.pointerId))bar.releasePointerCapture(e.pointerId);};bar.addEventListener('pointerup',end);bar.addEventListener('pointercancel',end);bar.addEventListener('click',e=>{if(moved){e.preventDefault();e.stopImmediatePropagation();}},true);});}
-function setCat(mid,cat){selCat[mid]=cat;expandedFoodCategories[mid]=false;drawMeals();setTimeout(()=>{const el=document.getElementById(`fs-${mid}`);if(el)el.focus();},30);}
+function setCat(mid,cat){selCat[mid]=cat;expandedFoodCategories[mid]=false;drawMeals();const active=document.getElementById(`fl-${mid}`)?.parentElement.querySelector('.cchips .on');if(active){const bar=active.parentElement;bar.scrollLeft=active.getBoundingClientRect().left-bar.getBoundingClientRect().left;}}
+function foodServingLabel(per){return per==="per 100g edible portion"?"每100克可食部":per==="custom"||per==="custom serving"?"自定义份":safeHTML(per);}
 function foodResults(mid,foods){
-  if(!foods.length)return '<div style="padding:12px;color:#777;">No matching foods · 没有匹配食物，可用下方自定义录入。</div>';
-  return foods.map(f=>`<div class="fitem" onclick="pickF('${mid}','${f.id}')"><div class="finn">${f.n}</div><div class="fide">${f.per} · ${f.k} kcal · ${f.p}g P · ${f.c}g C · ${f.f}g F</div></div>`).join("");
+  if(!foods.length)return '<div style="padding:12px;color:#777;">此分类暂无结果。可搜索食物库，或在下方录入自定义食物。</div>';
+  return foods.map(f=>`<button type="button" class="fitem food-result-button" data-food-id="${safeHTML(f.id)}" onclick="pickF('${mid}',this.dataset.foodId)"><span class="finn" style="display:block">${safeHTML(f.n)}</span><span class="fide">${foodServingLabel(f.per)} · ${f.k} kcal · 蛋白质 ${f.p}g · 碳水 ${f.c}g · 脂肪 ${f.f}g</span></button>`).join("");
 }
 function refilter(mid){
-  const q=document.getElementById(`fs-${mid}`)?.value||"",cat=selCat[mid]||"all";
+  const q=document.getElementById(`fs-${mid}`)?.value||"",cat=selCat[mid]||defaultFoodCategory();
   const el=document.getElementById(`fl-${mid}`);
   if(el)el.innerHTML=foodResults(mid,filt(q,cat));
 }
@@ -5523,54 +5804,26 @@ function foodQuantity(mid){
 function updPrev(mid){
   const sf=selFood[mid];if(!sf)return;
   const q=foodQuantity(mid);
-  const el=document.getElementById(`qp-${mid}`);if(el)el.textContent=q?`${Math.round(sf.k*q)} kcal`:"Enter a positive amount";
+  const el=document.getElementById(`qp-${mid}`);if(el)el.textContent=q?`${Math.round(sf.k*q)} kcal`:"请填写正数份量";
 }
 function confirmF(mid,date){
   const sf=selFood[mid];if(!sf)return;
   const q=foodQuantity(mid);
-  if(!q){fb("nfb","Enter a positive weight or serving amount");return;}
-  pushEnt(date,mid,sf.n,sf.per,q,Math.round(sf.k*q),Math.round(sf.p*q*10)/10,Math.round(sf.c*q*10)/10,Math.round(sf.f*q*10)/10);
+  if(!q){fb("nfb","请输入大于零的重量或份数");return;}
+  pushEnt(date,mid,sf.n,sf.per,q,Math.round(sf.k*q),Math.round(sf.p*q*10)/10,Math.round(sf.c*q*10)/10,Math.round(sf.f*q*10)/10,sf.id);
   selFood[mid]=null;openForm[mid]=false;persist();renderN();if(nutritionDrafts[date]){for(const key of Object.keys(nutritionDrafts[date].inputs)){if(key.endsWith("-"+mid))delete nutritionDrafts[date].inputs[key];}}
 }
-function addCust(mid,date){
-  const fn=document.getElementById(`cfn-${mid}`)?.value?.trim();
-  const k=parseFloat(document.getElementById(`cfk-${mid}`)?.value)||0;
-  const p=parseFloat(document.getElementById(`cfp-${mid}`)?.value)||0;
-  const c=parseFloat(document.getElementById(`cfc-${mid}`)?.value)||0;
-  const f=parseFloat(document.getElementById(`cff-${mid}`)?.value)||0;
-  if(!fn||!k){fb("nfb","Enter a name and calories");return;}
-  pushEnt(date,mid,fn,"custom",1,k,p,c,f);
-  openForm[mid]=false;persist();renderN();
-}
-function addSaveFood(mid,date){
-  // Adds to today's log AND saves to My foods permanently
-  const fn=document.getElementById(`cfn-${mid}`)?.value?.trim();
-  const k=parseFloat(document.getElementById(`cfk-${mid}`)?.value)||0;
-  const p=parseFloat(document.getElementById(`cfp-${mid}`)?.value)||0;
-  const c=parseFloat(document.getElementById(`cfc-${mid}`)?.value)||0;
-  const f=parseFloat(document.getElementById(`cff-${mid}`)?.value)||0;
-  if(!fn||!k){fb("nfb","Enter a name and calories to save");return;}
-  // Add to today's meal log
-  pushEnt(date,mid,fn,"custom",1,k,p,c,f);
-  // Save to My foods library if not already there
-  if(!customFoodDB.find(x=>x.n.toLowerCase()===fn.toLowerCase())){
-    customFoodDB.push({id:"cfd_"+Date.now(),n:fn,per:"custom serving",k,p,c,f,cat:"myfood"});
-    fb("nfb",`⭐ "${fn}" saved to My foods — find it under ⭐ My foods category`);
-  } else {
-    fb("nfb",`Added to log (already in ⭐ My foods)`);
-  }
-  openForm[mid]=false;persist();renderN();
-}
+
 function removeMyFood(id){
   customFoodDB=customFoodDB.filter(x=>x.id!==id);
-  persist();fb("nfb","Removed from My foods");
+  persist();fb("nfb","已从我的食物移除");
 }
-function pushEnt(date,mid,fn,per,qty,k,p,c,f){
+function pushEnt(date,mid,fn,per,qty,k,p,c,f,foodId){
   const day=getDay(date);
   if(!day.nut)day.nut={type:dayMode(date),entries:[]};
   day.nut.type=dayMode(date);
   eid=Math.max(Date.now(),eid+1);
-  day.nut.entries.push({id:eid,mid,fn,per,qty,k,p,c,f});
+  day.nut.entries.push({id:eid,mid,fn,per,qty,k,p,c,f,foodId});
 }
 function delEnt(date,index){
  const entries=S.days[date]?.nut?.entries;
@@ -5580,9 +5833,9 @@ function delEnt(date,index){
 
 function togForm(mid){
   openForm[mid]=!openForm[mid];
-  if(!openForm[mid]){selFood[mid]=null;selCat[mid]="all";}
+  if(!openForm[mid]){selFood[mid]=null;delete selCat[mid];}
   drawMeals();
-  if(openForm[mid])setTimeout(()=>{const el=document.getElementById(`fs-${mid}`);if(el)el.focus();},30);
+
 }
 renderN();
 
@@ -5606,7 +5859,7 @@ function chMon(d){rm+=d;if(rm<0){rm=11;ry--;}if(rm>11){rm=0;ry++;}renderR();}
 function dkey(d){return `${ry}-${String(rm+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;}
 
 function renderR(){
-  const MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const MN=["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
   document.getElementById("montitle").textContent=`${MN[rm]} ${ry}`;
   if(curRTab==="tr"){drawTrStats();drawCal();drawWtChart();drawCharts();drawPRs();}
   else drawNutRev();
@@ -5629,7 +5882,7 @@ function drawWtChart(){
     data:{
       labels:pts.map(p=>String(p.d)),
       datasets:[
-        {label:"Weight (kg)",data:pts.map(p=>p.w),borderColor:"#1D9E75",backgroundColor:"#1D9E7520",borderWidth:2,pointRadius:4,pointBackgroundColor:"#1D9E75",fill:true,tension:0.3},
+        {label:"体重（kg）",data:pts.map(p=>p.w),borderColor:"#1D9E75",backgroundColor:"#1D9E7520",borderWidth:2,pointRadius:4,pointBackgroundColor:"#1D9E75",fill:true,tension:0.3},
         {type:"line",label:`Baseline (${baseline} kg)`,data:Array(pts.length).fill(baseline),borderColor:"#aaa",borderWidth:1,borderDash:[5,5],pointRadius:0,fill:false}
       ]
     },
@@ -5646,18 +5899,18 @@ function drawTrStats(){
   let tot=0,byT={A:0,B:0,C:0,D:0,E:0};
   for(let d=1;d<=dim;d++){const day=S.days[dkey(d)];if(day?.tr){tot++;(day.tr.sess||[]).forEach(s=>{if(byT[s]!==undefined)byT[s]++;});}}
   const tp=Object.entries(byT).filter(([,v])=>v>0).map(([k,v])=>`<div class="sc"><div class="sv" style="color:${SCOL[k]};">${v}</div><div class="sl">${EX[k].ic} ${EX[k].name}</div></div>`).join("");
-  document.getElementById("rstats").innerHTML=`<div class="sc"><div class="sv">${tot}</div><div class="sl">Total sessions</div></div>${tp}`;
+  document.getElementById("rstats").innerHTML=`<div class="sc"><div class="sv">${tot}</div><div class="sl">训练天数</div></div>${tp}`;
 }
 
 function drawCal(){
   const dim=new Date(ry,rm+1,0).getDate(),fd=new Date(ry,rm,1).getDay(),ts=today();
-  const dow=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const dow=["日","一","二","三","四","五","六"];
   let h=dow.map(d=>`<div class="cdow">${d}</div>`).join("");
   for(let i=0;i<fd;i++)h+=`<div></div>`;
   for(let d=1;d<=dim;d++){
     const k=dkey(d),day=S.days[k],it=k===ts;
     const dots=(day?.tr?.sess||[]).map(s=>`<div class="sdot" style="background:${SCOL[s]}22;color:${SCOL[s]};">${s}</div>`).join("");
-    h+=`<button class="cday${it?" istoday":""}" onclick="openDay('${k}')" title="Open ${k}"><div class="cnum">${d}</div>
+    h+=`<button class="cday${it?" istoday":""}" onclick="openDay('${k}')" title="打开 ${k}"><div class="cnum">${d}</div>
       ${dots?`<div class="sdots">${dots}</div>`:""}
       ${day?.nut?.entries?.length?`<div class="ndot"></div>`:""}
     </button>`;
@@ -5687,7 +5940,7 @@ function getExerciseStats(en,beforeDate='9999-12-31'){
 
 function renderActivityFields(){
   const t=document.getElementById("activity-type").value,el=document.getElementById("activity-fields");
-  el.innerHTML=t==="cycling"?`<div class="activity-grid"><label>Ride type<select id="activity-detail"><option>Outdoor road</option><option>Indoor bike</option><option>Commute</option><option>Interval ride</option></select></label><label>Elevation (m)<input id="activity-extra" type="number" min="0" placeholder="optional"></label><label style="grid-column:span 2">Notes<input id="activity-notes" placeholder="Route, weather, average speed…"></label></div>`:t==="tennis"?`<div class="activity-grid"><label>Session<select id="activity-detail"><option>Singles match</option><option>Doubles match</option><option>Practice / drills</option><option>Lesson</option></select></label><label>Sets played<input id="activity-extra" type="number" min="0" placeholder="optional"></label><label style="grid-column:span 2">Notes<input id="activity-notes" placeholder="Opponent, score, serve or movement notes…"></label></div>`:"";
+  el.innerHTML=t==="cycling"?`<div class="activity-grid"><label>骑行类型<select id="activity-detail"><option value="Outdoor road">户外公路</option><option value="Indoor bike">室内单车</option><option value="Commute">通勤</option><option value="Interval ride">间歇骑行</option></select></label><label>爬升（m）<input id="activity-extra" type="number" min="0" placeholder="选填"></label><label style="grid-column:span 2">备注<input id="activity-notes" placeholder="路线、天气、平均速度…"></label></div>`:t==="tennis"?`<div class="activity-grid"><label>Session<select id="activity-detail"><option value="Singles match">单打比赛</option><option value="Doubles match">双打比赛</option><option value="Practice / drills">练习</option><option value="Lesson">课程</option></select></label><label>盘数<input id="activity-extra" type="number" min="0" placeholder="选填"></label><label style="grid-column:span 2">备注<input id="activity-notes" placeholder="Opponent, score, serve or movement notes…"></label></div>`:"";
 }
 function gatherActivity(){const type=document.getElementById("activity-type").value;if(!type)return null;return{type,duration:+document.getElementById("activity-duration").value||0,distance:+document.getElementById("activity-distance").value||0,intensity:document.getElementById("activity-intensity").value,detail:document.getElementById("activity-detail")?.value||"",extra:+document.getElementById("activity-extra")?.value||0,notes:document.getElementById("activity-notes")?.value||""};}
 
@@ -5730,9 +5983,9 @@ function drawNutRev(){
   const avgTarget=Object.fromEntries(["p","c","f"].map(key=>[key,logd?Math.round(targetTotals[key]/logd):dailyTargets(nd())[key]]));
 
   document.getElementById("nutstats").innerHTML=`
-    <div class="nsc"><div class="nsv">${logd}</div><div class="nsl">Days logged</div></div>
-    <div class="nsc"><div class="nsv">${avgK}</div><div class="nsl">Avg kcal / day</div></div>
-    <div class="nsc"><div class="nsv">${avgP}g</div><div class="nsl">Avg protein / day</div></div>`;
+    <div class="nsc"><div class="nsv">${logd}</div><div class="nsl">记录天数</div></div>
+    <div class="nsc"><div class="nsv">${avgK}</div><div class="nsl">平均每日热量</div></div>
+    <div class="nsc"><div class="nsv">${avgP}g</div><div class="nsl">平均每日蛋白质</div></div>`;
 
   if(nutChart){try{nutChart.destroy();}catch(e){}}
   const ctx=document.getElementById("nutchart");
@@ -5742,20 +5995,20 @@ function drawNutRev(){
       data:{
         labels:bars.map(b=>String(b.d)),
         datasets:[
-          {label:"Calories logged",data:bars.map(b=>b.k),backgroundColor:bcols,borderRadius:4,borderSkipped:false},
+          {label:"热量摄入",data:bars.map(b=>b.k),backgroundColor:bcols,borderRadius:4,borderSkipped:false},
           {type:"line",label:"当天动态目标",data:bars.map(b=>b.target),borderColor:"#1D9E75",borderWidth:1.5,borderDash:[5,5],pointRadius:0,fill:false}
         ]
       },
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:10},boxWidth:12,padding:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:"#f0ede8"},ticks:{font:{size:10}},beginAtZero:false}}}
     });
   } else if(ctx){
-    const c=ctx.getContext("2d");c.fillStyle="#aaa";c.font="13px -apple-system";c.fillText("No nutrition data logged this month yet.",20,80);
+    const c=ctx.getContext("2d");c.fillStyle="#aaa";c.font="13px -apple-system";c.fillText("本月还没有饮食记录",20,80);
   }
 
   document.getElementById("nutmacros").innerHTML=`
-    <div class="cc"><div class="cct">Avg protein</div><div class="ccv" style="color:#1D9E75;">${avgP}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Avg daily target ${avgTarget.p}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,(avgTarget.p?Math.round(avgP/avgTarget.p*100):0))}%;background:#1D9E75;border-radius:99px;"></div></div></div>
-    <div class="cc"><div class="cct">Avg carbs</div><div class="ccv" style="color:#378ADD;">${avgC}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Avg daily target ${avgTarget.c}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,(avgTarget.c?Math.round(avgC/avgTarget.c*100):0))}%;background:#378ADD;border-radius:99px;"></div></div></div>
-    <div class="cc"><div class="cct">Avg fat</div><div class="ccv" style="color:#EF9F27;">${avgF}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">Avg daily target ${avgTarget.f}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,(avgTarget.f?Math.round(avgF/avgTarget.f*100):0))}%;background:#EF9F27;border-radius:99px;"></div></div></div>`;
+    <div class="cc"><div class="cct">平均蛋白质</div><div class="ccv" style="color:#1D9E75;">${avgP}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">平均每日目标 ${avgTarget.p}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,(avgTarget.p?Math.round(avgP/avgTarget.p*100):0))}%;background:#1D9E75;border-radius:99px;"></div></div></div>
+    <div class="cc"><div class="cct">平均碳水</div><div class="ccv" style="color:#378ADD;">${avgC}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">平均每日目标 ${avgTarget.c}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,(avgTarget.c?Math.round(avgC/avgTarget.c*100):0))}%;background:#378ADD;border-radius:99px;"></div></div></div>
+    <div class="cc"><div class="cct">平均脂肪</div><div class="ccv" style="color:#EF9F27;">${avgF}g</div><div style="font-size:11px;color:#888;margin-bottom:5px;">平均每日目标 ${avgTarget.f}g</div><div class="mtr"><div class="mtf" style="height:4px;width:${Math.min(100,(avgTarget.f?Math.round(avgF/avgTarget.f*100):0))}%;background:#EF9F27;border-radius:99px;"></div></div></div>`;
 }
 
 // ============================================================
@@ -5888,7 +6141,7 @@ function setCloudStatus(text,state=""){
 }
 function saveCloudConfig(){
   const url=document.getElementById("cloud-url").value.trim(),key=document.getElementById("cloud-key").value.trim();
-  if(!url||!key){fb("cloud-fb","Enter both the project URL and publishable key");return;}
+  if(!url||!key){fb("cloud-fb","请输入项目地址和公开密钥");return;}
   localStorage.setItem("gt_supabase_config",JSON.stringify({url,key}));location.reload();
 }
 function cloudPayload(){return{version:5,days:S.days,customExercises:customExDB,customFoods:customFoodDB,profile:PROFILE};}
@@ -5899,12 +6152,14 @@ function applyCloudPayload(data){
 }
 async function initCloud(){
   const cfg=cloudConfig();document.getElementById("cloud-url").value=cfg.url;document.getElementById("cloud-key").value=cfg.key;
-  if(!cfg.url||!cfg.key||!window.supabase){setCloudStatus("Cloud connection not configured");document.getElementById("cloud-config").open=true;return;}
+  if(!cfg.url||!cfg.key||!window.supabase){setCloudStatus("本机模式 · 云同步可选");document.getElementById("cloud-auth").hidden=true;return;}
+  document.getElementById("cloud-auth").hidden=false;
+  document.getElementById("cloud-signup").hidden=window.TRACKER_CONFIG?.allowSignup===false;document.getElementById("cloud-config").hidden=window.TRACKER_CONFIG?.allowSignup===false;
   try{
     cloudClient=window.supabase.createClient(cfg.url,cfg.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
     const{data:{session}}=await cloudClient.auth.getSession();await handleCloudSession(session);
     cloudClient.auth.onAuthStateChange((_event,session)=>setTimeout(()=>handleCloudSession(session),0));
-  }catch(e){setCloudStatus("Could not connect to Supabase","err");fb("cloud-fb",e.message||"Connection failed");}
+  }catch(e){setCloudStatus("云连接失败","err");fb("cloud-fb",e.message||"连接失败");}
 }
 async function handleCloudSession(session){
   clearTimeout(cloudTimer);cloudReady=false;cloudUser=session?.user||null;loadWorkspace(cloudUser?.id||'guest');document.getElementById("cloud-auth").style.display=cloudUser?"none":"block";document.getElementById("cloud-user").style.display=cloudUser?"block":"none";document.getElementById("cloud-signout").style.display=cloudUser?"block":"none";
@@ -5912,8 +6167,8 @@ async function handleCloudSession(session){
   if(!cloudUser){
     document.getElementById("cloud-new-password").value="";
     document.getElementById("cloud-confirm-password").value="";
-    cloudReady=false;setCloudStatus("Not signed in");return;}
-  document.getElementById("cloud-user").textContent=`Signed in as ${cloudUser.email}`;setCloudStatus("Loading cloud data…","busy");await reconcileCloud();
+    cloudReady=false;setCloudStatus("未登录");return;}
+  document.getElementById("cloud-user").textContent=`已登录 ${cloudUser.email}`;setCloudStatus("正在读取云端数据…","busy");await reconcileCloud();
 }
 let cloudLinkSentAt=0;
 function cloudEmail(){
@@ -5934,7 +6189,7 @@ async function signInPassword(){
   const input=document.getElementById("cloud-password"),password=input.value;
   if(!password){fb("cloud-fb","请输入账号密码。");return;}
   const button=document.getElementById("cloud-password-login");if(button.disabled)return;
-  button.disabled=true;setCloudStatus("Signing in…","busy");
+  button.disabled=true;setCloudStatus("正在登录…","busy");
   try{
     const {data,error}=await cloudClient.auth.signInWithPassword({email,password});
     if(error)throw error;
@@ -5942,23 +6197,23 @@ async function signInPassword(){
     input.value="";
     fb("cloud-fb","登录成功，正在加载云端记录…");
     // onAuthStateChange loads records for the authenticated user.
-  }catch(error){setCloudStatus("Sign-in failed","err");fb("cloud-fb",cloudAuthError(error));}
+  }catch(error){setCloudStatus("登录失败","err");fb("cloud-fb",cloudAuthError(error));}
   finally{button.disabled=false;}
 }
-async function registerAccount(){if(!cloudClient){fb('cloud-fb','请先配置服务连接，或继续使用本机模式。');return;}const email=cloudEmail(),password=inputValue('cloud-password');if(!email||password.length<8){fb('cloud-fb','请输入邮箱和至少8位密码。');return;}const button=document.getElementById('cloud-signup');button.disabled=true;try{const {data,error}=await cloudClient.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});if(error)throw error;document.getElementById('cloud-password').value='';fb('cloud-fb',data?.session?'注册成功，已进入空白账号。':'请查看邮箱并确认账号，再回到应用使用密码登录。');}catch(e){fb('cloud-fb',e.message||'注册失败');}finally{button.disabled=false;}}
+async function registerAccount(){if(window.TRACKER_CONFIG?.allowSignup===false)return;if(!cloudClient){fb('cloud-fb','请先配置服务连接，或继续使用本机模式。');return;}const email=cloudEmail(),password=inputValue('cloud-password');if(!email||password.length<8){fb('cloud-fb','请输入邮箱和至少8位密码。');return;}const button=document.getElementById('cloud-signup');button.disabled=true;try{const {data,error}=await cloudClient.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});if(error)throw error;document.getElementById('cloud-password').value='';fb('cloud-fb',data?.session?'注册成功，已进入空白账号。':'请查看邮箱并确认账号，再回到应用使用密码登录。');}catch(e){fb('cloud-fb',e.message||'注册失败');}finally{button.disabled=false;}}
 async function sendSetupLink(){
   if(!cloudClient){fb("cloud-fb","请先配置 Supabase 连接。");return;}
   const email=cloudEmail();if(!email)return;
   if(cloudLinkSentAt && Date.now()-cloudLinkSentAt<60000){fb("cloud-fb","请至少间隔 60 秒后再发送。");return;}
   const button=document.getElementById("cloud-send-link");if(button.disabled)return;
-  button.disabled=true;setCloudStatus("Sending sign-in email…","busy");
+  button.disabled=true;setCloudStatus("正在发送登录邮件…","busy");
   try{
     const redirect=location.origin+location.pathname;
     const {error}=await cloudClient.auth.signInWithOtp({email,options:{shouldCreateUser:false,emailRedirectTo:redirect}});
     if(error)throw error;
-    cloudLinkSentAt=Date.now();setCloudStatus("Check your email","ok");
-    fb("cloud-fb","邮件已发送。在 Safari 打开邮件链接，进入 Settings 设置密码，再回到主屏幕应用用密码登录。");
-  }catch(error){setCloudStatus("Could not send email","err");fb("cloud-fb",cloudAuthError(error));}
+    cloudLinkSentAt=Date.now();setCloudStatus("请查收登录邮件","ok");
+    fb("cloud-fb","邮件已发送。在 Safari 打开邮件链接，进入设置 设置密码，再回到主屏幕应用用密码登录。");
+  }catch(error){setCloudStatus("登录邮件发送失败","err");fb("cloud-fb",cloudAuthError(error));}
   finally{button.disabled=false;}
 }
 async function saveAccountPassword(){
@@ -5978,19 +6233,19 @@ async function saveAccountPassword(){
   }catch(error){fb("cloud-password-fb",cloudAuthError(error));}
   finally{button.disabled=false;}
 }
-async function cloudSignOut(){if(cloudClient)await cloudClient.auth.signOut();await handleCloudSession(null);setCloudStatus('Signed out');}
+async function cloudSignOut(){if(cloudClient)await cloudClient.auth.signOut();await handleCloudSession(null);setCloudStatus('已退出');}
 async function reconcileCloud(){
-  const expectedUser=cloudUser?.id;if(!expectedUser)return;const{data,error}=await cloudClient.from("wellness_tracker_state").select("data,updated_at").eq("user_id",expectedUser).maybeSingle();if(cloudUser?.id!==expectedUser)return;if(error){setCloudStatus("Cloud read failed","err");fb("cloud-fb",error.message);return;}
-  const localStamp=localStorage.getItem(scopedKey("gt_local_updated"))||"";if(!data){cloudReady=true;await pushCloud();return;}
-  if(localStamp&&localStamp>data.updated_at){cloudReady=true;await pushCloud();}else{applyCloudPayload(data.data);localStorage.setItem(scopedKey("gt_local_updated"),data.updated_at);cloudReady=true;setCloudStatus(`Synced ${fmtTs(data.updated_at)}`,"ok");}
+  const expectedUser=cloudUser?.id;if(!expectedUser)return;const{data,error}=await cloudClient.from("wellness_tracker_state").select("data,updated_at").eq("user_id",expectedUser).maybeSingle();if(cloudUser?.id!==expectedUser)return;if(error){setCloudStatus("无法读取云端记录","err");fb("cloud-fb",error.message);return;}
+  const localStamp=localStorage.getItem(scopedKey("gt_local_updated"))||"";if(!data){cloudReady=true;if(localStamp)await pushCloud();else setCloudStatus('已登录，暂无云端记录','ok');return;}
+  if(localStamp&&localStamp>data.updated_at){cloudReady=true;await pushCloud();}else{applyCloudPayload(data.data);localStorage.setItem(scopedKey("gt_local_updated"),data.updated_at);cloudReady=true;setCloudStatus(`已同步 ${fmtTs(data.updated_at)}`,"ok");}
 }
-function scheduleCloudSync(){if(!cloudReady||!cloudUser||cloudApplying)return;clearTimeout(cloudTimer);setCloudStatus("Saving…","busy");cloudTimer=setTimeout(pushCloud,900);}
+function scheduleCloudSync(){if(!cloudReady||!cloudUser||cloudApplying)return;clearTimeout(cloudTimer);setCloudStatus("正在同步…","busy");cloudTimer=setTimeout(pushCloud,900);}
 async function pushCloud(){
-  if(!cloudClient||!cloudUser||!cloudReady)return;const userId=cloudUser.id,stampKey=scopedKey('gt_local_updated');const now=new Date().toISOString();setCloudStatus("Saving…","busy");const{error}=await cloudClient.from("wellness_tracker_state").upsert({user_id:userId,data:cloudPayload(),updated_at:now},{onConflict:"user_id"});
+  if(!cloudClient||!cloudUser||!cloudReady)return;const userId=cloudUser.id,stampKey=scopedKey('gt_local_updated');const now=new Date().toISOString();setCloudStatus("正在同步…","busy");const{error}=await cloudClient.from("wellness_tracker_state").upsert({user_id:userId,data:cloudPayload(),updated_at:now},{onConflict:"user_id"});
   if(cloudUser?.id!==userId)return;
-  if(error){setCloudStatus(navigator.onLine?"Sync failed":"Offline — saved locally","err");return;}localStorage.setItem(stampKey,now);cloudReady=true;setCloudStatus(`Synced ${fmtTs(now)}`,"ok");
+  if(error){setCloudStatus(navigator.onLine?"同步失败":"离线，记录保存在本机","err");return;}localStorage.setItem(stampKey,now);cloudReady=true;setCloudStatus(`已同步 ${fmtTs(now)}`,"ok");
 }
-window.addEventListener("online",()=>{if(cloudUser){if(cloudReady)scheduleCloudSync();else reconcileCloud();}});window.addEventListener("offline",()=>setCloudStatus("Offline — saved locally","busy"));
+window.addEventListener("online",()=>{if(cloudUser){if(cloudReady)scheduleCloudSync();else reconcileCloud();}});window.addEventListener("offline",()=>{if(cloudClient)setCloudStatus("离线，记录保存在本机","busy");});
 
 // ============================================================
 // TAB NAV
@@ -6008,22 +6263,22 @@ function showTab(t){
 
 function openDay(d){if(S.days[d]?.tr){document.getElementById("td").value=d;loadTrainingDate();showTab("T");}else{document.getElementById("nd").value=d;showTab("N");}}
 function openTodayHistory(){openDay(today());}
-const PLATE=[{id:"protein",ic:"🍗",n:"Protein"},{id:"veg",ic:"🥦",n:"Vegetables"},{id:"carb",ic:"🍚",n:"Smart carbs"},{id:"fruit",ic:"🍓",n:"Fruit"}];
+const PLATE=[{id:"protein",ic:"🍗",n:"蛋白质"},{id:"veg",ic:"🥦",n:"蔬菜"},{id:"carb",ic:"🍚",n:"主食"},{id:"fruit",ic:"🍓",n:"水果"}];
 function togglePlate(id){const day=getDay(today());day.plate=day.plate||{};day.plate[id]=!day.plate[id];persist();renderDashboard();}
-function saveRecovery(){const day=getDay(today());day.recovery={sleep:parseFloat(document.getElementById("rec-sleep").value)||null,soreness:document.getElementById("rec-sore").value};persist();fb("rec-fb","✓ Check-in saved");renderDashboard();}
+function saveRecovery(){const day=getDay(today());day.recovery={sleep:parseFloat(document.getElementById("rec-sleep").value)||null,soreness:document.getElementById("rec-sore").value};persist();fb("rec-fb","✓ 已保存恢复记录");renderDashboard();}
 function renderDashboard(){
   const d=today(),day=S.days[d]||{},tot=tots(d),water=getWater(d),trained=!!day.tr;
-  document.getElementById("dash-date").textContent=new Date(d+"T12:00:00").toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
-  document.getElementById("today-grid").innerHTML=`<div class="today-card"><div class="today-v">${trained?"✓":"—"}</div><div class="today-l">Workout</div></div><div class="today-card"><div class="today-v">${Math.round(tot.p)}g</div><div class="today-l">Protein</div></div><div class="today-card"><div class="today-v">${water}ml</div><div class="today-l">Water</div></div><div class="today-card"><div class="today-v">${day.recovery?.sleep||"—"}</div><div class="today-l">Sleep hours</div></div>`;
+  document.getElementById("dash-date").textContent=new Date(d+"T12:00:00").toLocaleDateString("zh-CN",{weekday:"long",month:"long",day:"numeric"});
+  document.getElementById("today-grid").innerHTML=`<div class="today-card"><div class="today-v">${trained?"✓":"—"}</div><div class="today-l">训练</div></div><div class="today-card"><div class="today-v">${Math.round(tot.p)}g</div><div class="today-l">蛋白质</div></div><div class="today-card"><div class="today-v">${water}ml</div><div class="today-l">饮水</div></div><div class="today-card"><div class="today-v">${day.recovery?.sleep||"—"}</div><div class="today-l">睡眠（小时）</div></div>`;
   document.getElementById("plate-grid").innerHTML=PLATE.map(x=>`<button class="plate-btn${day.plate?.[x.id]?" on":""}" onclick="togglePlate('${x.id}')">${x.ic}<br>${x.n}${day.plate?.[x.id]?" ✓":""}</button>`).join("");
   const now=new Date(d+"T12:00:00"),dow=now.getDay(),start=new Date(now);start.setDate(now.getDate()-((dow+6)%7));let sessions=0,logged=0;
   for(let i=0;i<7;i++){const x=new Date(start);x.setDate(start.getDate()+i);const k=`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`;if(S.days[k]?.tr)sessions++;if(S.days[k]?.nut?.entries?.length)logged++;}
-  document.getElementById("week-summary").innerHTML=`<strong>${sessions}</strong> workouts · <strong>${logged}</strong> nutrition days logged. Aim for consistency, not a perfect streak.`;
+  document.getElementById("week-summary").innerHTML=`<strong>${sessions}</strong> 天训练 · <strong>${logged}</strong> 天记录饮食`;
   if(day.recovery){document.getElementById("rec-sleep").value=day.recovery.sleep||"";document.getElementById("rec-sore").value=day.recovery.soreness||"";}
 }
 // Init review month title
-const _MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
-document.getElementById("montitle").textContent=`${_MN[rm]} ${ry}`;
+const _MN=["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+document.getElementById("montitle").textContent=`${ry}年${_MN[rm]}`;
 
 // ============================================================
 // LOCAL STORAGE — auto-save so data survives tab close
@@ -6032,7 +6287,7 @@ function blankProfile(){return {height:null,age:null,weight:null,sex:'',goal:'',
 function profileReady(w=currentWeight){return Number(w)>0&&Number(PROFILE.height)>0&&Number(PROFILE.age)>=18&&['female','male'].includes(PROFILE.sex);}
 function profileBMR(w){return profileReady(w)?10*w+6.25*Number(PROFILE.height)-5*Number(PROFILE.age)+(PROFILE.sex==='male'?5:-161):null;}
 function syncProfileFields(){for(const [id,key] of [['set-height','height'],['set-age','age'],['set-weight','weight'],['set-sex','sex'],['set-goal','goal'],['set-weekly','weekly']]){const el=document.getElementById(id);if(el)el.value=PROFILE[key]??'';}}
-function updateHeader(){const el=document.getElementById('profile-sub');if(el)el.textContent=profileReady()?`${PROFILE.height} cm · ${currentWeight} kg · ${PROFILE.goal||'个人记录'}`:'欢迎使用 Wellness · 先记录，或在 Settings 填写个人资料以启用可选目标估算';}
+function updateHeader(){const el=document.getElementById('profile-sub');if(el)el.textContent=profileReady()?`${PROFILE.height} cm · ${currentWeight} kg · ${PROFILE.goal||'个人记录'}`:'在设置中填写资料，即可查看营养目标。';}
 function saveSettings(){
  const p={height:Number(inputValue('set-height'))||null,age:Number(inputValue('set-age'))||null,weight:Number(inputValue('set-weight'))||null,sex:inputValue('set-sex'),goal:inputValue('set-goal'),weekly:Number(inputValue('set-weekly'))||null};
  if(p.height&&(p.height<80||p.height>250)||p.weight&&(p.weight<20||p.weight>400)||p.age&&(p.age<18||p.age>110)){fb('sfb-settings','请核对身高、体重和年龄；本估算适用于成人。');return;}
@@ -6048,7 +6303,7 @@ function loadWorkspace(scope){
  if(typeof cancelSessionOCR==='function')cancelSessionOCR();if(typeof parsedSession!=='undefined')parsedSession=null;for(const id of ['session-raw','session-import-duration']){const el=document.getElementById(id);if(el)el.value='';}document.getElementById('session-preview').innerHTML='';document.getElementById('session-parse-status').textContent='';document.getElementById('session-apply').disabled=true;
  workspaceScope=scope;S.days={};PROFILE=blankProfile();customExDB=[];customFoodDB=[];currentWeight=0;
  trainingDrafts={};activeTrainingDate='';cxRows=[];nutritionDrafts={};renderedNutritionDate='';renderedFoodIds={};selFood={};openForm={};selCat={};
- closeFoodEditor();hydrate();TGT=calcTGT(currentWeight);updateHeader();loadTrainingDate(true);renderN();renderDashboard();updateSyncBar();
+ closeFoodEditor();expandedExercises.clear();hydrate();currentWeight=weightForDate(today());TGT=calcTGT(currentWeight);updateHeader();loadTrainingDate(true);renderN();renderDashboard();updateSyncBar();
 }
 function previewLegacyData(){
  try{const days=JSON.parse(localStorage.getItem('gt_v3')||'{}');const count=Object.keys(days).length;const el=document.getElementById('legacy-info');el.textContent=count?`发现此设备旧版记录 ${count} 天。确认这是你的记录后，可仅补入当前工作区的空日期；已有日期不会覆盖。`:'此设备没有旧版记录。';document.getElementById('legacy-import').hidden=!count;}catch(e){fb('legacy-info','旧版数据无法读取。');}

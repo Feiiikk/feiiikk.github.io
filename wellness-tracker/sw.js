@@ -1,6 +1,6 @@
 const ROOT = new URL('./', self.location.href);
 const PREFIX='wellness-pwa-'+encodeURIComponent(ROOT.pathname)+'-';
-const CACHE = PREFIX+'5093292d2e31c2ee';
+const CACHE = PREFIX+'cc225245f417dbee';
 const FILES = ['./', './index.html', './config.js', './pwa.js', './session-import.js', './manifest.webmanifest', './vendor/chart.umd.js', './vendor/supabase.js', './icons/apple-touch-icon.png', './icons/icon-192.png', './icons/icon-512.png'];
 const URLS = new Set(FILES.map(path => new URL(path, ROOT).href));
 self.addEventListener('install', event => {
