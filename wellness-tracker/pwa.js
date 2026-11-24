@@ -12,7 +12,7 @@
     const button = document.createElement('button');
     button.textContent = label; button.onclick = action;
     const later = document.createElement('button');
-    later.textContent = '稍后'; later.onclick = dismiss;
+    later.textContent = 'Later'; later.onclick = dismiss;
     notice.append(button, later); document.body.append(notice);
   }
   let requestedUpdate = false;
@@ -22,7 +22,7 @@
   navigator.serviceWorker.register('./sw.js', {updateViaCache: 'none'}).then(registration => {
     const offerUpdate = () => {
       if (!registration.waiting || !navigator.serviceWorker.controller) return;
-      show('新版本已准备好。请先保存当前填写的内容，再更新。', '更新并重新打开', () => {
+      show('An update is ready. Save any changes before updating.', 'Update and reopen', () => {
         if (!registration.waiting) { dismiss(); return; }
         requestedUpdate = true;
         registration.waiting.postMessage({type: 'SKIP_WAITING'});
@@ -46,7 +46,7 @@
     setInterval(check, 5 * 60000);
     const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
     if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !standalone && !registration.waiting) {
-      show('安装到 iPhone：在 Safari 中点“分享”，再选“添加到主屏幕”。', '知道了', dismiss);
+      show('Install on iPhone from Safari with Share → Add to Home Screen.', 'Got it', dismiss);
     }
-  }).catch(error => console.warn('离线功能暂未启用，请联网重新打开。', error));
+  }).catch(error => console.warn('Offline mode is unavailable. Reopen the app while online.', error));
 })();
